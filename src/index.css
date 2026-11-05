@@ -13,6 +13,14 @@
   --color-brand-black: #0a0a0a;
   --color-brand-white: #ffffff;
   --color-brand-accent: #65ff00; /* Gymshark-style high-vis green placeholder */
+  /* Ported from gymshark.com's --fds-* tokens */
+  --color-ink: #0d1012;
+  --color-muted: #767a7f;
+  --color-faint: #9fa3a8;
+  --color-surface-subtle: #f4f5f6;
+  --color-line: #dee0e3;
+  --color-accent-blue: #004eba;
+
   --font-sans: "Skandia SN", "Helvetica Neue", Arial, sans-serif;
   --font-display: "Plaak Gymshark", "Skandia SN", "Helvetica Neue", Arial, sans-serif;
 }

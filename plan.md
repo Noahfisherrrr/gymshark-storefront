@@ -115,7 +115,18 @@ environment variables.
 ## Phase 1 — Design system & core layout (in progress)
 
 - [x] Tailwind theme tokens (placeholder brand colors/fonts)
-- [x] Header/Footer/nav shell
+- [x] Header — 1:1 port of gymshark.com's header (`src/components/header/`):
+      revolving USP bar (6s / 500ms slide, pause button), transparent
+      gradient header on home that turns white on hover, hides on scroll
+      down past 200px and returns solid on scroll up, USP bar tucks away on
+      solid pages, hover mega-menu (tier 1 → tier 2 panel, animated
+      underlines, blurred backdrop, featured tiles), mobile drawer with
+      category tabs + sliding tier-2 panel. Menu content lives in
+      `src/config/navigation.js` (placeholder labels, CMS-driven later)
+- [ ] Header follow-ups: search overlay (currently links to /shop),
+      mini-bag slide-out drawer (currently links to /cart), client logo in
+      place of the "Brand Name" wordmark, real featured-tile imagery
+- [x] Footer shell (not yet ported 1:1)
 - [ ] Refine against real Gymshark reference pages once client confirms
       which sections/pages to mirror (Brief #4)
 - [ ] Swap placeholder tokens for real brand colors/fonts/logo once supplied

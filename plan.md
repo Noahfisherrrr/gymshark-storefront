@@ -123,9 +123,23 @@ environment variables.
       underlines, blurred backdrop, featured tiles), mobile drawer with
       category tabs + sliding tier-2 panel. Menu content lives in
       `src/config/navigation.js` (placeholder labels, CMS-driven later)
-- [ ] Header follow-ups: search overlay (currently links to /shop),
-      mini-bag slide-out drawer (currently links to /cart), client logo in
-      place of the "Brand Name" wordmark, real featured-tile imagery
+- [x] Header search overlay — port of gymshark.com's current search
+      ("glow-up" variant): backdrop fade .2s, content fade .3s, desktop
+      600px right panel slides out .4s on close; All/Women/Men tabs
+      (remembered, pre-selected from women's/men's pages), 500ms debounced
+      type-ahead with suggested terms + 2-col product grid, Trending Pages,
+      recently viewed row, no-results state with trending products, Enter →
+      `/search?q=` results page. Backed by a new `api.search` contract
+      (mock implemented; Supabase does ILIKE search, trending stubbed)
+- [x] Mini bag drawer — slides in from the right (desktop) / up from the
+      bottom (mobile) .4s; free-shipping progress bar ($75, `config/store.js`),
+      quantity stepper (max 10 / stock), remove with Undo snackbox, wishlist
+      tab, empty state; opens after add-to-cart on the PDP
+- [x] Header buttons all route correctly: account → /login when signed out,
+      Help/Returns/Student Discount → `/help` placeholder sections
+- [ ] Header follow-ups: client logo in place of the "Brand Name" wordmark,
+      real featured-tile/product imagery, "Checkout securely" goes to /cart
+      until Stripe checkout exists (Brief #9)
 - [x] Footer shell (not yet ported 1:1)
 - [ ] Refine against real Gymshark reference pages once client confirms
       which sections/pages to mirror (Brief #4)

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { api } from '../api'
 
 const CartContext = createContext(null)
@@ -6,6 +6,10 @@ const CartContext = createContext(null)
 export function CartProvider({ children }) {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
+  // The header's mini bag; lives here so add-to-cart anywhere can open it.
+  const [miniBagOpen, setMiniBagOpen] = useState(false)
+  const openMiniBag = useCallback(() => setMiniBagOpen(true), [])
+  const closeMiniBag = useCallback(() => setMiniBagOpen(false), [])
 
   useEffect(() => {
     api.cart
@@ -41,7 +45,18 @@ export function CartProvider({ children }) {
 
   return (
     <CartContext.Provider
-      value={{ items, loading, itemCount, addItem, updateQuantity, removeItem, clear }}
+      value={{
+        items,
+        loading,
+        itemCount,
+        addItem,
+        updateQuantity,
+        removeItem,
+        clear,
+        miniBagOpen,
+        openMiniBag,
+        closeMiniBag,
+      }}
     >
       {children}
     </CartContext.Provider>

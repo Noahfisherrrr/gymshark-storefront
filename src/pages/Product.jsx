@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { api } from '../api'
 import { useCart } from '../context/CartContext'
+import { addRecentlyViewed } from '../lib/recentlyViewed'
 
 export default function Product() {
   const { productId } = useParams()
-  const { addItem } = useCart()
+  const { addItem, openMiniBag } = useCart()
 
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -15,6 +16,7 @@ export default function Product() {
   useEffect(() => {
     setLoading(true)
     api.products.getById(productId).then((p) => {
+      if (p) addRecentlyViewed(p.id)
       setProduct(p)
       setSelectedVariantId(p?.variants[0]?.id ?? null)
       setLoading(false)
@@ -30,7 +32,8 @@ export default function Product() {
     setStatus(null)
     try {
       await addItem({ productId: product.id, variantId: selectedVariant.id, quantity: 1 })
-      setStatus({ type: 'success', message: 'Added to cart' })
+      // gymshark.com confirms add-to-bag by sliding the mini bag open.
+      openMiniBag()
     } catch (err) {
       setStatus({ type: 'error', message: err.message })
     }

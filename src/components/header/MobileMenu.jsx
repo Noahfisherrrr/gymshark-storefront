@@ -4,7 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, HeartIcon, SearchIcon } f
 
 const TIER_EASE = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
 
-export default function MobileMenu({ open, onClose, categories, secondaryLinks }) {
+export default function MobileMenu({ open, onClose, categories, secondaryLinks, onOpenSearch }) {
   const [categoryId, setCategoryId] = useState(categories[0].id)
   const [group, setGroup] = useState(null)
 
@@ -56,16 +56,20 @@ export default function MobileMenu({ open, onClose, categories, secondaryLinks }
 
             <div className="flex flex-col gap-4 pb-0 pt-[21px]">
               <div className="px-4">
-                <Link
-                  to="/shop"
-                  onClick={close}
-                  className="flex w-full items-center border border-transparent bg-surface-subtle p-4"
+                <button
+                  type="button"
+                  onClick={() => {
+                    setGroup(null)
+                    onOpenSearch()
+                  }}
+                  aria-haspopup="dialog"
+                  className="flex w-full items-center border border-transparent bg-surface-subtle p-4 text-left"
                 >
                   <SearchIcon size={24} />
                   <span className="truncate pl-2.5 text-[14px] text-muted">
                     What are you looking for?
                   </span>
-                </Link>
+                </button>
               </div>
 
               <div className="gs-no-scrollbar relative overflow-x-auto">

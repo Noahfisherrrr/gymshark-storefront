@@ -15,6 +15,7 @@
   --color-brand-accent: #65ff00; /* Gymshark-style high-vis green placeholder */
   /* Ported from gymshark.com's --fds-* tokens */
   --color-ink: #0d1012;
+  --color-ink-hover: #1b1d22;
   --color-muted: #767a7f;
   --color-faint: #9fa3a8;
   --color-surface-subtle: #f4f5f6;
@@ -30,9 +31,11 @@ body {
   @apply bg-brand-white text-brand-black antialiased font-sans;
 }
 
-h1,
-h2,
-h3,
-.font-display {
-  font-family: var(--font-display);
+/* In the base layer so utilities (e.g. font-sans on a heading) can override it. */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+  }
 }

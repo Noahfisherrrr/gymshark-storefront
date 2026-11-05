@@ -8,6 +8,8 @@ import Wishlist from './pages/Wishlist'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Account from './pages/Account'
+import Search from './pages/Search'
+import Help from './pages/Help'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -22,6 +24,8 @@ export default function App() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="account" element={<Account />} />
+        <Route path="search" element={<Search />} />
+        <Route path="help" element={<Help />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { api } from '../api'
 import ProductCard from '../components/product/ProductCard'
 
-const CATEGORIES = ['all', 'men', 'women', 'new', 'sale']
+const CATEGORIES = ['all', 'men', 'women', 'accessories', 'new', 'sale']
 
 export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams()

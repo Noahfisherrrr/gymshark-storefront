@@ -1,0 +1,61 @@
+/* Motion shared by the header overlays (search, mini bag). Timings are
+   gymshark.com's: backdrop .2s, panels .4s, content fades .25–.3s. */
+
+@keyframes gs-backdrop-in {
+  from { background-color: rgba(0, 0, 0, 0); }
+  to { background-color: rgba(0, 0, 0, 0.8); }
+}
+@keyframes gs-backdrop-out {
+  from { background-color: rgba(0, 0, 0, 0.8); }
+  to { background-color: rgba(0, 0, 0, 0); }
+}
+@keyframes gs-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes gs-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes gs-slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes gs-slide-out-right {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+@keyframes gs-slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes gs-slide-down {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+
+.gs-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background-color: rgba(0, 0, 0, 0);
+  animation: gs-backdrop-in 0.2s forwards;
+}
+.gs-overlay--closing {
+  animation: gs-backdrop-out 0.2s forwards;
+}
+
+.gs-dialog:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gs-overlay,
+  .gs-overlay *,
+  .gs-overlay *::before,
+  .gs-overlay *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+  }
+}

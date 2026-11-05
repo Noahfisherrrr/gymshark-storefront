@@ -1,0 +1,83 @@
+/* Ported from gymshark.com's search overlay ("search-glow-up-modal" and
+   friends). Their 1rem = 10px. Keyframes live in ui/overlay.css. */
+
+.gs-search-modal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+@media (min-width: 1024px) {
+  .gs-search-modal {
+    left: auto;
+    width: 600px;
+  }
+  .gs-search-modal--closing {
+    animation: gs-slide-out-right 0.4s forwards;
+  }
+}
+/* gymshark.com lets the full-screen mobile sheet vanish when the 400ms
+   close timer ends; fading it over the same window reads smoother. */
+@media (max-width: 1023px) {
+  .gs-search-modal--closing {
+    animation: gs-fade-out 0.4s forwards;
+  }
+}
+
+.gs-search-content {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  animation: gs-fade-in 0.3s ease-out forwards;
+}
+
+.gs-search-body {
+  flex: 1 1;
+  overflow-y: auto;
+  padding-bottom: 16px;
+  scrollbar-width: none;
+}
+.gs-search-body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Results, suggestions and the no-results state fade in on every swap. */
+.gs-search-fade {
+  animation: gs-fade-in 0.3s ease-out;
+}
+
+/* Gender tabs: underline + colour ease over .2s. */
+.gs-gender-tab {
+  height: 27px;
+  border-bottom: 1px solid #fff;
+  color: var(--color-faint);
+  transition: all 0.2s;
+}
+.gs-gender-tab:hover,
+.gs-gender-tab[aria-selected='true'] {
+  color: var(--color-ink);
+}
+.gs-gender-tab[aria-selected='true'] {
+  border-color: var(--color-ink);
+}
+
+.gs-search-input::placeholder {
+  color: var(--color-faint);
+}
+
+/* Horizontal drag-to-scroll rows (desktop) hide their scrollbar. */
+.gs-drag-row {
+  scrollbar-width: none;
+  user-select: none;
+}
+.gs-drag-row::-webkit-scrollbar {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .gs-drag-row {
+    cursor: grab;
+  }
+}

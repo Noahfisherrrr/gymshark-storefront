@@ -91,6 +91,6 @@ export const NAV_CATEGORIES = [
 export const SECONDARY_LINKS = [
   { label: 'Help', href: '/help' },
   { label: 'Order Tracking', href: '/account' },
-  { label: 'Returns', href: '/help' },
-  { label: 'Student Discount', href: '/help' },
+  { label: 'Returns', href: '/help#returns' },
+  { label: 'Student Discount', href: '/help#student-discount' },
 ]

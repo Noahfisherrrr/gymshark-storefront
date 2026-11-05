@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
 import { NAV_CATEGORIES, SECONDARY_LINKS, USP_MESSAGES } from '../../config/navigation'
+import { useBodyScrollLock } from '../../lib/scrollLock'
 import UspBar from './UspBar'
 import DesktopNav from './DesktopNav'
 import MobileMenu from './MobileMenu'
+import SearchModal, { SEARCH_PLACEHOLDER } from '../search/SearchModal'
+import MiniBag from '../minibag/MiniBag'
 import { BagIcon, HeartIcon, MenuIcon, ProfileIcon, SearchIcon } from './icons'
 import './header.css'
 
@@ -81,15 +85,19 @@ function ActionIcon({ to, label, children, className = '' }) {
 }
 
 export default function Header() {
-  const { pathname } = useLocation()
-  const transparent = pathname === '/'
-  const { itemCount } = useCart()
+  const location = useLocation()
+  const transparent = location.pathname === '/'
+  const { user } = useAuth()
+  const { itemCount, openMiniBag } = useCart()
   const { productIds } = useWishlist()
   const wrapperRef = useRef(null)
   const { scrollingDown, pastThreshold, pointerInside } = useScrollState(wrapperRef)
 
   const [openMenuId, setOpenMenuId] = useState(null)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  // Kept after closing: the trigger shows the last term, as on gymshark.com.
+  const [searchTerm, setSearchTerm] = useState('')
 
   const menuOpen = openMenuId !== null
   // Transparent pages also turn solid on :hover, handled in CSS below.
@@ -97,12 +105,14 @@ export default function Header() {
   const hidden = transparent && scrollingDown && !pointerInside && !mobileOpen
   const uspTucked = !transparent && scrollingDown && !mobileOpen
 
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? 'hidden' : ''
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [mobileOpen])
+  // Any navigation (links, back/forward) closes the search overlay.
+  const [seenLocation, setSeenLocation] = useState(location)
+  if (location !== seenLocation) {
+    setSeenLocation(location)
+    setSearchOpen(false)
+  }
+
+  useBodyScrollLock(mobileOpen)
 
   useEffect(() => {
     function onKey(e) {
@@ -118,6 +128,11 @@ export default function Header() {
   function closeAll() {
     setOpenMenuId(null)
     setMobileOpen(false)
+  }
+
+  function openSearch() {
+    closeAll()
+    setSearchOpen(true)
   }
 
   const showSearchPill = !transparent
@@ -170,10 +185,12 @@ export default function Header() {
           <Logo onClick={closeAll} />
 
           <div className="flex w-full items-center justify-end lg:gap-3">
-            <Link
-              to="/shop"
+            <button
+              type="button"
               aria-label="Search"
-              onClick={closeAll}
+              aria-haspopup="dialog"
+              aria-expanded={searchOpen}
+              onClick={openSearch}
               className={`group mr-auto flex h-11 items-center lg:mr-0 ${
                 showSearchPill
                   ? 'w-11 justify-center min-[1440px]:mr-4 min-[1440px]:w-[250px] min-[1440px]:justify-start min-[1440px]:border min-[1440px]:border-transparent min-[1440px]:bg-surface-subtle min-[1440px]:px-4 min-[1440px]:hover:border-ink'
@@ -183,10 +200,10 @@ export default function Header() {
               <SearchIcon size={22} />
               {showSearchPill && (
                 <span className="hidden truncate pl-2.5 text-[14px] text-muted group-hover:text-ink min-[1440px]:inline">
-                  What are you looking for?
+                  {searchTerm || SEARCH_PLACEHOLDER}
                 </span>
               )}
-            </Link>
+            </button>
 
             <ActionIcon to="/wishlist" label="View your wishlist" className="hidden lg:flex">
               <span className="relative block">
@@ -199,13 +216,18 @@ export default function Header() {
               </span>
             </ActionIcon>
 
-            <ActionIcon to="/account" label="View your account">
+            <ActionIcon to={user ? '/account' : '/login'} label="View your account">
               <ProfileIcon size={24} />
             </ActionIcon>
 
-            <Link
-              to="/cart"
-              aria-label={`${itemCount} items in cart`}
+            <button
+              type="button"
+              onClick={() => {
+                closeAll()
+                openMiniBag()
+              }}
+              aria-haspopup="dialog"
+              aria-label={`${itemCount} items in your bag`}
               className="relative flex h-11 w-11 items-center justify-center"
             >
               <BagIcon size={24} />
@@ -214,7 +236,7 @@ export default function Header() {
                   {itemCount}
                 </span>
               )}
-            </Link>
+            </button>
           </div>
 
           {menuOpen && (
@@ -232,9 +254,18 @@ export default function Header() {
           onClose={() => setMobileOpen(false)}
           categories={NAV_CATEGORIES}
           secondaryLinks={SECONDARY_LINKS}
+          onOpenSearch={openSearch}
         />,
         document.body,
       )}
+
+      <SearchModal
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        term={searchTerm}
+        onTermChange={setSearchTerm}
+      />
+      <MiniBag />
     </div>
   )
 }

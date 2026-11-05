@@ -16,6 +16,7 @@
  * @property {string} id
  * @property {string} name
  * @property {string} category
+ * @property {'f'|'m'|'u'} gender  f = women, m = men, u = unisex
  * @property {number} price
  * @property {string} description
  * @property {ProductVariant[]} variants
@@ -40,12 +41,22 @@
  * @property {string} status
  * @property {string} createdAt
  *
+ * @typedef {Object} SearchResult
+ * @property {Product[]} products   first `limit` matches
+ * @property {number} total         total matches before `limit`
+ * @property {string[]} suggestions query suggestions for the typed term
+ *
  * @typedef {Object} ApiProvider
  * @property {{
  *   list: (opts?: { category?: string, search?: string, sort?: string }) => Promise<Product[]>,
  *   getById: (id: string) => Promise<Product|null>,
  *   listCategories: () => Promise<string[]>,
  * }} products
+ * @property {{
+ *   query: (term: string, opts?: { gender?: 'f'|'m'|null, limit?: number }) => Promise<SearchResult>,
+ *   trendingTerms: (opts?: { gender?: 'f'|'m'|null }) => Promise<string[]>,
+ *   trendingProducts: (opts?: { gender?: 'f'|'m'|null, limit?: number }) => Promise<Product[]>,
+ * }} search
  * @property {{
  *   get: () => Promise<CartItem[]>,
  *   add: (input: { productId: string, variantId: string, quantity: number }) => Promise<CartItem[]>,

@@ -1,4 +1,9 @@
-import { MOCK_PRODUCTS, MOCK_DISCOUNT_CODES } from '../../data/products.mock'
+import {
+  MOCK_PRODUCTS,
+  MOCK_DISCOUNT_CODES,
+  MOCK_SEARCH_TERMS,
+  MOCK_TRENDING_PRODUCT_IDS,
+} from '../../data/products.mock'
 import { readStore, writeStore, makeId } from './storage'
 
 // Simulates network latency so loading states in the UI get exercised
@@ -45,6 +50,72 @@ async function getProductById(id) {
 async function listCategories() {
   await delay()
   return [...new Set(MOCK_PRODUCTS.map((p) => p.category))]
+}
+
+// ---- search (stand-in for a hosted index like Algolia) -------------------
+
+function tokenize(term) {
+  return term.toLowerCase().split(/\s+/).filter(Boolean)
+}
+
+// Every token must appear somewhere in the product; a trailing "s" is
+// optional so "hoodies" still finds "hoodie".
+function matchesTokens(product, tokens) {
+  const haystack = [
+    product.name,
+    product.description,
+    product.category,
+    ...product.variants.map((v) => v.color),
+  ]
+    .join(' ')
+    .toLowerCase()
+  return tokens.every(
+    (t) => haystack.includes(t) || (t.length > 3 && t.endsWith('s') && haystack.includes(t.slice(0, -1))),
+  )
+}
+
+// Unisex products show under both the Women and Men tabs.
+function matchesGender(gender, itemGender) {
+  return !gender || itemGender === gender || itemGender === 'u'
+}
+
+async function searchProducts(term, { gender = null, limit = 20 } = {}) {
+  await delay()
+  const tokens = tokenize(term ?? '')
+  if (tokens.length === 0) return { products: [], total: 0, suggestions: [] }
+
+  const matches = MOCK_PRODUCTS.filter(
+    (p) => matchesGender(gender, p.gender) && matchesTokens(p, tokens),
+  )
+
+  const q = tokens.join(' ')
+  const suggestions = MOCK_SEARCH_TERMS.filter(
+    (s) => matchesGender(gender, s.gender) && tokens.every((t) => s.query.includes(t)),
+  )
+    .sort((a, b) => b.popularity - a.popularity)
+    .map((s) => s.query)
+  // Top up with matching product names so suggestions never run dry.
+  for (const p of matches) {
+    const name = p.name.toLowerCase()
+    if (suggestions.length >= 4) break
+    if (name.includes(q) && !suggestions.includes(name)) suggestions.push(name)
+  }
+
+  return { products: matches.slice(0, limit), total: matches.length, suggestions: suggestions.slice(0, 4) }
+}
+
+async function trendingTerms({ gender = null } = {}) {
+  await delay()
+  return MOCK_SEARCH_TERMS.filter((s) => matchesGender(gender, s.gender))
+    .sort((a, b) => b.popularity - a.popularity)
+    .map((s) => s.query)
+}
+
+async function trendingProducts({ gender = null, limit = 20 } = {}) {
+  await delay()
+  return MOCK_TRENDING_PRODUCT_IDS.map(findProduct)
+    .filter((p) => p && matchesGender(gender, p.gender))
+    .slice(0, limit)
 }
 
 // ---- cart (persisted in localStorage, per-browser) ---------------------
@@ -172,6 +243,7 @@ async function applyDiscountCode(code) {
 /** @type {import('../../contract').ApiProvider} */
 export const mockApi = {
   products: { list: listProducts, getById: getProductById, listCategories },
+  search: { query: searchProducts, trendingTerms, trendingProducts },
   cart: {
     get: getCart,
     add: addToCart,

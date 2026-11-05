@@ -1,0 +1,114 @@
+/* Ported from gymshark.com's mini bag ("mini-cart" + friends). Their
+   1rem = 10px. Keyframes live in ui/overlay.css. */
+
+/* Mobile: sheet slides up from the bottom. Desktop: the whole row
+   (click-away area + 500px panel) slides in from the right. */
+.gs-minibag {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  animation: gs-slide-up 0.4s forwards;
+}
+.gs-minibag--closing {
+  animation: gs-slide-down 0.4s forwards;
+}
+@media (min-width: 1024px) {
+  .gs-minibag {
+    flex-direction: row;
+    animation: gs-slide-in-right 0.4s forwards;
+  }
+  .gs-minibag--closing {
+    animation: gs-slide-out-right 0.4s forwards;
+  }
+  .gs-minibag--closing .gs-minibag-away {
+    animation: gs-fade-out 0.25s forwards;
+  }
+}
+
+/* Click-away area: the strip above the sheet on mobile, the space left of
+   the panel on desktop. */
+.gs-minibag-away {
+  position: relative;
+  flex: 1 1 auto;
+}
+@media (min-width: 1024px) {
+  .gs-minibag-away {
+    opacity: 0;
+    animation: gs-fade-in 0.25s 0.4s forwards;
+  }
+}
+
+.gs-minibag-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100% - 52px);
+  flex-shrink: 0;
+  overflow: auto;
+  padding-bottom: 128px;
+  background: #fff;
+}
+@media (min-width: 768px) {
+  .gs-minibag-panel {
+    height: calc(100% - 60px);
+  }
+}
+@media (min-width: 1024px) {
+  .gs-minibag-panel {
+    height: 100%;
+    max-width: 500px;
+  }
+}
+
+/* Fixed inside the transformed dialog, so it rides along with the slide. */
+.gs-minibag-actions {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+}
+@media (min-width: 1024px) {
+  .gs-minibag-actions {
+    max-width: 500px;
+  }
+}
+.gs-minibag-cta {
+  transition: box-shadow 0.15s linear;
+}
+.gs-minibag-cta[data-scrolling='true'] {
+  box-shadow: 0 -9px 9px 0 rgba(0, 0, 0, 0.11);
+}
+
+/* Free-shipping progress: fill eases over 1s once the bag opens. */
+.gs-shipping-fill {
+  transition: transform 1s ease;
+  transform-origin: left;
+}
+
+/* Bag / wishlist icon switch in the header. */
+.gs-icon-toggle span {
+  border: 1px solid var(--color-line);
+  color: #bec2c6;
+}
+.gs-icon-toggle span[data-active='true'] {
+  border-color: var(--color-ink);
+  color: var(--color-ink);
+}
+
+/* "You removed an item" snackbox. */
+@keyframes gs-snackbox-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.gs-snackbox {
+  animation: gs-snackbox-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}

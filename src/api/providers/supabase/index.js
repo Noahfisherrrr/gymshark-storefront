@@ -60,6 +60,34 @@ async function listCategories() {
   return [...new Set(data.map((row) => row.category))]
 }
 
+// ---- search -----------------------------------------------------------
+// Plain ILIKE matching for now. Trending terms/products need a ranking
+// source (search analytics or a curated table) — pending Brief.md #7.
+
+async function searchProducts(term, { gender = null, limit = 20 } = {}) {
+  assertConfigured()
+  const tokens = (term ?? '').toLowerCase().split(/\s+/).filter(Boolean)
+  if (tokens.length === 0) return { products: [], total: 0, suggestions: [] }
+
+  let query = supabase
+    .from('products')
+    .select('*, variants:product_variants(*)', { count: 'exact' })
+  for (const token of tokens) query = query.ilike('name', `%${token}%`)
+  if (gender) query = query.in('gender', [gender, 'u'])
+
+  const { data, count, error } = await query.limit(limit)
+  if (error) throw error
+  const suggestions = [...new Set(data.map((p) => p.name.toLowerCase()))].slice(0, 4)
+  return { products: data, total: count ?? data.length, suggestions }
+}
+
+async function trendingTerms() {
+  notImplemented('Trending search terms')
+}
+async function trendingProducts() {
+  notImplemented('Trending products')
+}
+
 // ---- cart / wishlist / orders — blocked on scope decisions -------------
 
 async function getCart() {
@@ -133,6 +161,7 @@ async function signOut() {
 /** @type {import('../../contract').ApiProvider} */
 export const supabaseApi = {
   products: { list: listProducts, getById: getProductById, listCategories },
+  search: { query: searchProducts, trendingTerms, trendingProducts },
   cart: {
     get: getCart,
     add: addToCart,

@@ -1,31 +1,16 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../api'
 import { useCart } from '../context/CartContext'
+import { useCartLines } from '../hooks/useCartLines'
 
 export default function Cart() {
-  const { items, updateQuantity, removeItem } = useCart()
-  const [products, setProducts] = useState([])
+  const { updateQuantity, removeItem } = useCart()
+  const { lines, subtotal } = useCartLines()
   const [discountCode, setDiscountCode] = useState('')
   const [discount, setDiscount] = useState(null)
   const [discountError, setDiscountError] = useState(null)
 
-  useEffect(() => {
-    api.products.list().then(setProducts)
-  }, [])
-
-  const lines = useMemo(() => {
-    return items
-      .map((item) => {
-        const product = products.find((p) => p.id === item.productId)
-        const variant = product?.variants.find((v) => v.id === item.variantId)
-        if (!product || !variant) return null
-        return { ...item, product, variant, lineTotal: product.price * item.quantity }
-      })
-      .filter(Boolean)
-  }, [items, products])
-
-  const subtotal = lines.reduce((sum, line) => sum + line.lineTotal, 0)
   const discountAmount = discount?.valid ? subtotal * discount.amountOff : 0
   const total = subtotal - discountAmount
 

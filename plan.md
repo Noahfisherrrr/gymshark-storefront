@@ -150,7 +150,17 @@ environment variables.
 - [ ] Header follow-ups: client logo in place of the "Brand Name" wordmark,
       real featured-tile/product imagery, "Checkout securely" goes to /cart
       until Stripe checkout exists (Brief #9)
-- [x] Footer shell (not yet ported 1:1)
+- [x] Footer ported from gymshark.com's structure (`src/components/layout/Footer.jsx`):
+      Help/My Account/Pages nav columns (accordion on mobile via native
+      `<details>`, static columns on desktop), "More about" featured tiles +
+      Email Sign Up (opens a modal, no real newsletter integration yet —
+      Brief #12), social icon row (inert pending the client's real accounts,
+      Brief #5), legal link row, region/language selects (single-market
+      placeholder pending Brief #11), payment-network text badges (pending
+      Brief #9), copyright line. Pages not yet built route to `/help`.
+      All controls are real `<button>`/`<Link>`/`<select>` elements —
+      cursor-pointer and click handling come from the global rule in
+      `index.css` plus native element behavior, no dead-looking controls.
 - [ ] Refine against real Gymshark reference pages once client confirms
       which sections/pages to mirror (Brief #4)
 - [ ] Swap placeholder tokens for real brand colors/fonts/logo once supplied

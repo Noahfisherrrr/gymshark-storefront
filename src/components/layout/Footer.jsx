@@ -1,44 +1,293 @@
-const FOOTER_COLUMNS = [
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import Modal from '../ui/Modal'
+import {
+  ChevronDownIcon,
+  DiscordIcon,
+  FacebookIcon,
+  InstagramIcon,
+  PinterestIcon,
+  TiktokIcon,
+  TwitterIcon,
+  YoutubeIcon,
+} from '../header/icons'
+
+// Ported from gymshark.com's footer structure (nav columns → featured tiles
+// → socials → legal row → region/language → payment badges → copyright).
+// Labels that named Gymshark's own brand (e.g. "Gymshark Central", "Gymshark
+// Loyalty") are genericized; pages that don't exist yet point at /help as a
+// placeholder hub until the client supplies real content (Brief.md #4, #5).
+
+const NAV_COLUMNS = [
   {
     title: 'Help',
-    links: ['Contact Us', 'Order Tracking', 'Shipping & Delivery', 'Returns'],
+    links: [
+      { label: 'FAQ', href: '/help' },
+      { label: 'Track Your Order', href: '/account' },
+      { label: 'Delivery Information', href: '/help#shipping' },
+      { label: 'Returns Policy', href: '/help#returns' },
+      { label: 'Make A Return', href: '/help#returns' },
+      { label: 'Orders', href: '/account' },
+      { label: 'Submit a Fake', href: '/help' },
+      { label: 'Reviews Policy', href: '/help' },
+    ],
   },
   {
-    title: 'About',
-    links: ['Our Story', 'Sustainability', 'Careers'],
+    title: 'My Account',
+    links: [
+      { label: 'Login', href: '/login' },
+      { label: 'Register', href: '/register' },
+    ],
   },
   {
-    title: 'Legal',
-    links: ['Terms & Conditions', 'Privacy Policy', 'Accessibility'],
+    title: 'Pages',
+    links: [
+      { label: 'Stores', href: '/help' },
+      { label: 'Refer a Friend', href: '/help' },
+      { label: 'Our Blog', href: '/help' },
+      { label: 'Loyalty Program', href: '/help' },
+      { label: 'About Us', href: '/help' },
+      { label: 'Careers', href: '/help' },
+      { label: 'Student Discount', href: '/help#student-discount' },
+      { label: 'Military & Government Discount', href: '/help' },
+      { label: 'Accessibility Statement', href: '/help' },
+      { label: 'Factory List', href: '/help' },
+      { label: 'Sustainability', href: '/help' },
+    ],
   },
 ]
 
-export default function Footer() {
-  return (
-    <footer className="border-t border-black/10 bg-brand-black text-brand-white">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-12 lg:grid-cols-4 lg:px-8">
-        <div>
-          <p className="text-lg font-extrabold uppercase">Brand Name</p>
-          <p className="mt-2 text-sm text-white/60">
-            Legal name, address and support contact pending client details (Brief.md #1).
-          </p>
-        </div>
+const FEATURED_TILES = [
+  { label: 'Our Blog', href: '/help' },
+  { label: 'Students get an extra 12% off', href: '/help#student-discount' },
+]
 
-        {FOOTER_COLUMNS.map((col) => (
-          <div key={col.title}>
-            <p className="text-sm font-semibold uppercase tracking-wide">{col.title}</p>
-            <ul className="mt-3 space-y-2 text-sm text-white/70">
-              {col.links.map((link) => (
-                <li key={link}>{link}</li>
-              ))}
-            </ul>
-          </div>
+const SOCIAL_LINKS = [
+  { label: 'Discord', Icon: DiscordIcon },
+  { label: 'Facebook', Icon: FacebookIcon },
+  { label: 'Pinterest', Icon: PinterestIcon },
+  { label: 'YouTube', Icon: YoutubeIcon },
+  { label: 'Instagram', Icon: InstagramIcon },
+  { label: 'Twitter', Icon: TwitterIcon },
+  { label: 'TikTok', Icon: TiktokIcon },
+]
+
+const LEGAL_LINKS = [
+  { label: 'Terms & Conditions', href: '/help' },
+  { label: 'Terms of Use', href: '/help' },
+  { label: 'Privacy Notice', href: '/help' },
+  { label: 'Cookie Policy', href: '/help' },
+  { label: 'Modern Slavery Statement', href: '/help' },
+]
+
+// Generic payment-network badges, not Gymshark's assets. Which of these the
+// client actually accepts is pending their verified Stripe account
+// (Brief.md #9) — shown as plain text so nothing implies a live integration.
+const PAYMENT_METHODS = [
+  'Visa',
+  'Mastercard',
+  'PayPal',
+  'Apple Pay',
+  'Klarna',
+  'American Express',
+  'Afterpay',
+  'Sezzle',
+]
+
+function FooterLink({ href, children, mobile = false }) {
+  return (
+    <Link
+      to={href}
+      data-testid={mobile ? 'footer-navigationPanelLinkMobile' : 'footer-navigationPanelLink'}
+      className="block py-1.5 text-sm text-white/70 transition-colors duration-200 hover:text-white hover:underline lg:py-1"
+    >
+      {children}
+    </Link>
+  )
+}
+
+function NavColumn({ title, links }) {
+  return (
+    <div>
+      {/* Desktop: static column. */}
+      <h2 className="hidden text-xs font-semibold uppercase tracking-wide text-white lg:block">{title}</h2>
+      <div className="mt-3 hidden lg:block">
+        {links.map((link) => (
+          <FooterLink key={link.label} href={link.href}>
+            {link.label}
+          </FooterLink>
         ))}
       </div>
 
-      <div className="mx-auto max-w-7xl border-t border-white/10 px-4 py-4 text-xs text-white/50 lg:px-8">
-        © {new Date().getFullYear()} Brand Name. All rights reserved.
+      {/* Mobile: native accordion — gets cursor:pointer from the global
+          `summary` rule in index.css. */}
+      <details className="group border-b border-white/10 lg:hidden">
+        <summary className="flex items-center justify-between py-4 text-sm font-semibold uppercase tracking-wide text-white">
+          {title}
+          <ChevronDownIcon size={18} className="shrink-0 transition-transform duration-200 group-open:rotate-180" />
+        </summary>
+        <div className="pb-3">
+          {links.map((link) => (
+            <FooterLink key={link.label} href={link.href} mobile>
+              {link.label}
+            </FooterLink>
+          ))}
+        </div>
+      </details>
+    </div>
+  )
+}
+
+function NewsletterModal({ open, onClose }) {
+  const [email, setEmail] = useState('')
+  const [sent, setSent] = useState(false)
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    // No real newsletter integration yet (Brief.md #12) — just acknowledge.
+    setSent(true)
+  }
+
+  return (
+    <Modal
+      isOpen={open}
+      onRequestClose={() => {
+        onClose()
+        setSent(false)
+        setEmail('')
+      }}
+      label="Email sign up"
+      className="fixed left-1/2 top-1/2 w-[90vw] max-w-[420px] -translate-x-1/2 -translate-y-1/2 bg-white p-6 text-ink"
+    >
+      <h2 className="font-display text-lg font-extrabold uppercase">Email Sign Up</h2>
+      {sent ? (
+        <p className="mt-3 text-sm text-muted">Thanks — we'll be in touch once sign-ups go live.</p>
+      ) : (
+        <form onSubmit={handleSubmit} className="mt-4 space-y-3">
+          <label className="block text-xs font-semibold uppercase tracking-wide text-muted" htmlFor="footer-newsletter-email">
+            Email address
+          </label>
+          <input
+            id="footer-newsletter-email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full border border-line px-3 py-2 text-sm"
+            placeholder="you@example.com"
+          />
+          <button type="submit" className="w-full bg-ink px-4 py-3 text-sm font-semibold uppercase text-white transition-opacity duration-200 hover:opacity-80">
+            Subscribe
+          </button>
+        </form>
+      )}
+      <button
+        type="button"
+        onClick={onClose}
+        className="mt-4 text-xs uppercase text-muted underline transition-colors duration-200 hover:text-ink"
+      >
+        Close
+      </button>
+    </Modal>
+  )
+}
+
+export default function Footer() {
+  const [newsletterOpen, setNewsletterOpen] = useState(false)
+
+  return (
+    <footer className="border-t border-black/10 bg-brand-black text-brand-white">
+      <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
+        <nav aria-label="Footer" className="grid grid-cols-1 gap-x-8 lg:grid-cols-3">
+          {NAV_COLUMNS.map((col) => (
+            <NavColumn key={col.title} title={col.title} links={col.links} />
+          ))}
+        </nav>
+
+        <div className="mt-10 border-t border-white/10 pt-8">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-white/60">More About Brand Name</h2>
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {FEATURED_TILES.map((tile) => (
+              <Link
+                key={tile.label}
+                to={tile.href}
+                className="flex items-center justify-between border border-white/15 px-4 py-3 text-sm text-white/80 transition-colors duration-200 hover:border-white hover:text-white"
+              >
+                {tile.label}
+              </Link>
+            ))}
+            <button
+              type="button"
+              onClick={() => setNewsletterOpen(true)}
+              className="flex items-center justify-between border border-white/15 px-4 py-3 text-left text-sm text-white/80 transition-colors duration-200 hover:border-white hover:text-white"
+            >
+              Email Sign Up
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-wrap gap-4 border-t border-white/10 pt-8">
+          {SOCIAL_LINKS.map(({ label, Icon }) => (
+            <button
+              key={label}
+              type="button"
+              aria-label={label}
+              title="Pending the client's social accounts (Brief.md #5)"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors duration-200 hover:border-white hover:text-white"
+            >
+              <Icon size={18} />
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-8 flex flex-col gap-6 border-t border-white/10 pt-8 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            {LEGAL_LINKS.map((link) => (
+              <Link
+                key={link.label}
+                to={link.href}
+                className="text-xs text-white/60 transition-colors duration-200 hover:text-white hover:underline"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          <div className="flex gap-3">
+            {/* Multi-market support is pending the client's shipping countries
+                (Brief.md #11) — a single-market placeholder for now. */}
+            <label className="sr-only" htmlFor="footer-store-select">
+              Store
+            </label>
+            <select id="footer-store-select" defaultValue="us" className="border border-white/15 bg-transparent px-3 py-2 text-xs text-white/80">
+              <option value="us">United States</option>
+            </select>
+            <label className="sr-only" htmlFor="footer-language-select">
+              Language
+            </label>
+            <select id="footer-language-select" defaultValue="en" className="border border-white/15 bg-transparent px-3 py-2 text-xs text-white/80">
+              <option value="en">English</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-wrap gap-3 border-t border-white/10 pt-8">
+          {PAYMENT_METHODS.map((method) => (
+            <span
+              key={method}
+              className="rounded border border-white/15 px-2.5 py-1 text-[11px] uppercase tracking-wide text-white/60"
+            >
+              {method}
+            </span>
+          ))}
+        </div>
       </div>
+
+      <div className="mx-auto max-w-7xl border-t border-white/10 px-4 py-4 text-xs text-white/50 lg:px-8">
+        © {new Date().getFullYear()} | Brand Name | All Rights Reserved.
+      </div>
+
+      <NewsletterModal open={newsletterOpen} onClose={() => setNewsletterOpen(false)} />
     </footer>
   )
 }

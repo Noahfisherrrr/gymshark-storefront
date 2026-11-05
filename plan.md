@@ -116,26 +116,36 @@ environment variables.
 
 - [x] Tailwind theme tokens (placeholder brand colors/fonts)
 - [x] Header — 1:1 port of gymshark.com's header (`src/components/header/`):
-      revolving USP bar (6s / 500ms slide, pause button), transparent
+      ads bar over the header (`AdsBar`, gymshark.com's revolving USP
+      banner: 6s / 500ms slide, pause button — **hidden for now**, flip
+      `SHOW_ADS_BAR` in `config/navigation.js` to bring it back), transparent
       gradient header on home that turns white on hover, hides on scroll
-      down past 200px and returns solid on scroll up, USP bar tucks away on
+      down past 200px and returns solid on scroll up, ads bar tucks away on
       solid pages, hover mega-menu (tier 1 → tier 2 panel, animated
       underlines, blurred backdrop, featured tiles), mobile drawer with
       category tabs + sliding tier-2 panel. Menu content lives in
       `src/config/navigation.js` (placeholder labels, CMS-driven later)
-- [x] Header search overlay — port of gymshark.com's current search
-      ("glow-up" variant): backdrop fade .2s, content fade .3s, desktop
-      600px right panel slides out .4s on close; All/Women/Men tabs
-      (remembered, pre-selected from women's/men's pages), 500ms debounced
-      type-ahead with suggested terms + 2-col product grid, Trending Pages,
-      recently viewed row, no-results state with trending products, Enter →
-      `/search?q=` results page. Backed by a new `api.search` contract
-      (mock implemented; Supabase does ILIKE search, trending stubbed)
+- [x] Header search overlay — gymshark.com A/B tests two overlays 50/50
+      per visitor; both are ported, picked by `SEARCH_OVERLAY` in
+      `config/navigation.js`:
+      - `'classic'` (default, their control t140.0): full-width panel over
+        an instantly dimmed page (desktop) / full-screen sheet with back
+        chevron (mobile), centred 350px grey input, content fades in .3s,
+        closes instantly and clears the term. Empty: Trending Searches +
+        Recently Viewed or Best Sellers. Typing (500ms debounce): bolded
+        suggestions + 4-product row + "View all" link; previous results stay
+        up while the next query loads
+      - `'glow-up'` (t140.1): 600px right panel, All/Women/Men tabs,
+        20-product grid, slide-out close
+      Enter → `/search?q=` results page. Backed by a new `api.search`
+      contract (mock implemented; Supabase does ILIKE search, trending stubbed)
 - [x] Mini bag drawer — slides in from the right (desktop) / up from the
       bottom (mobile) .4s; free-shipping progress bar ($75, `config/store.js`),
       quantity stepper (max 10 / stock), remove with Undo snackbox, wishlist
       tab, empty state; opens after add-to-cart on the PDP
-- [x] Header buttons all route correctly: account → /login when signed out,
+- [x] Header buttons match gymshark.com: account icon → `/account`, which
+      redirects signed-out visitors to `/login`; wishlist → `/wishlist`; bag
+      opens the mini bag; drawer
       Help/Returns/Student Discount → `/help` placeholder sections
 - [ ] Header follow-ups: client logo in place of the "Brand Name" wordmark,
       real featured-tile/product imagery, "Checkout securely" goes to /cart

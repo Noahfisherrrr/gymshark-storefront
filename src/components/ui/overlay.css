@@ -38,10 +38,12 @@
   position: fixed;
   inset: 0;
   z-index: 400;
+}
+.gs-overlay--fade {
   background-color: rgba(0, 0, 0, 0);
   animation: gs-backdrop-in 0.2s forwards;
 }
-.gs-overlay--closing {
+.gs-overlay--fade.gs-overlay--closing {
   animation: gs-backdrop-out 0.2s forwards;
 }
 

@@ -3,7 +3,15 @@
 // taxonomy and collection names (Brief.md #4, #6). Eventually this should
 // be served from the CMS/admin panel instead of hard-coded.
 
-export const USP_MESSAGES = [
+// Search overlay style. gymshark.com A/B tests both: 'classic' is their
+// control (full-width panel), 'glow-up' the challenger (600px side panel).
+export const SEARCH_OVERLAY = 'classic'
+
+// The revolving ads bar above the header (gymshark.com's USP banner).
+// Hidden for now; flip to true to bring it back.
+export const SHOW_ADS_BAR = false
+
+export const ADS_MESSAGES = [
   'Free standard shipping on orders over $75',
   'Get $10 off when you refer a friend',
   'Get 15% off when you sign up for emails',

@@ -1,6 +1,6 @@
 // Commerce rules the UI needs before the backend owns them. Shipping
 // thresholds are pending the client's shipping rules (Brief.md #11) — keep
-// this in sync with the USP copy in config/navigation.js until then.
+// this in sync with ADS_MESSAGES in config/navigation.js until then.
 
 export const FREE_STANDARD_SHIPPING_THRESHOLD = 75
 

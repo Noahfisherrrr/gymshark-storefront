@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { api } from '../../api'
 import { formatPrice } from '../../lib/format'
 import { getRecentlyViewed } from '../../lib/recentlyViewed'
-import { searchHref } from './searchHref'
+import { searchHref } from './shared'
 
 // Click-and-drag horizontal scrolling for desktop rows (Trending Pages,
 // recent activity). A drag of more than 3px swallows the click so letting

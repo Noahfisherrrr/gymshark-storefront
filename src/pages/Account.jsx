@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { api } from '../api'
 import { useAuth } from '../context/AuthContext'
 
@@ -14,16 +14,9 @@ export default function Account() {
 
   if (loading) return <div className="px-4 py-10 text-center text-sm">Loading…</div>
 
-  if (!user) {
-    return (
-      <div className="mx-auto max-w-4xl px-4 py-10 text-center lg:px-8">
-        <h1 className="text-2xl font-bold uppercase">My Account</h1>
-        <p className="mt-4 text-sm text-black/50">
-          <Link to="/login" className="underline">Sign in</Link> to view your account.
-        </p>
-      </div>
-    )
-  }
+  // Signed-out visitors go straight to login, as gymshark.com's /account does.
+  if (!user) return <Navigate to="/login" replace />
+
 
   async function handleSignOut() {
     await signOut()

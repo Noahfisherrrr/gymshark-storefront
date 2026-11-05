@@ -16,6 +16,7 @@ export default function Modal({
   onRequestClose,
   closeTimeoutMs = 0,
   label,
+  overlayClassName = 'gs-overlay--fade',
   className = '',
   closingClassName = '',
   initialFocusRef,
@@ -67,7 +68,7 @@ export default function Modal({
 
   return createPortal(
     <div
-      className={`gs-overlay ${closing ? 'gs-overlay--closing' : ''}`}
+      className={`gs-overlay ${overlayClassName} ${closing ? 'gs-overlay--closing' : ''}`}
       onClick={(e) => {
         if (e.target === e.currentTarget) onRequestClose()
       }}

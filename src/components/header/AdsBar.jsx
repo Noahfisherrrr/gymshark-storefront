@@ -8,7 +8,9 @@ const TRANSITION_MS = 500
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-export default function UspBar({ messages }) {
+// Ads bar over the header: revolving promo messages (gymshark.com's USP
+// banner). Currently switched off via SHOW_ADS_BAR in config/navigation.js.
+export default function AdsBar({ messages }) {
   const [index, setIndex] = useState(0)
   const [animate, setAnimate] = useState(true)
   const [paused, setPaused] = useState(prefersReducedMotion)

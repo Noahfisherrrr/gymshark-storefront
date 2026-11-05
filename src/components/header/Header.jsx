@@ -1,15 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, useLocation } from 'react-router-dom'
-import { useAuth } from '../../context/AuthContext'
 import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
-import { NAV_CATEGORIES, SECONDARY_LINKS, USP_MESSAGES } from '../../config/navigation'
+import {
+  ADS_MESSAGES,
+  NAV_CATEGORIES,
+  SECONDARY_LINKS,
+  SHOW_ADS_BAR,
+} from '../../config/navigation'
 import { useBodyScrollLock } from '../../lib/scrollLock'
-import UspBar from './UspBar'
+import AdsBar from './AdsBar'
 import DesktopNav from './DesktopNav'
 import MobileMenu from './MobileMenu'
-import SearchModal, { SEARCH_PLACEHOLDER } from '../search/SearchModal'
+import SearchModal from '../search/SearchModal'
+import { SEARCH_PLACEHOLDER } from '../search/shared'
 import MiniBag from '../minibag/MiniBag'
 import { BagIcon, HeartIcon, MenuIcon, ProfileIcon, SearchIcon } from './icons'
 import './header.css'
@@ -21,7 +26,7 @@ const HEADER_HEIGHT = 76
 // - scrollingDown: true only while scrolling down AND past the threshold
 // - transparent pages (home): header slides fully out while scrolling down,
 //   returns as a solid white bar on scroll-up, goes transparent again at the top
-// - solid pages: only the USP bar tucks away while scrolling down
+// - solid pages: only the ads bar tucks away while scrolling down
 //
 // Hover is read via :hover (browser hit-testing) rather than mouseenter/leave
 // state: React misses mouseleave when a hovered child (the menu backdrop) is
@@ -87,7 +92,6 @@ function ActionIcon({ to, label, children, className = '' }) {
 export default function Header() {
   const location = useLocation()
   const transparent = location.pathname === '/'
-  const { user } = useAuth()
   const { itemCount, openMiniBag } = useCart()
   const { productIds } = useWishlist()
   const wrapperRef = useRef(null)
@@ -103,7 +107,7 @@ export default function Header() {
   // Transparent pages also turn solid on :hover, handled in CSS below.
   const solid = !transparent || menuOpen || (pastThreshold && !scrollingDown)
   const hidden = transparent && scrollingDown && !pointerInside && !mobileOpen
-  const uspTucked = !transparent && scrollingDown && !mobileOpen
+  const adsTucked = SHOW_ADS_BAR && !transparent && scrollingDown && !mobileOpen
 
   // Any navigation (links, back/forward) closes the search overlay.
   const [seenLocation, setSeenLocation] = useState(location)
@@ -142,13 +146,13 @@ export default function Header() {
       ref={wrapperRef}
       className="group/header sticky z-[201] flex flex-col"
       style={{
-        top: uspTucked ? -48 : 0,
+        top: adsTucked ? -48 : 0,
         marginBottom: transparent ? -HEADER_HEIGHT : 0,
         transform: hidden ? 'translateY(-100%)' : 'none',
         transition: 'top 0.3s ease-in-out, transform 0.3s ease-in-out',
       }}
     >
-      <UspBar messages={USP_MESSAGES} />
+      {SHOW_ADS_BAR && <AdsBar messages={ADS_MESSAGES} />}
 
       <header
         className={`relative z-[1] flex h-[76px] items-center p-4 antialiased lg:p-0 ${
@@ -216,7 +220,7 @@ export default function Header() {
               </span>
             </ActionIcon>
 
-            <ActionIcon to={user ? '/account' : '/login'} label="View your account">
+            <ActionIcon to="/account" label="View your account">
               <ProfileIcon size={24} />
             </ActionIcon>
 

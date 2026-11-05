@@ -1,18 +1,30 @@
 @import "tailwindcss";
+@import "./assets/fonts/fonts.css";
 
 /*
   Brand tokens are placeholders until the client confirms brand colors/fonts
   (Brief.md item #3). Swap these values once approved — nothing else should
   need to change since components reference the tokens below, not raw hex.
+
+  Font files are Gymshark's own assets, wired in only to pixel-match the
+  clone during preview — see the licensing note in assets/fonts/fonts.css.
 */
 @theme {
   --color-brand-black: #0a0a0a;
   --color-brand-white: #ffffff;
   --color-brand-accent: #65ff00; /* Gymshark-style high-vis green placeholder */
-  --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Skandia SN", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Plaak Gymshark", "Skandia SN", "Helvetica Neue", Arial, sans-serif;
 }
 
 html,
 body {
-  @apply bg-brand-white text-brand-black antialiased;
+  @apply bg-brand-white text-brand-black antialiased font-sans;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
 }

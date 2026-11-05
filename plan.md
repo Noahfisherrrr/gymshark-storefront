@@ -76,7 +76,7 @@ live for real:
 |---|---|---|---|
 | 1 | Brand name, legal entity, address, support contact | Footer, legal pages, emails, Stripe business profile | **Pending** |
 | 2 | Domain name (client must purchase/own it) | Production DNS, Vercel custom domain | **Pending** |
-| 3 | Logo, brand colors, fonts, brand guidelines | Final visual skin (currently placeholder tokens) | **Pending** |
+| 3 | Logo, brand colors, fonts, brand guidelines | Final visual skin (currently placeholder tokens) | **Pending** — ⚠️ currently using Gymshark's own webfonts (Plaak Gymshark, Skandia SN) in `src/assets/fonts/` for preview pixel-matching only. Not licensed to us — **must be replaced before public launch** |
 | 4 | Which Gymshark pages/sections to mirror exactly | Confirms scope of UI clone | **Pending** |
 | 5 | Page list + copy/photos/video (incl. hero video?) | Content population of all pages | **Pending** |
 | 6 | Product catalog: counts, categories, variants, SKUs, stock | Supabase schema seeding, PLP/PDP real data | **Pending** |

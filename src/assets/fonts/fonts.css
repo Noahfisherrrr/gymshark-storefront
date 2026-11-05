@@ -1,0 +1,46 @@
+/*
+  LICENSING FLAG — read before shipping publicly.
+
+  These four files were pulled from Gymshark's live site assets, not
+  licensed by our client. "PlaakGymshark-*" is named as a custom cut
+  commissioned exclusively for Gymshark's brand, and SkandiaSN is a
+  commercial retail font — neither comes with rights for us to ship in
+  someone else's production app. They're wired in now purely so pixel-
+  matching the header/homepage during the Vercel preview phase is
+  possible (Brief.md #4). Before public launch, these MUST be replaced
+  with fonts the client actually owns/licenses (Brief.md #3) — swapping
+  them later is just replacing the files here and in tailwind theme
+  tokens in src/index.css, nothing else depends on these exact files.
+*/
+
+@font-face {
+  font-family: 'Plaak Gymshark';
+  src: url('./PlaakGymshark-Midweight.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Plaak Gymshark';
+  src: url('./PlaakGymshark-Heavyweight.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Skandia SN';
+  src: url('./SkandiaSN-Book.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Skandia SN';
+  src: url('./SkandiaSN-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

@@ -5,7 +5,7 @@ import { useDebouncedValue } from '../../hooks/useDebouncedValue'
 import { getRecentlyViewed } from '../../lib/recentlyViewed'
 import Modal from '../ui/Modal'
 import { ChevronLeftIcon, CloseIcon, SearchIcon } from '../header/icons'
-import { SearchProductTile } from './SearchSections'
+import ProductCard from '../product/ProductCard'
 import { SEARCH_PLACEHOLDER, searchHref } from './shared'
 import './search.css'
 
@@ -82,7 +82,7 @@ function BestSellers() {
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2 px-4 lg:grid-cols-4 lg:px-0">
         {products.map((product) => (
-          <SearchProductTile key={product.id} product={product} />
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </section>
@@ -96,7 +96,7 @@ function RecentlyViewed({ products }) {
       <div className="gs-drag-row flex gap-2 overflow-x-auto px-4 lg:px-0">
         {products.map((product) => (
           <div key={product.id} className="w-[42vw] shrink-0 lg:w-[calc(25%-6px)]">
-            <SearchProductTile product={product} />
+            <ProductCard product={product} />
           </div>
         ))}
       </div>
@@ -205,7 +205,7 @@ function SearchPanel({ inputRef, term, onTermChange, onClose, onPickTerm }) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="mr-3 flex h-11 w-11 shrink-0 items-center justify-center lg:hidden"
+            className="mr-3 flex h-11 w-11 shrink-0 items-center justify-center transition-opacity duration-200 hover:opacity-60 lg:hidden"
           >
             <ChevronLeftIcon size={24} />
           </button>
@@ -244,7 +244,7 @@ function SearchPanel({ inputRef, term, onTermChange, onClose, onPickTerm }) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="absolute right-[30px] top-5 hidden h-11 w-11 items-center justify-center lg:flex min-[1440px]:right-[60px]"
+            className="absolute right-[30px] top-5 hidden h-11 w-11 items-center justify-center transition-opacity duration-200 hover:opacity-60 lg:flex min-[1440px]:right-[60px]"
           >
             <CloseIcon size={24} />
           </button>
@@ -285,7 +285,7 @@ function SearchPanel({ inputRef, term, onTermChange, onClose, onPickTerm }) {
                 </h5>
                 <div className="grid grid-cols-2 gap-2 p-4 lg:grid-cols-3 lg:px-0 lg:pb-0 lg:[&>*:nth-child(4)]:hidden min-[1200px]:grid-cols-4 min-[1200px]:[&>*:nth-child(4)]:flex">
                   {shown.products.map((product) => (
-                    <SearchProductTile key={product.id} product={product} />
+                    <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
               </div>

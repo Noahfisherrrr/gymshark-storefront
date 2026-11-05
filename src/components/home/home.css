@@ -1,0 +1,97 @@
+/* Ported from gymshark.com's homepage blocks ("banner", "carousel",
+   "button"). Their 1rem = 10px. */
+
+/* Banner CTA ("tertiary" button): 2px underline that retracts to the
+   right, then redraws from the left on hover. */
+@keyframes gs-underline-redraw {
+  0% {
+    left: auto;
+    right: 0;
+    width: 50%;
+  }
+  49% {
+    left: auto;
+    right: 0;
+    width: 0;
+  }
+  50% {
+    left: 0;
+    right: auto;
+    width: 0;
+  }
+  to {
+    left: 0;
+    right: auto;
+    width: 100%;
+  }
+}
+.gs-underline-cta {
+  position: relative;
+}
+.gs-underline-cta::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: auto;
+  height: 2px;
+  width: 100%;
+  background-color: currentColor;
+  pointer-events: none;
+}
+.gs-underline-cta:hover::before {
+  animation: gs-underline-redraw 1.2s forwards;
+}
+
+/* Product carousel track: native horizontal scroll with snap, no bar. */
+.gs-carousel {
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 16px;
+  scrollbar-width: none;
+}
+.gs-carousel::-webkit-scrollbar {
+  display: none;
+}
+.gs-carousel > li {
+  scroll-snap-align: start;
+}
+@media (min-width: 1024px) {
+  .gs-carousel {
+    scroll-padding: 0;
+  }
+}
+
+/* Content swapped by a tab fades in. */
+@keyframes gs-fade-swap {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.gs-fade-swap {
+  animation: gs-fade-swap 0.3s ease-out;
+}
+
+/* Section tabs (Women / Men). */
+.gs-tab {
+  height: 27px;
+  border-bottom: 1px solid transparent;
+  color: var(--color-faint);
+  transition: all 0.2s;
+}
+.gs-tab:hover,
+.gs-tab[aria-selected='true'] {
+  color: var(--color-ink);
+}
+.gs-tab[aria-selected='true'] {
+  border-color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gs-underline-cta:hover::before,
+  .gs-fade-swap {
+    animation: none;
+  }
+}

@@ -21,13 +21,15 @@ function findVariant(productId, variantId) {
 
 // ---- products ---------------------------------------------------------
 
-async function listProducts({ category, search, sort } = {}) {
+async function listProducts({ category, search, sort, gender, onSale, limit } = {}) {
   await delay()
   let items = [...MOCK_PRODUCTS]
 
   if (category && category !== 'all') {
     items = items.filter((p) => p.category === category)
   }
+  if (gender) items = items.filter((p) => matchesGender(gender, p.gender))
+  if (onSale) items = items.filter((p) => p.compareAtPrice !== null)
 
   if (search) {
     const q = search.toLowerCase()
@@ -39,7 +41,7 @@ async function listProducts({ category, search, sort } = {}) {
   if (sort === 'price-asc') items.sort((a, b) => a.price - b.price)
   if (sort === 'price-desc') items.sort((a, b) => b.price - a.price)
 
-  return items
+  return limit ? items.slice(0, limit) : items
 }
 
 async function getProductById(id) {

@@ -18,6 +18,7 @@
  * @property {string} category
  * @property {'f'|'m'|'u'} gender  f = women, m = men, u = unisex
  * @property {number} price
+ * @property {number|null} compareAtPrice  original price when on sale, else null
  * @property {string} description
  * @property {ProductVariant[]} variants
  * @property {string|null} image
@@ -48,7 +49,14 @@
  *
  * @typedef {Object} ApiProvider
  * @property {{
- *   list: (opts?: { category?: string, search?: string, sort?: string }) => Promise<Product[]>,
+ *   list: (opts?: {
+ *     category?: string,
+ *     search?: string,
+ *     sort?: string,
+ *     gender?: 'f'|'m',   // includes unisex products
+ *     onSale?: boolean,   // only products with a compareAtPrice
+ *     limit?: number,
+ *   }) => Promise<Product[]>,
  *   getById: (id: string) => Promise<Product|null>,
  *   listCategories: () => Promise<string[]>,
  * }} products

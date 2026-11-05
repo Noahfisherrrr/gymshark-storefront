@@ -42,7 +42,11 @@ export default function Product() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
       <div className="grid gap-10 lg:grid-cols-2">
-        <div className="aspect-square bg-black/5" />
+        <div className="aspect-[4/5] overflow-hidden bg-surface-subtle">
+          {product.image && (
+            <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+          )}
+        </div>
 
         <div>
           <h1 className="text-2xl font-bold uppercase">{product.name}</h1>
@@ -58,10 +62,10 @@ export default function Product() {
                   type="button"
                   disabled={v.stock === 0}
                   onClick={() => setSelectedVariantId(v.id)}
-                  className={`border px-3 py-2 text-xs font-semibold uppercase ${
+                  className={`border px-3 py-2 text-xs font-semibold uppercase transition-colors duration-200 ${
                     v.id === selectedVariantId
                       ? 'border-brand-black bg-brand-black text-brand-white'
-                      : 'border-black/20'
+                      : 'border-black/20 hover:border-brand-black'
                   } ${v.stock === 0 ? 'cursor-not-allowed opacity-30' : ''}`}
                 >
                   {v.size} / {v.color}
@@ -75,7 +79,7 @@ export default function Product() {
             type="button"
             onClick={handleAddToCart}
             disabled={!selectedVariant || selectedVariant.stock === 0}
-            className="mt-8 w-full bg-brand-black py-3 text-sm font-semibold uppercase text-brand-white disabled:opacity-40"
+            className="mt-8 w-full bg-brand-black py-3 text-sm font-semibold uppercase text-brand-white transition-colors duration-200 hover:bg-ink-hover disabled:opacity-40"
           >
             Add to Cart
           </button>

@@ -21,6 +21,7 @@
   --color-surface-subtle: #f4f5f6;
   --color-line: #dee0e3;
   --color-accent-blue: #004eba;
+  --color-sale: #dc0428;
 
   --font-sans: "Skandia SN", "Helvetica Neue", Arial, sans-serif;
   --font-display: "Plaak Gymshark", "Skandia SN", "Helvetica Neue", Arial, sans-serif;
@@ -37,5 +38,20 @@ body {
   h2,
   h3 {
     font-family: var(--font-display);
+  }
+
+  /* Tailwind's reset gives buttons the default arrow; every clickable
+     control should show the hand. */
+  button:not(:disabled),
+  [role='button'],
+  [role='tab'],
+  [role='switch'],
+  select,
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
   }
 }

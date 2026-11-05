@@ -5,6 +5,15 @@ import ProductCard from '../components/product/ProductCard'
 
 const CATEGORIES = ['all', 'men', 'women', 'accessories', 'new', 'sale']
 
+// Women/men are gendered (unisex included) and sale means "discounted", so
+// these pages match the homepage carousels that link to them.
+function listQuery(category) {
+  if (category === 'women') return { gender: 'f' }
+  if (category === 'men') return { gender: 'm' }
+  if (category === 'sale') return { onSale: true }
+  return { category }
+}
+
 export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams()
   const category = searchParams.get('category') ?? 'all'
@@ -17,7 +26,7 @@ export default function Shop() {
   useEffect(() => {
     setLoading(true)
     api.products
-      .list({ category, sort, search })
+      .list({ ...listQuery(category), sort, search })
       .then(setProducts)
       .finally(() => setLoading(false))
   }, [category, sort, search])

@@ -158,7 +158,20 @@ environment variables.
 ## Phase 2 — Static page structure & content (greybox now, real content later)
 
 - [x] Home, Shop (PLP), Product (PDP), Cart, Wishlist, Login, Account routes
-- [ ] Hero section — confirm video vs. static image (Brief #5)
+- [x] Homepage built from gymshark.com's block system (`src/components/home/`,
+      content in `src/config/home.js`): video hero banner → women's product
+      carousel → gym video banner → men's → accessories → sale ("up to X%
+      off", struck-through red compare-at prices) → "Popular right now"
+      Women/Men tabbed grid. Banners: 2:3 / 8:3, bottom gradient, underline
+      CTAs, pause control. Carousels: 5 cards desktop / ~1.7 mobile, snap
+      scroll, arrows, "View all" → matching `/shop` filter
+- [x] Product card ported 1:1 (4:5 image, wishlist heart, title/colour/price)
+      and used everywhere; hover zooms the image and underlines the title.
+      All buttons get `cursor: pointer` + hover states
+- [x] **Placeholder media** (free licences, credits in `public/media/CREDITS.md`):
+      Mixkit videos for hero + gym banner, Pexels photos for all 20 mock
+      products. Nothing taken from gymshark.com
+- [ ] Hero/campaign media — swap placeholder video for the client's own (Brief #5)
 - [ ] Legal pages (Terms, Privacy, Shipping, Returns) — placeholder until
       client supplies approved policy text (Brief #10)
 - [ ] Full page list + copy/imagery once client delivers content (Brief #5)

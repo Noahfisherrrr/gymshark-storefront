@@ -24,6 +24,17 @@ const PRIMARY_BUTTON =
 const HEADING = 'font-display text-[clamp(18px,17.3px+0.19vw,20px)] font-medium uppercase leading-[0.94]'
 const SNACKBOX_MS = 5000
 
+function Thumb({ src }) {
+  return src ? (
+    <img
+      src={src}
+      alt=""
+      loading="lazy"
+      className="h-full w-full object-cover transition-transform duration-[250ms] ease-in-out hover:scale-[1.04]"
+    />
+  ) : null
+}
+
 function ShippingProgress({ subtotal }) {
   const progress = Math.min(subtotal / FREE_STANDARD_SHIPPING_THRESHOLD, 1)
   const remaining = FREE_STANDARD_SHIPPING_THRESHOLD - subtotal
@@ -126,8 +137,10 @@ function LineItem({ line, onRemoved, onNavigate }) {
           onClick={onNavigate}
           tabIndex={-1}
           aria-hidden="true"
-          className="block aspect-[4/5] w-[100px] shrink-0 bg-surface-subtle"
-        />
+          className="block aspect-[4/5] w-[100px] shrink-0 overflow-hidden bg-surface-subtle"
+        >
+          <Thumb src={line.product.image} />
+        </Link>
         <div className="flex min-w-0 flex-1 flex-col text-[14px] leading-[1.4]">
           <Link to={href} onClick={onNavigate} className="capitalize text-ink">
             {line.product.name}
@@ -224,8 +237,10 @@ function WishlistView({ onNavigate }) {
                 onClick={onNavigate}
                 tabIndex={-1}
                 aria-hidden="true"
-                className="block aspect-[4/5] w-[100px] shrink-0 bg-surface-subtle"
-              />
+                className="block aspect-[4/5] w-[100px] shrink-0 overflow-hidden bg-surface-subtle"
+              >
+                <Thumb src={product.image} />
+              </Link>
               <div className="flex min-w-0 flex-1 flex-col text-[14px] leading-[1.4]">
                 <Link to={`/product/${product.id}`} onClick={onNavigate} className="capitalize text-ink">
                   {product.name}
@@ -307,7 +322,12 @@ function MiniBagPanel({ onClose }) {
             <HeartIcon size={20} />
           </span>
         </button>
-        <button type="button" onClick={onClose} aria-label="Close" className="flex items-center">
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="flex items-center transition-opacity duration-200 hover:opacity-60"
+        >
           <CloseIcon size={22} />
         </button>
       </div>

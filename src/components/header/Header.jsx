@@ -69,7 +69,7 @@ function Logo({ onClick }) {
       to="/"
       onClick={onClick}
       aria-label="Home"
-      className="absolute left-[calc(50%-22px)] top-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[18px] font-extrabold uppercase leading-none tracking-tight whitespace-nowrap lg:static lg:translate-x-0 lg:translate-y-0"
+      className="absolute left-[calc(50%-22px)] top-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[18px] font-extrabold uppercase leading-none tracking-tight whitespace-nowrap transition-opacity duration-200 hover:opacity-70 lg:static lg:translate-x-0 lg:translate-y-0"
     >
       {/* Client logo pending (Brief.md #3) — swap this wordmark for their SVG. */}
       Brand Name
@@ -82,7 +82,7 @@ function ActionIcon({ to, label, children, className = '' }) {
     <Link
       to={to}
       aria-label={label}
-      className={`flex h-11 w-11 items-center justify-center ${className}`}
+      className={`flex h-11 w-11 items-center justify-center transition-opacity duration-200 hover:opacity-70 ${className}`}
     >
       {children}
     </Link>
@@ -173,7 +173,7 @@ export default function Header() {
           onClick={() => setMobileOpen(true)}
           aria-label="Main menu"
           aria-expanded={mobileOpen}
-          className="z-[1] flex h-11 min-w-11 items-center justify-center lg:hidden"
+          className="z-[1] flex h-11 min-w-11 items-center justify-center transition-opacity duration-200 hover:opacity-70 lg:hidden"
         >
           <MenuIcon size={24} />
         </button>
@@ -195,9 +195,9 @@ export default function Header() {
               aria-haspopup="dialog"
               aria-expanded={searchOpen}
               onClick={openSearch}
-              className={`group mr-auto flex h-11 items-center lg:mr-0 ${
+              className={`group mr-auto flex h-11 items-center transition-opacity duration-200 hover:opacity-70 lg:mr-0 ${
                 showSearchPill
-                  ? 'w-11 justify-center min-[1440px]:mr-4 min-[1440px]:w-[250px] min-[1440px]:justify-start min-[1440px]:border min-[1440px]:border-transparent min-[1440px]:bg-surface-subtle min-[1440px]:px-4 min-[1440px]:hover:border-ink'
+                  ? 'w-11 justify-center min-[1440px]:mr-4 min-[1440px]:w-[250px] min-[1440px]:justify-start min-[1440px]:border min-[1440px]:border-transparent min-[1440px]:bg-surface-subtle min-[1440px]:px-4 min-[1440px]:hover:border-ink min-[1440px]:hover:opacity-100'
                   : 'w-11 justify-center'
               }`}
             >
@@ -232,7 +232,7 @@ export default function Header() {
               }}
               aria-haspopup="dialog"
               aria-label={`${itemCount} items in your bag`}
-              className="relative flex h-11 w-11 items-center justify-center"
+              className="relative flex h-11 w-11 items-center justify-center transition-opacity duration-200 hover:opacity-70"
             >
               <BagIcon size={24} />
               {itemCount > 0 && (

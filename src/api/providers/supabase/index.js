@@ -28,14 +28,20 @@ function notImplemented(feature) {
 
 // ---- products (real queries once the `products` table exists) --------
 
-async function listProducts({ category, search, sort } = {}) {
+// Aliases snake_case columns to the contract's camelCase field names.
+const PRODUCT_COLUMNS = '*, compareAtPrice:compare_at_price, variants:product_variants(*)'
+
+async function listProducts({ category, search, sort, gender, onSale, limit } = {}) {
   assertConfigured()
-  let query = supabase.from('products').select('*, variants:product_variants(*)')
+  let query = supabase.from('products').select(PRODUCT_COLUMNS)
 
   if (category && category !== 'all') query = query.eq('category', category)
+  if (gender) query = query.in('gender', [gender, 'u'])
+  if (onSale) query = query.not('compare_at_price', 'is', null)
   if (search) query = query.ilike('name', `%${search}%`)
   if (sort === 'price-asc') query = query.order('price', { ascending: true })
   if (sort === 'price-desc') query = query.order('price', { ascending: false })
+  if (limit) query = query.limit(limit)
 
   const { data, error } = await query
   if (error) throw error
@@ -46,7 +52,7 @@ async function getProductById(id) {
   assertConfigured()
   const { data, error } = await supabase
     .from('products')
-    .select('*, variants:product_variants(*)')
+    .select(PRODUCT_COLUMNS)
     .eq('id', id)
     .maybeSingle()
   if (error) throw error
@@ -71,7 +77,7 @@ async function searchProducts(term, { gender = null, limit = 20 } = {}) {
 
   let query = supabase
     .from('products')
-    .select('*, variants:product_variants(*)', { count: 'exact' })
+    .select(PRODUCT_COLUMNS, { count: 'exact' })
   for (const token of tokens) query = query.ilike('name', `%${token}%`)
   if (gender) query = query.in('gender', [gender, 'u'])
 

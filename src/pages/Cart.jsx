@@ -44,7 +44,11 @@ export default function Cart() {
       <div className="mt-6 divide-y divide-black/10">
         {lines.map((line) => (
           <div key={line.id} className="flex items-center gap-4 py-4">
-            <div className="h-20 w-16 shrink-0 bg-black/5" />
+            <div className="h-20 w-16 shrink-0 overflow-hidden bg-surface-subtle">
+              {line.product.image && (
+                <img src={line.product.image} alt="" className="h-full w-full object-cover" />
+              )}
+            </div>
             <div className="flex-1">
               <p className="text-sm font-semibold">{line.product.name}</p>
               <p className="text-xs text-black/50">

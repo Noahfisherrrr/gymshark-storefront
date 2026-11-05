@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { api } from '../../api'
 import { formatPrice } from '../../lib/format'
 import { getRecentlyViewed } from '../../lib/recentlyViewed'
+import ProductCard from '../product/ProductCard'
 import { searchHref } from './shared'
 
 // Click-and-drag horizontal scrolling for desktop rows (Trending Pages,
@@ -38,28 +39,6 @@ function useDragScroll() {
   return { ref, onMouseDown, onMouseMove, onMouseUp: end, onMouseLeave: end, onClickCapture }
 }
 
-export function SearchProductTile({ product, onNavigate }) {
-  const href = `/product/${product.id}`
-  const colour = product.variants[0]?.color
-  return (
-    <article className="relative flex min-w-0 flex-col text-left">
-      {/* Product imagery pending client catalog (Brief.md #6). */}
-      <Link to={href} onClick={onNavigate} tabIndex={-1} className="block aspect-[4/5] bg-surface-subtle" />
-      <div className="flex flex-col bg-white p-2">
-        <Link
-          to={href}
-          onClick={onNavigate}
-          className="line-clamp-2 text-[14px] leading-[1.4] capitalize text-ink"
-        >
-          {product.name}
-        </Link>
-        {colour && <p className="text-[14px] leading-[1.4] capitalize text-muted">{colour}</p>}
-        <p className="text-[14px] leading-[1.4] text-ink">{formatPrice(product.price)}</p>
-      </div>
-    </article>
-  )
-}
-
 // Recently viewed products, shown once there are at least 3 (as on
 // gymshark.com) so the row never looks half-empty.
 export function RecentActivity({ onNavigate }) {
@@ -87,7 +66,11 @@ export function RecentActivity({ onNavigate }) {
             draggable={false}
             className="flex w-60 shrink-0 overflow-hidden border border-line hover:border-ink"
           >
-            <span className="aspect-[3/4] h-20 shrink-0 bg-surface-subtle" />
+            <span className="aspect-[3/4] h-20 shrink-0 overflow-hidden bg-surface-subtle">
+              {product.image && (
+                <img src={product.image} alt="" draggable={false} className="h-full w-full object-cover" />
+              )}
+            </span>
             <span className="flex min-w-0 flex-col justify-center p-4 text-[14px] leading-[1.4] text-ink">
               <span className="truncate capitalize">{product.name}</span>
               <span className="truncate">{formatPrice(product.price)}</span>
@@ -164,7 +147,7 @@ export function ResultsGrid({ products, total, term, gender, onNavigate }) {
     <div className="gs-search-fade">
       <div className="grid grid-cols-2 gap-1">
         {products.map((product) => (
-          <SearchProductTile key={product.id} product={product} onNavigate={onNavigate} />
+          <ProductCard key={product.id} product={product} onNavigate={onNavigate} />
         ))}
       </div>
       {total >= 20 && (
@@ -209,7 +192,7 @@ export function NoResults({ term, gender, onClear, onNavigate }) {
           <h3 className="px-4 pb-4 font-sans text-[14px] leading-[1.4] text-faint">Trending</h3>
           <div className="grid grid-cols-2 gap-1">
             {trending.map((product) => (
-              <SearchProductTile key={product.id} product={product} onNavigate={onNavigate} />
+              <ProductCard key={product.id} product={product} onNavigate={onNavigate} />
             ))}
           </div>
         </div>

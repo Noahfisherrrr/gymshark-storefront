@@ -6,6 +6,7 @@ import Product from './pages/Product'
 import Cart from './pages/Cart'
 import Wishlist from './pages/Wishlist'
 import Login from './pages/Login'
+import Register from './pages/Register'
 import Account from './pages/Account'
 import NotFound from './pages/NotFound'
 
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="cart" element={<Cart />} />
         <Route path="wishlist" element={<Wishlist />} />
         <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
         <Route path="account" element={<Account />} />
         <Route path="*" element={<NotFound />} />
       </Route>

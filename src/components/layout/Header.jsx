@@ -1,4 +1,6 @@
 import { Link, NavLink } from 'react-router-dom'
+import { useCart } from '../../context/CartContext'
+import { useAuth } from '../../context/AuthContext'
 
 const NAV_LINKS = [
   { label: 'Shop All', to: '/shop' },
@@ -9,6 +11,9 @@ const NAV_LINKS = [
 ]
 
 export default function Header() {
+  const { itemCount } = useCart()
+  const { user } = useAuth()
+
   return (
     <header className="sticky top-0 z-50 border-b border-black/10 bg-brand-white">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 lg:px-8">
@@ -29,9 +34,9 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-4 text-sm font-semibold uppercase">
-          <Link to="/account">Account</Link>
+          <Link to="/account">{user ? user.name || 'Account' : 'Sign In'}</Link>
           <Link to="/wishlist">Wishlist</Link>
-          <Link to="/cart">Cart (0)</Link>
+          <Link to="/cart">Cart ({itemCount})</Link>
         </div>
       </div>
     </header>

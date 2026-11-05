@@ -7,11 +7,31 @@ the code will be swapped once confirmed.
 ## Stack
 
 - **Frontend:** React (Vite) + Tailwind CSS v4
-- **Backend / data / auth:** Supabase (Postgres, Auth, Storage, RLS)
+- **Backend / data / auth:** Supabase (Postgres, Auth, Storage, RLS) —
+  leaning choice, Firebase remains an option. The frontend never calls a
+  backend SDK directly (see "API layer" below), so this decision can still
+  be made or changed later without touching UI code.
 - **Payments:** Stripe (Checkout or Payment Element — TBD once accepted
   payment methods are confirmed)
-- **Hosting:** Vercel (frontend), Supabase-hosted backend
+- **Hosting:** Vercel (frontend), Supabase/Firebase-hosted backend
 - **Source control:** GitHub, private repo, single developer (you)
+
+## API layer (backend-agnostic by design)
+
+All data access goes through `src/api` — components never import a
+backend SDK directly:
+
+- `src/api/contract.js` — the interface every provider must implement
+  (products, cart, wishlist, auth, orders)
+- `src/api/providers/mock/` — a fully working mock backend (localStorage),
+  used right now so the UI functions end-to-end with no backend at all
+- `src/api/providers/supabase/` — a real Supabase implementation for
+  products/auth already written against the contract; cart/wishlist/orders
+  are explicit "not implemented yet" stubs pending schema decisions
+- `src/api/index.js` — picks the active provider via `VITE_API_PROVIDER`
+  (defaults to `mock`)
+- A future `providers/firebase/` would just be another file satisfying the
+  same contract — no component changes needed either way.
 
 ## Guiding principle
 
@@ -27,15 +47,22 @@ the *skin* becomes the client's brand.
 
 - [x] Vite + React + Tailwind v4 scaffold
 - [x] React Router routes: Home, Shop (PLP), Product (PDP), Cart, Wishlist,
-      Login, Account, 404
+      Login, Register, Account, 404
 - [x] Base layout: Header, Footer, nav structure matching Gymshark's IA
+- [x] Backend-agnostic API layer (`src/api`) with a working mock provider
+      and a Supabase provider skeleton — see "API layer" above
+- [x] Pages wired to real (mock) data: category/sort filtering, product
+      variant selection + stock-aware add-to-cart, cart quantity/remove,
+      discount codes, wishlist toggling, sign up/in/out, order history shell
 - [x] Supabase client stub (`src/lib/supabaseClient.js`) — inert until
       client provisions a project and keys land in `.env.local`
 - [x] Stripe client stub (`src/lib/stripeClient.js`) — inert until client
       provisions a verified Stripe account
 - [x] `.env.example` documenting required keys
-- Everything above runs today with placeholder content/greybox blocks —
-  no real product data, no auth, no payments yet.
+- The whole flow (browse → filter → product → add to cart → discount code
+  → wishlist → sign up/in → account) works today against mock data. No
+  real catalog, no real auth/payments, no real backend yet — that's all
+  one `VITE_API_PROVIDER=supabase` switch + schema/account setup away.
 
 ---
 

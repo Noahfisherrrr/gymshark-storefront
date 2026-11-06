@@ -3,13 +3,16 @@
 // imagery and which products feature are placeholders until the client
 // supplies them (Brief.md #5, #6); eventually this comes from the CMS.
 
+import { asset } from './assetVersion'
+
 // Placeholder footage: "Woman doing lunges with dumbbells at the gym"
 // (Mixkit #52110, free under the Mixkit License).
 export const HOME_HERO = {
   title: 'New season, new standard',
   copy: 'Performance essentials built for the work you put in.',
-  video: '/media/hero-training.mp4',
-  poster: '/media/hero-training-poster.webp',
+  video: asset('/media/hero-training.mp4'),
+  mobileVideo: asset('/media/hero-training-mobile.mp4'),
+  poster: asset('/media/hero-training-poster.webp'),
   ctas: [
     { label: 'Shop women', href: '/shop?category=women' },
     { label: 'Shop men', href: '/shop?category=men' },
@@ -31,8 +34,9 @@ export const HOME_PROMO_BANNER = {
 export const HOME_VIDEO_BANNER = {
   title: 'Train with intent',
   copy: 'Every rep counts. Gear up for your next session.',
-  video: '/media/gym-training.mp4',
-  poster: '/media/gym-training-poster.webp',
+  video: asset('/media/gym-training.mp4'),
+  mobileVideo: asset('/media/gym-training-mobile.mp4'),
+  poster: asset('/media/gym-training-poster.webp'),
   ctas: [
     { label: 'Shop new in', href: '/shop?category=new' },
     { label: 'Shop lifting', href: '/shop?category=men' },
@@ -72,21 +76,21 @@ export const HOME_BLOG = {
       id: 'blog-1',
       title: 'New in: the 2026 drop, decoded',
       excerpt: 'Everything landing this season, from everyday leggings to the next training essentials.',
-      image: '/media/products/p3.webp',
+      image: asset('/media/products/p3.webp'),
       href: '/help',
     },
     {
       id: 'blog-2',
       title: 'Dresses, re-imagined for the gym bag',
       excerpt: 'Why athleisure dresses are the move for rest days — more coming soon.',
-      image: '/media/products/p16.webp',
+      image: asset('/media/products/p16.webp'),
       href: '/help',
     },
     {
       id: 'blog-3',
       title: 'How we train: tips from the team',
       excerpt: 'Short, sharp advice for getting the most out of every session.',
-      image: '/media/products/p9.webp',
+      image: asset('/media/products/p9.webp'),
       href: '/help',
     },
   ],

@@ -7,6 +7,10 @@ replace with the client's own photography/video before launch (Brief.md #5, #6).
 
 - `hero-training.mp4` / `hero-training-poster.webp` — Mixkit #52110, woman doing lunges with dumbbells at the gym
 - `gym-training.mp4` / `gym-training-poster.webp` — Mixkit #14661, "Fitness man lifting weights at the gym"
+- `hero-training-mobile.mp4` / `gym-training-mobile.mp4` — 640px-wide, CRF 30
+  re-encodes of the above (`ffmpeg -vf scale=640:-2 -crf 30 -preset slow`),
+  served to mobile viewports via `<source media>` in `Banner.jsx` to cut the
+  hero's mobile payload (~6MB → ~190KB for hero-training).
 
 ## Product photos — Pexels (pexels.com, Pexels License)
 

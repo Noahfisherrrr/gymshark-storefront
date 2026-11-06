@@ -10,17 +10,20 @@ const prefersReducedMotion = () =>
 // from tablet up), a bottom gradient, copy + underline CTAs bottom-left,
 // and a pause control when the media is a video.
 //
-// `priority` marks the above-the-fold hero: its video is allowed to start
-// loading immediately. Every other instance waits until it's actually
-// near the viewport before fetching any video bytes, so off-screen banners
-// don't compete with the initial page load (a top Lighthouse TBT offender
-// here was both homepage videos downloading on mount regardless of
-// scroll position).
+// `priority` marks the above-the-fold hero: its poster renders immediately,
+// but the actual video (mobile and desktop variants) doesn't start fetching
+// until the window `load` event fires, so it doesn't compete with other
+// critical requests. Every other instance waits until it's actually near
+// the viewport before fetching any video bytes, so off-screen banners don't
+// compete with the initial page load either (a top Lighthouse TBT offender
+// here was both homepage videos downloading on mount regardless of scroll
+// position).
 export default function Banner({
   title,
   copy,
   ctas = [],
   video,
+  mobileVideo,
   poster,
   image,
   headingLevel = 'h2',
@@ -29,11 +32,25 @@ export default function Banner({
   const videoRef = useRef(null)
   const sectionRef = useRef(null)
   const [paused, setPaused] = useState(prefersReducedMotion)
-  const [nearViewport, setNearViewport] = useState(priority)
+  // The hero shows its poster immediately either way; for `priority` we hold
+  // off fetching/starting the actual video until the page has finished
+  // loading so it doesn't compete with other critical requests.
+  const [nearViewport, setNearViewport] = useState(false)
   const Heading = headingLevel
 
   useEffect(() => {
     if (nearViewport || !video) return
+
+    if (priority) {
+      if (typeof document === 'undefined' || document.readyState === 'complete') {
+        setNearViewport(true)
+        return
+      }
+      const onLoad = () => setNearViewport(true)
+      window.addEventListener('load', onLoad, { once: true })
+      return () => window.removeEventListener('load', onLoad)
+    }
+
     const el = sectionRef.current
     if (!el || typeof IntersectionObserver === 'undefined') {
       setNearViewport(true)
@@ -47,7 +64,13 @@ export default function Banner({
     )
     observer.observe(el)
     return () => observer.disconnect()
-  }, [nearViewport, video])
+  }, [nearViewport, video, priority])
+
+  useEffect(() => {
+    // <source> children only mount once nearViewport flips true, so the
+    // element needs an explicit reload to pick them up.
+    if (nearViewport) videoRef.current?.load()
+  }, [nearViewport])
 
   useEffect(() => {
     const el = videoRef.current
@@ -65,7 +88,6 @@ export default function Banner({
         {video ? (
           <video
             ref={videoRef}
-            src={nearViewport ? video : undefined}
             poster={poster}
             muted
             loop
@@ -74,7 +96,12 @@ export default function Banner({
             fetchPriority={priority ? 'high' : 'low'}
             aria-hidden="true"
             className="h-full w-full object-cover"
-          />
+          >
+            {nearViewport && mobileVideo && (
+              <source src={mobileVideo} media="(max-width: 767px)" type="video/mp4" />
+            )}
+            {nearViewport && <source src={video} type="video/mp4" />}
+          </video>
         ) : (
           image && (
             <img

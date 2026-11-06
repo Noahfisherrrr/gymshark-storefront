@@ -20,11 +20,16 @@
   Book for body copy) by a fixed URL instead of a build-hashed one —
   that lets them start downloading in parallel with the stylesheet
   instead of only being discovered after it parses.
+
+  The `?v=v1` query string is this project's cache-buster for unhashed
+  /public assets (see src/config/assetVersion.js) — vercel.json gives
+  /fonts/* a long, immutable Cache-Control, so bump this version (and the
+  matching one in index.html's preload links) whenever a font file changes.
 */
 
 @font-face {
   font-family: 'Plaak Gymshark';
-  src: url('/fonts/PlaakGymshark-Midweight.woff2') format('woff2');
+  src: url('/fonts/PlaakGymshark-Midweight.woff2?v=v1') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -32,7 +37,7 @@
 
 @font-face {
   font-family: 'Plaak Gymshark';
-  src: url('/fonts/PlaakGymshark-Heavyweight.woff2') format('woff2');
+  src: url('/fonts/PlaakGymshark-Heavyweight.woff2?v=v1') format('woff2');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -40,7 +45,7 @@
 
 @font-face {
   font-family: 'Skandia SN';
-  src: url('/fonts/SkandiaSN-Book.woff2') format('woff2');
+  src: url('/fonts/SkandiaSN-Book.woff2?v=v1') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -48,7 +53,7 @@
 
 @font-face {
   font-family: 'Skandia SN';
-  src: url('/fonts/SkandiaSN-Bold.woff2') format('woff2');
+  src: url('/fonts/SkandiaSN-Bold.woff2?v=v1') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;

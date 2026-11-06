@@ -3,9 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preload" as="image" href="/media/hero-training-poster.webp" fetchpriority="high" />
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/PlaakGymshark-Heavyweight.woff2" crossorigin />
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/SkandiaSN-Book.woff2" crossorigin />
+    <!-- ?v=v1 is this project's cache-buster for unhashed /public assets
+         (see src/config/assetVersion.js) — keep in sync with fonts.css. -->
+    <link rel="preload" as="image" href="/media/hero-training-poster.webp?v=v1" fetchpriority="high" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/PlaakGymshark-Heavyweight.woff2?v=v1" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/SkandiaSN-Book.woff2?v=v1" crossorigin />
     <title>Storefront (working title)</title>
   </head>
   <body>

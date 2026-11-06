@@ -57,7 +57,7 @@ async function upsertCategory(strapi, { name, slug }) {
   return created;
 }
 
-async function upsertProduct(strapi, product, categoryDocumentId) {
+async function upsertProduct(strapi, product, categoryDocumentIds) {
   const existing = await strapi.documents('api::product.product').findFirst({
     filters: { commerceProductId: product.id },
   });
@@ -83,7 +83,7 @@ async function upsertProduct(strapi, product, categoryDocumentId) {
       commerceProductId: product.id,
       description: product.description,
       gallery,
-      category: categoryDocumentId,
+      categories: categoryDocumentIds,
     },
   });
   await strapi.documents('api::product.product').publish({ documentId: created.documentId });
@@ -111,8 +111,8 @@ async function seed() {
     const { MOCK_PRODUCTS } = mockModule;
 
     for (const product of MOCK_PRODUCTS) {
-      const categoryDocumentId = categoryDocIds[product.category];
-      await upsertProduct(strapi, product, categoryDocumentId);
+      const categoryDocumentIds = [categoryDocIds[product.category]].filter(Boolean);
+      await upsertProduct(strapi, product, categoryDocumentIds);
     }
 
     console.log(`Done. ${MOCK_PRODUCTS.length} products processed.`);

@@ -43,9 +43,9 @@
       "multiple": true,
       "allowedTypes": ["images", "videos"]
     },
-    "category": {
+    "categories": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "manyToMany",
       "target": "api::category.category",
       "inversedBy": "products"
     },

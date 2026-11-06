@@ -158,26 +158,23 @@ async function getCurrentUser() {
   return toUser(user)
 }
 
-async function signUp({ email, password, name }) {
+async function signUp({ email, password, firstName, lastName, dateOfBirth }) {
   assertConfigured()
+  const name = `${firstName} ${lastName}`.trim()
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { name } },
+    options: { data: { name, firstName, lastName, dateOfBirth } },
   })
   if (error) throw error
-  return { id: data.user.id, email: data.user.email, name }
+  return { id: data.user.id, email: data.user.email, name, firstName, lastName, dateOfBirth }
 }
 
 async function signIn({ email, password }) {
   assertConfigured()
   const { data, error } = await supabase.auth.signInWithPassword({ email, password })
   if (error) throw error
-  return {
-    id: data.user.id,
-    email: data.user.email,
-    name: data.user.user_metadata?.name ?? '',
-  }
+  return toUser(data.user)
 }
 
 // Redirects the browser to Google/Apple; Supabase needs that provider
@@ -193,7 +190,14 @@ async function signInWithOAuth(provider) {
 }
 
 function toUser(user) {
-  return { id: user.id, email: user.email, name: user.user_metadata?.name ?? '' }
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.user_metadata?.name ?? '',
+    firstName: user.user_metadata?.firstName ?? '',
+    lastName: user.user_metadata?.lastName ?? '',
+    dateOfBirth: user.user_metadata?.dateOfBirth ?? '',
+  }
 }
 
 // localStorage (not state) because the confirmation email reopens the site in

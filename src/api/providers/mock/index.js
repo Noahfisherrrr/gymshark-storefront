@@ -221,15 +221,16 @@ async function getCurrentUser() {
   return readStore('session', null)
 }
 
-async function signUp({ email, password, name }) {
+async function signUp({ email, password, firstName, lastName, dateOfBirth }) {
   await delay()
   const users = getUsersDb()
   if (users.some((u) => u.email === email)) {
     throw new Error('An account with that email already exists')
   }
-  const user = { id: makeId('user'), email, name, password }
+  const name = `${firstName} ${lastName}`.trim()
+  const user = { id: makeId('user'), email, firstName, lastName, dateOfBirth, name, password }
   writeStore('users', [...users, user])
-  const session = { id: user.id, email: user.email, name: user.name }
+  const session = toSession(user)
   writeStore('session', session)
   return session
 }
@@ -238,9 +239,20 @@ async function signIn({ email, password }) {
   await delay()
   const user = getUsersDb().find((u) => u.email === email && u.password === password)
   if (!user) throw new Error('Invalid email or password')
-  const session = { id: user.id, email: user.email, name: user.name }
+  const session = toSession(user)
   writeStore('session', session)
   return session
+}
+
+function toSession(user) {
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    dateOfBirth: user.dateOfBirth,
+  }
 }
 
 // Google/Apple verify the email on their end, but the client still wants a

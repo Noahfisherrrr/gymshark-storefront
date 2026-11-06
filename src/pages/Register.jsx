@@ -6,18 +6,25 @@ import SocialSignInButtons from '../components/auth/SocialSignInButtons'
 export default function Register() {
   const { signUp } = useAuth()
   const navigate = useNavigate()
-  const [name, setName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [dateOfBirth, setDateOfBirth] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError(null)
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
     setSubmitting(true)
     try {
-      await signUp({ name, email, password })
+      await signUp({ firstName, lastName, dateOfBirth, email, password })
       navigate('/account')
     } catch (err) {
       setError(err.message)
@@ -38,14 +45,34 @@ export default function Register() {
         <span className="h-px flex-1 bg-black/10" />
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Full name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="w-full border border-black/20 px-3 py-2 text-sm"
-        />
+        <div className="flex gap-4">
+          <input
+            type="text"
+            placeholder="First name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+            className="w-1/2 border border-black/20 px-3 py-2 text-sm"
+          />
+          <input
+            type="text"
+            placeholder="Last name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+            className="w-1/2 border border-black/20 px-3 py-2 text-sm"
+          />
+        </div>
+        <label className="block text-xs uppercase text-black/40">
+          Date of birth
+          <input
+            type="date"
+            value={dateOfBirth}
+            onChange={(e) => setDateOfBirth(e.target.value)}
+            required
+            className="mt-1 w-full border border-black/20 px-3 py-2 text-sm normal-case"
+          />
+        </label>
         <input
           type="email"
           placeholder="Email"
@@ -59,6 +86,15 @@ export default function Register() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
+          minLength={6}
+          className="w-full border border-black/20 px-3 py-2 text-sm"
+        />
+        <input
+          type="password"
+          placeholder="Confirm password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           required
           minLength={6}
           className="w-full border border-black/20 px-3 py-2 text-sm"

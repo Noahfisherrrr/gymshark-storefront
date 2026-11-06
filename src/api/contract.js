@@ -34,7 +34,10 @@
  * @typedef {Object} User
  * @property {string} id
  * @property {string} email
- * @property {string} name
+ * @property {string} name  full name, derived from firstName + lastName
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} dateOfBirth  ISO date string (YYYY-MM-DD)
  *
  * @typedef {Object} Order
  * @property {string} id
@@ -84,7 +87,7 @@
  * }} wishlist
  * @property {{
  *   getCurrentUser: () => Promise<User|null>,
- *   signUp: (input: { email: string, password: string, name: string }) => Promise<User>,
+ *   signUp: (input: { email: string, password: string, firstName: string, lastName: string, dateOfBirth: string }) => Promise<User>,
  *   signIn: (input: { email: string, password: string }) => Promise<User>,
  *   signInWithOAuth: (provider: 'google'|'apple') => Promise<void>,  // doesn't grant access directly — a confirmation email must be clicked first, see onAuthStateChange
  *   confirmPendingOAuth: () => Promise<User>,  // dev-only: completes the mock provider's simulated confirmation email. Supabase sends a real email instead and confirms automatically when its link is clicked, so its implementation is unused in practice.

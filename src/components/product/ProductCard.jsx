@@ -8,9 +8,9 @@ import { HeartFilledIcon, HeartIcon } from '../header/icons'
 // gymshark.com's product card: 4:5 image with the wishlist heart in the
 // corner, then title (2 lines max), colour, and price — sale items show the
 // original price struck through in red after the current one. Hovering the
-// card eases the image in (their banner hover: .25s ease-in-out) and swaps
-// the info block for their quick-add size grid: 4 columns of square bordered
-// cells, label bottom-left. Picking a size adds it and slides the mini bag open.
+// card eases the image in (their banner hover: .25s ease-in-out) and, on
+// desktop, raises their quick-add tray over the image bottom: a 4-column size
+// grid whose cells invert on hover. Picking a size adds it and opens the mini bag.
 export default function ProductCard({ product, onNavigate, infoClassName = 'p-2 min-[1440px]:p-4' }) {
   const { isWishlisted, toggle } = useWishlist()
   const { addItem, openMiniBag } = useCart()
@@ -63,9 +63,54 @@ export default function ProductCard({ product, onNavigate, infoClassName = 'p-2 
         >
           {saved ? <HeartFilledIcon size={22} /> : <HeartIcon size={22} />}
         </button>
+
+        {/* Desktop-only like theirs: after a 500ms hover the tray appears and the grid slides up. */}
+        {sizes.length > 0 && (
+          <div
+            role="region"
+            aria-label={`Quick add ${product.name} sizes`}
+            className="invisible absolute inset-x-0 bottom-0 z-[1] flex items-center justify-center overflow-hidden bg-white p-4 opacity-0 transition-[visibility,opacity] delay-500 duration-0 max-lg:hidden group-hover/card:visible group-hover/card:opacity-100"
+          >
+            <div className="-mb-[140px] w-full transition-[margin] delay-500 duration-[80ms] ease-in-out group-hover/card:mb-0">
+              <ul className="flex w-full flex-wrap [&>li:nth-child(-n+4)>button]:mt-0 [&>li:nth-child(4n+1)>button]:ml-0 [&>li:only-child>button]:basis-auto [&>li:only-child>button]:grow">
+                {sizes.map((v) => {
+                  const soldOut = v.stock === 0
+                  const adding = addingVariantId === v.id
+                  return (
+                    <li key={v.id} className="contents">
+                      <button
+                        type="button"
+                        disabled={soldOut || adding}
+                        onClick={() => handlePickSize(v)}
+                        aria-label={`Add ${product.name}, size ${v.size}, to bag`}
+                        className={`relative -ml-px -mt-px flex min-h-[52px] shrink-0 grow-0 basis-1/4 flex-col items-start justify-end overflow-hidden border px-2 py-1 text-left text-[12px] leading-[1.3] uppercase ${
+                          soldOut
+                            ? 'cursor-not-allowed border-line bg-white text-[#bec2c6] hover:bg-line hover:text-faint'
+                            : adding
+                              ? 'cursor-progress border-ink bg-ink text-white'
+                              : 'border-line bg-white text-ink hover:z-[1] hover:border-ink hover:bg-ink hover:text-white'
+                        }`}
+                      >
+                        <span>{v.size}</span>
+                        {soldOut && (
+                          <svg
+                            aria-hidden="true"
+                            className="absolute left-[10%] top-[11%] z-[1] h-[79%] w-[80%]"
+                          >
+                            <line x1="0" y1="100%" x2="100%" y2="0" className="stroke-line" strokeWidth="1" />
+                          </svg>
+                        )}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className={`relative flex flex-col bg-white text-[14px] leading-[1.4] ${infoClassName}`}>
+      <div className={`flex flex-col bg-white text-[14px] leading-[1.4] ${infoClassName}`}>
         <Link
           to={href}
           onClick={onNavigate}
@@ -84,30 +129,6 @@ export default function ProductCard({ product, onNavigate, infoClassName = 'p-2 
             </span>
           )}
         </p>
-
-        {sizes.length > 0 && (
-          <div
-            className={`invisible absolute inset-x-0 top-0 z-10 bg-white group-hover/card:visible ${infoClassName}`}
-          >
-            <ul className="grid grid-cols-[repeat(4,3rem)] border-l border-t border-black/10">
-              {sizes.map((v) => (
-                <li key={v.id} className="border-b border-r border-black/10">
-                  <button
-                    type="button"
-                    disabled={v.stock === 0 || addingVariantId === v.id}
-                    onClick={() => handlePickSize(v)}
-                    aria-label={`Add ${product.name}, size ${v.size}, to bag`}
-                    className={`flex h-12 w-full items-end p-2 text-[11px] font-bold uppercase leading-none text-ink transition-colors duration-150 hover:bg-surface-subtle disabled:cursor-not-allowed disabled:hover:bg-transparent ${
-                      v.stock === 0 ? 'text-muted line-through' : ''
-                    }`}
-                  >
-                    {v.size}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
     </article>
   )

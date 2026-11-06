@@ -17,7 +17,7 @@ export const MOCK_PRODUCTS = [
     activities: ['weight-lifting', 'athleisure'],
     price: 32,
     description: 'Lightweight seamless tee built for high-rep training days.',
-    image: '/media/products/p1.jpg',
+    image: '/media/products/p1.webp',
     variants: [
       variant('p1-s-blk', 'S', 'Black', 8),
       variant('p1-m-blk', 'M', 'Black', 12),
@@ -34,7 +34,7 @@ export const MOCK_PRODUCTS = [
     activities: ['weight-lifting', 'running'],
     price: 28,
     description: '4-way stretch shorts with a zip pocket for essentials.',
-    image: '/media/products/p2.jpg',
+    image: '/media/products/p2.webp',
     variants: [
       variant('p2-s-blk', 'S', 'Black', 10),
       variant('p2-m-blk', 'M', 'Black', 10),
@@ -50,7 +50,7 @@ export const MOCK_PRODUCTS = [
     activities: ['athleisure', 'yoga', 'pilates'],
     price: 48,
     description: 'Second-skin ribbed leggings with a high waistband.',
-    image: '/media/products/p3.jpg',
+    image: '/media/products/p3.webp',
     variants: [
       variant('p3-xs-blk', 'XS', 'Black', 7),
       variant('p3-s-blk', 'S', 'Black', 9),
@@ -66,7 +66,7 @@ export const MOCK_PRODUCTS = [
     activities: ['yoga', 'pilates', 'athleisure'],
     price: 26,
     description: 'Medium-support sports bra with a racerback cut.',
-    image: '/media/products/p4.jpg',
+    image: '/media/products/p4.webp',
     variants: [
       variant('p4-xs-blk', 'XS', 'Black', 6),
       variant('p4-s-sage', 'S', 'Sage', 8),
@@ -82,7 +82,7 @@ export const MOCK_PRODUCTS = [
     activities: ['athleisure'],
     price: 54,
     description: 'Heavyweight cotton hoodie, relaxed oversized fit.',
-    image: '/media/products/p5.jpg',
+    image: '/media/products/p5.webp',
     variants: [
       variant('p5-s-grey', 'S', 'Grey', 5),
       variant('p5-m-grey', 'M', 'Grey', 11),
@@ -98,7 +98,7 @@ export const MOCK_PRODUCTS = [
     activities: ['running', 'hiking', 'athleisure'],
     price: 46,
     description: 'Brushed-back half-zip for warm-ups and rest days.',
-    image: '/media/products/p6.jpg',
+    image: '/media/products/p6.webp',
     variants: [
       variant('p6-m-black', 'M', 'Black', 3),
       variant('p6-l-black', 'L', 'Black', 4),
@@ -114,7 +114,7 @@ export const MOCK_PRODUCTS = [
     price: 39,
     compareAtPrice: 65,
     description: 'Retro track jacket, final-sale colorway.',
-    image: '/media/products/p7.jpg',
+    image: '/media/products/p7.webp',
     variants: [variant('p7-m-red', 'M', 'Red', 2), variant('p7-l-red', 'L', 'Red', 0)],
   },
   {
@@ -127,7 +127,7 @@ export const MOCK_PRODUCTS = [
     price: 18,
     compareAtPrice: 30,
     description: 'Moisture-wicking base layer, clearance pricing.',
-    image: '/media/products/p8.jpg',
+    image: '/media/products/p8.webp',
     variants: [variant('p8-s-black', 'S', 'Black', 6), variant('p8-m-black', 'M', 'Black', 6)],
   },
   {
@@ -139,7 +139,7 @@ export const MOCK_PRODUCTS = [
     activities: ['weight-lifting', 'athleisure'],
     price: 52,
     description: 'Scrunch-back leggings with a contour seam and squat-proof fabric.',
-    image: '/media/products/p9.jpg',
+    image: '/media/products/p9.webp',
     variants: [
       variant('p9-xs-black', 'XS', 'Black', 5),
       variant('p9-s-black', 'S', 'Black', 8),
@@ -156,7 +156,7 @@ export const MOCK_PRODUCTS = [
     price: 35,
     compareAtPrice: 50,
     description: 'Soft-touch flared leggings for studio sessions and rest days.',
-    image: '/media/products/p10.jpg',
+    image: '/media/products/p10.webp',
     variants: [variant('p10-s-black', 'S', 'Black', 9), variant('p10-m-brown', 'M', 'Brown', 4)],
   },
   {
@@ -168,7 +168,7 @@ export const MOCK_PRODUCTS = [
     activities: ['weight-lifting', 'pilates'],
     price: 24,
     description: 'Cropped tank top with a relaxed fit and dropped armholes.',
-    image: '/media/products/p11.jpg',
+    image: '/media/products/p11.webp',
     variants: [variant('p11-s-white', 'S', 'White', 7), variant('p11-m-black', 'M', 'Black', 5)],
   },
   {
@@ -181,7 +181,7 @@ export const MOCK_PRODUCTS = [
     price: 21,
     compareAtPrice: 30,
     description: 'Lightweight running shorts with a built-in liner and back pocket.',
-    image: '/media/products/p12.jpg',
+    image: '/media/products/p12.webp',
     variants: [variant('p12-xs-black', 'XS', 'Black', 6), variant('p12-s-pink', 'S', 'Pink', 3)],
   },
   {
@@ -193,7 +193,7 @@ export const MOCK_PRODUCTS = [
     activities: ['athleisure', 'weight-lifting'],
     price: 30,
     description: 'Dropped-shoulder oversized tee in heavyweight cotton.',
-    image: '/media/products/p13.jpg',
+    image: '/media/products/p13.webp',
     variants: [
       variant('p13-m-black', 'M', 'Black', 12),
       variant('p13-l-white', 'L', 'White', 8),
@@ -210,7 +210,7 @@ export const MOCK_PRODUCTS = [
     price: 32,
     compareAtPrice: 45,
     description: 'Tapered fleece joggers with cuffed ankles and zip pockets.',
-    image: '/media/products/p14.jpg',
+    image: '/media/products/p14.webp',
     variants: [variant('p14-m-grey', 'M', 'Grey', 10), variant('p14-l-black', 'L', 'Black', 7)],
   },
   {
@@ -222,7 +222,7 @@ export const MOCK_PRODUCTS = [
     activities: ['running', 'weight-lifting'],
     price: 16,
     description: 'Cushioned crew socks with arch support, pack of three.',
-    image: '/media/products/p15.jpg',
+    image: '/media/products/p15.webp',
     variants: [variant('p15-m-white', 'M', 'White', 20), variant('p15-l-black', 'L', 'Black', 20)],
   },
   {
@@ -235,7 +235,7 @@ export const MOCK_PRODUCTS = [
     price: 28,
     compareAtPrice: 40,
     description: 'Holdall gym bag with a separate shoe compartment.',
-    image: '/media/products/p16.jpg',
+    image: '/media/products/p16.webp',
     variants: [variant('p16-os-black', 'One Size', 'Black', 9)],
   },
   {
@@ -247,7 +247,7 @@ export const MOCK_PRODUCTS = [
     activities: ['weight-lifting'],
     price: 14,
     description: 'Padded cotton lifting straps for a locked-in grip on heavy pulls.',
-    image: '/media/products/p17.jpg',
+    image: '/media/products/p17.webp',
     variants: [variant('p17-os-black', 'One Size', 'Black', 15)],
   },
   {
@@ -259,7 +259,7 @@ export const MOCK_PRODUCTS = [
     activities: ['running', 'hiking'],
     price: 22,
     description: 'Six-panel cap with a curved peak and adjustable strap.',
-    image: '/media/products/p18.jpg',
+    image: '/media/products/p18.webp',
     variants: [variant('p18-os-black', 'One Size', 'Black', 12), variant('p18-os-grey', 'One Size', 'Grey', 6)],
   },
   {
@@ -271,7 +271,7 @@ export const MOCK_PRODUCTS = [
     activities: ['weight-lifting', 'running'],
     price: 12,
     description: 'Leak-proof shaker with a mixing ball and measurement markings.',
-    image: '/media/products/p19.jpg',
+    image: '/media/products/p19.webp',
     variants: [variant('p19-os-black', 'One Size', 'Black', 25)],
   },
   {
@@ -283,7 +283,7 @@ export const MOCK_PRODUCTS = [
     activities: ['hiking', 'athleisure'],
     price: 55,
     description: 'Water-resistant backpack with a padded laptop sleeve.',
-    image: '/media/products/p20.jpg',
+    image: '/media/products/p20.webp',
     variants: [variant('p20-os-black', 'One Size', 'Black', 8)],
   },
 ].map((product) => ({ compareAtPrice: null, activities: [], ...product }))

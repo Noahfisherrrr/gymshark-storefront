@@ -13,9 +13,18 @@
   tokens in src/index.css, nothing else depends on these exact files.
 */
 
+/*
+  Served from /public/fonts (stable, unhashed paths) rather than bundled
+  through src/assets, so index.html can <link rel="preload"> the two
+  above-the-fold weights (Plaak Heavyweight for the hero heading, Skandia
+  Book for body copy) by a fixed URL instead of a build-hashed one —
+  that lets them start downloading in parallel with the stylesheet
+  instead of only being discovered after it parses.
+*/
+
 @font-face {
   font-family: 'Plaak Gymshark';
-  src: url('./PlaakGymshark-Midweight.woff2') format('woff2');
+  src: url('/fonts/PlaakGymshark-Midweight.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -23,7 +32,7 @@
 
 @font-face {
   font-family: 'Plaak Gymshark';
-  src: url('./PlaakGymshark-Heavyweight.woff2') format('woff2');
+  src: url('/fonts/PlaakGymshark-Heavyweight.woff2') format('woff2');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -31,7 +40,7 @@
 
 @font-face {
   font-family: 'Skandia SN';
-  src: url('./SkandiaSN-Book.woff2') format('woff2');
+  src: url('/fonts/SkandiaSN-Book.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -39,7 +48,7 @@
 
 @font-face {
   font-family: 'Skandia SN';
-  src: url('./SkandiaSN-Bold.woff2') format('woff2');
+  src: url('/fonts/SkandiaSN-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;

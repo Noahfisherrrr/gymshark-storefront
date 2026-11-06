@@ -5,12 +5,12 @@ replace with the client's own photography/video before launch (Brief.md #5, #6).
 
 ## Video — Mixkit (mixkit.co, Mixkit License)
 
-- `hero-training.mp4` / `hero-training-poster.jpg` — Mixkit #52110, woman doing lunges with dumbbells at the gym
-- `gym-training.mp4` / `gym-training-poster.jpg` — Mixkit #14661, "Fitness man lifting weights at the gym"
+- `hero-training.mp4` / `hero-training-poster.webp` — Mixkit #52110, woman doing lunges with dumbbells at the gym
+- `gym-training.mp4` / `gym-training-poster.webp` — Mixkit #14661, "Fitness man lifting weights at the gym"
 
 ## Product photos — Pexels (pexels.com, Pexels License)
 
-`products/<product id>.jpg` ← Pexels photo id (https://www.pexels.com/photo/<id>/)
+`products/<product id>.webp` ← Pexels photo id (https://www.pexels.com/photo/<id>/)
 
 | Product | Pexels id |
 |---|---|

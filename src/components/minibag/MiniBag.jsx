@@ -5,6 +5,7 @@ import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
 import { useCartLines } from '../../hooks/useCartLines'
 import { formatPrice } from '../../lib/format'
+import { productThumb } from '../../lib/images'
 import {
   FREE_STANDARD_SHIPPING_THRESHOLD,
   LOW_STOCK_THRESHOLD,
@@ -33,7 +34,7 @@ const SNACKBOX_MS = 5000
 function Thumb({ src }) {
   return src ? (
     <img
-      src={src}
+      src={productThumb(src)}
       alt=""
       loading="lazy"
       className="h-full w-full object-cover transition-transform duration-[250ms] ease-in-out hover:scale-[1.04]"

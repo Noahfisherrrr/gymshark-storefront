@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { api } from '../../api'
 import { formatPrice } from '../../lib/format'
 import { getRecentlyViewed } from '../../lib/recentlyViewed'
+import { productThumb } from '../../lib/images'
 import ProductCard from '../product/ProductCard'
 import { searchHref } from './shared'
 
@@ -68,7 +69,12 @@ export function RecentActivity({ onNavigate }) {
           >
             <span className="aspect-[3/4] h-20 shrink-0 overflow-hidden bg-surface-subtle">
               {product.image && (
-                <img src={product.image} alt="" draggable={false} className="h-full w-full object-cover" />
+                <img
+                  src={productThumb(product.image)}
+                  alt=""
+                  draggable={false}
+                  className="h-full w-full object-cover"
+                />
               )}
             </span>
             <span className="flex min-w-0 flex-col justify-center p-4 text-[14px] leading-[1.4] text-ink">

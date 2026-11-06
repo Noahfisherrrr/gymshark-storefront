@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useWishlist } from '../../context/WishlistContext'
 import { useCart } from '../../context/CartContext'
 import { formatPrice } from '../../lib/format'
+import { productThumb } from '../../lib/images'
 import { HeartFilledIcon, HeartIcon } from '../header/icons'
 
 // gymshark.com's product card: 4:5 image with the wishlist heart in the
@@ -67,7 +68,7 @@ export default function ProductCard({ product, onNavigate, infoClassName = 'p-2 
         >
           {product.image && (
             <img
-              src={product.image}
+              src={productThumb(product.image)}
               alt=""
               loading="lazy"
               draggable={false}

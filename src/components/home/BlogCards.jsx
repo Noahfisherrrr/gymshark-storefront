@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { productThumb } from '../../lib/images'
 import { SECTION_HEADING } from './ProductCarousel'
 
 // Editorial cards block (gymshark.com's "Conditioning" blog teaser): title +
@@ -24,7 +25,7 @@ export default function BlogCards({ title, href, posts }) {
             <Link to={post.href} className="group block">
               <div className="aspect-[4/3] w-full overflow-hidden bg-surface-subtle">
                 <img
-                  src={post.image}
+                  src={productThumb(post.image)}
                   alt=""
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"

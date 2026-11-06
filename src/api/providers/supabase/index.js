@@ -151,7 +151,11 @@ async function getCurrentUser() {
   const { data, error } = await supabase.auth.getUser()
   if (error) return null
   const user = data.user
-  return user ? { id: user.id, email: user.email, name: user.user_metadata?.name ?? '' } : null
+  if (!user) return null
+  // An OAuth session that hasn't cleared the confirmation-email gate yet
+  // (see onAuthStateChange) shouldn't count as a signed-in user on reload.
+  if (hasOAuthIdentity(user) && user.user_metadata?.oauth_authorized !== true) return null
+  return toUser(user)
 }
 
 async function signUp({ email, password, name }) {
@@ -188,15 +192,78 @@ async function signInWithOAuth(provider) {
   if (error) throw error
 }
 
-// Catches the session Supabase creates after the OAuth redirect lands back
-// on the site (supabase-js parses it out of the URL automatically).
+function toUser(user) {
+  return { id: user.id, email: user.email, name: user.user_metadata?.name ?? '' }
+}
+
+// localStorage (not state) because the confirmation email reopens the site in
+// a fresh page load — a plain variable wouldn't survive that round trip.
+const PENDING_OAUTH_KEY = 'gymshark:pendingOAuthEmail'
+
+// Google/Apple already verify the email, but the client wants an extra
+// authorization step: the OAuth sign-in above establishes a real Supabase
+// session immediately, so we sign it straight back out and fire off
+// Supabase's own magic-link email to the same address as the "confirm this
+// sign-in" step. Clicking that link re-authenticates (a second SIGNED_IN
+// event below), at which point we flag the account authorized for good.
+async function demoteUnauthorizedOAuthSession(session, callback) {
+  const email = session.user.email
+  await supabase.auth.signOut()
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { shouldCreateUser: false, emailRedirectTo: `${window.location.origin}/account` },
+  })
+  if (error) throw error
+  window.localStorage.setItem(PENDING_OAUTH_KEY, email)
+  callback({ user: null, pendingConfirmationEmail: email })
+}
+
+// `identities` lists every provider ever linked to the account, which is a
+// more reliable signal than `app_metadata.provider` (not guaranteed to still
+// read "google"/"apple" once the user has also signed in by email/OTP).
+function hasOAuthIdentity(user) {
+  return Boolean(user.identities?.some((identity) => identity.provider === 'google' || identity.provider === 'apple'))
+}
+
 function onAuthStateChange(callback) {
   if (!isSupabaseConfigured) return () => {}
   const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-    const user = session?.user
-    callback(user ? { id: user.id, email: user.email, name: user.user_metadata?.name ?? '' } : null)
+    if (!session?.user) {
+      callback({ user: null, pendingConfirmationEmail: null })
+      return
+    }
+
+    const { user } = session
+    const alreadyAuthorized = user.user_metadata?.oauth_authorized === true
+    const awaitingThisEmail = window.localStorage.getItem(PENDING_OAUTH_KEY) === user.email
+
+    // Checked first, regardless of provider: this is the session created by
+    // clicking the confirmation email's link, so it's the real sign-in.
+    if (awaitingThisEmail && !alreadyAuthorized) {
+      window.localStorage.removeItem(PENDING_OAUTH_KEY)
+      supabase.auth.updateUser({ data: { oauth_authorized: true } }).catch(() => {})
+      callback({ user: toUser(user), pendingConfirmationEmail: null })
+      return
+    }
+
+    if (hasOAuthIdentity(user) && !alreadyAuthorized) {
+      // First time this Google/Apple account has signed in — hold access and
+      // send the confirmation email instead of calling back with a user.
+      demoteUnauthorizedOAuthSession(session, callback).catch(() =>
+        callback({ user: null, pendingConfirmationEmail: null }),
+      )
+      return
+    }
+
+    callback({ user: toUser(user), pendingConfirmationEmail: null })
   })
   return () => data.subscription.unsubscribe()
+}
+
+// Real confirmation happens by clicking the emailed link (handled above);
+// nothing for the UI to call directly against Supabase.
+async function confirmPendingOAuth() {
+  throw new Error('Click the confirmation link in your email to finish signing in.')
 }
 
 async function signOut() {
@@ -217,6 +284,6 @@ export const supabaseApi = {
     clear: clearCart,
   },
   wishlist: { get: getWishlist, toggle: toggleWishlist },
-  auth: { getCurrentUser, signUp, signIn, signInWithOAuth, onAuthStateChange, signOut },
+  auth: { getCurrentUser, signUp, signIn, signInWithOAuth, confirmPendingOAuth, onAuthStateChange, signOut },
   orders: { list: listOrders, applyDiscountCode },
 }

@@ -243,30 +243,51 @@ async function signIn({ email, password }) {
   return session
 }
 
-// No real OAuth app exists in mock mode, so simulate an instant social
-// sign-in — reuses the same fake account across calls, like a real IdP would.
+// Google/Apple verify the email on their end, but the client still wants a
+// confirmation email as the final authorization step before access is
+// granted. There's no real mailbox in mock mode, so this just records a
+// pending confirmation and notifies listeners — `confirmPendingOAuth` below
+// stands in for "the user clicked the link in their email."
+let oauthListeners = []
+
+function notifyOAuthListeners(update) {
+  oauthListeners.forEach((listener) => listener(update))
+}
+
 async function signInWithOAuth(provider) {
   await delay()
   const email = `${provider}-user@example.com`
+  const name = provider === 'google' ? 'Google User' : 'Apple User'
+  writeStore('pendingOAuthConfirmation', { provider, email, name })
+  console.info(`[mock auth] Confirmation email "sent" to ${email}. Use the dev button to simulate clicking it.`)
+  notifyOAuthListeners({ user: null, pendingConfirmationEmail: email })
+}
+
+async function confirmPendingOAuth() {
+  await delay()
+  const pending = readStore('pendingOAuthConfirmation', null)
+  if (!pending) throw new Error('No pending confirmation to complete')
+
   const users = getUsersDb()
-  let user = users.find((u) => u.email === email)
+  let user = users.find((u) => u.email === pending.email)
   if (!user) {
-    user = {
-      id: makeId('user'),
-      email,
-      name: provider === 'google' ? 'Google User' : 'Apple User',
-      password: null,
-    }
+    user = { id: makeId('user'), email: pending.email, name: pending.name, password: null }
     writeStore('users', [...users, user])
   }
   const session = { id: user.id, email: user.email, name: user.name }
   writeStore('session', session)
+  writeStore('pendingOAuthConfirmation', null)
+  notifyOAuthListeners({ user: session, pendingConfirmationEmail: null })
   return session
 }
 
-// Mock auth has no external session events (no redirect round-trip) to listen for.
-function onAuthStateChange() {
-  return () => {}
+// Mock auth has no real redirect round-trip; state only changes via the
+// listeners notified above (sign-up/sign-in/sign-out all go through these too).
+function onAuthStateChange(callback) {
+  oauthListeners.push(callback)
+  return () => {
+    oauthListeners = oauthListeners.filter((listener) => listener !== callback)
+  }
 }
 
 async function signOut() {
@@ -302,6 +323,6 @@ export const mockApi = {
     clear: clearCart,
   },
   wishlist: { get: getWishlist, toggle: toggleWishlist },
-  auth: { getCurrentUser, signUp, signIn, signInWithOAuth, onAuthStateChange, signOut },
+  auth: { getCurrentUser, signUp, signIn, signInWithOAuth, confirmPendingOAuth, onAuthStateChange, signOut },
   orders: { list: listOrders, applyDiscountCode },
 }

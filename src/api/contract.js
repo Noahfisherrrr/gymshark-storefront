@@ -86,8 +86,9 @@
  *   getCurrentUser: () => Promise<User|null>,
  *   signUp: (input: { email: string, password: string, name: string }) => Promise<User>,
  *   signIn: (input: { email: string, password: string }) => Promise<User>,
- *   signInWithOAuth: (provider: 'google'|'apple') => Promise<User|void>,  // mock resolves a User; supabase redirects the browser and resolves void
- *   onAuthStateChange: (callback: (user: User|null) => void) => (() => void),  // returns an unsubscribe function
+ *   signInWithOAuth: (provider: 'google'|'apple') => Promise<void>,  // doesn't grant access directly — a confirmation email must be clicked first, see onAuthStateChange
+ *   confirmPendingOAuth: () => Promise<User>,  // dev-only: completes the mock provider's simulated confirmation email. Supabase sends a real email instead and confirms automatically when its link is clicked, so its implementation is unused in practice.
+ *   onAuthStateChange: (callback: (update: { user: User|null, pendingConfirmationEmail: string|null }) => void) => (() => void),  // returns an unsubscribe function
  *   signOut: () => Promise<void>,
  * }} auth
  * @property {{

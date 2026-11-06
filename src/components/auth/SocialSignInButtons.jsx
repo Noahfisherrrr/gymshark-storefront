@@ -21,23 +21,63 @@ function AppleIcon() {
   )
 }
 
+// Google/Apple verify the email themselves, but the client wants our own
+// confirmation email as the final authorization step too (see AuthContext /
+// the supabase + mock providers' auth.onAuthStateChange). The mock provider
+// has no real mailbox, so it needs a dev-only button to stand in for the
+// click; Supabase sends a real email and confirms automatically.
+const isMockProvider = import.meta.env.VITE_API_PROVIDER !== 'supabase'
+
 export default function SocialSignInButtons({ onError }) {
-  const { signInWithOAuth } = useAuth()
+  const { signInWithOAuth, pendingConfirmationEmail, confirmPendingOAuth } = useAuth()
   const navigate = useNavigate()
   const [pending, setPending] = useState(null)
+  const [confirming, setConfirming] = useState(false)
 
   async function handleClick(provider) {
     onError?.(null)
     setPending(provider)
     try {
-      const signedInUser = await signInWithOAuth(provider)
-      // Only the mock provider resolves a user directly; Supabase redirects
-      // the browser away and the session is picked up on the way back.
-      if (signedInUser) navigate('/account')
+      await signInWithOAuth(provider)
     } catch (err) {
       onError?.(err.message)
+    } finally {
       setPending(null)
     }
+  }
+
+  async function handleDevConfirm() {
+    onError?.(null)
+    setConfirming(true)
+    try {
+      await confirmPendingOAuth()
+      navigate('/account')
+    } catch (err) {
+      onError?.(err.message)
+    } finally {
+      setConfirming(false)
+    }
+  }
+
+  if (pendingConfirmationEmail) {
+    return (
+      <div className="border border-black/20 p-4 text-sm">
+        <p>
+          We sent a confirmation link to <strong>{pendingConfirmationEmail}</strong>. Click it to
+          finish signing in and authorize this account.
+        </p>
+        {isMockProvider && (
+          <button
+            type="button"
+            onClick={handleDevConfirm}
+            disabled={confirming}
+            className="mt-3 w-full border border-black/20 py-2 text-xs font-semibold uppercase disabled:opacity-40"
+          >
+            {confirming ? 'Confirming…' : 'Dev: simulate clicking the email link'}
+          </button>
+        )}
+      </div>
+    )
   }
 
   return (

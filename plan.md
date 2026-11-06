@@ -208,10 +208,13 @@ environment variables.
 ## Phase 5 — Auth & customer accounts
 
 - [ ] Supabase Auth: email/password
-- [x] Google + Apple sign-in UI wired through `src/api` (mock provider simulates
-      it instantly; Supabase provider calls `signInWithOAuth` for real) — needs
-      Google/Apple OAuth client credentials entered into the client's Supabase
-      project once it exists (Brief #14) before it actually works end-to-end
+- [x] Google + Apple sign-in UI wired through `src/api` — per-task requirement,
+      access is held until a confirmation email is clicked (sent via Supabase's
+      own magic-link email), even though Google/Apple already verify the
+      address; mock provider simulates the same gate with a dev-only button —
+      still needs Google/Apple OAuth client credentials entered into the
+      client's Supabase project once it exists (Brief #14) before it actually
+      works end-to-end
 - [ ] Account dashboard: profile, saved addresses, order history, return
       requests (scope depends on Brief #8 answer)
 

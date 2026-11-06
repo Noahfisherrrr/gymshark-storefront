@@ -6,6 +6,9 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  // Set while a Google/Apple sign-in is waiting on the confirmation email
+  // being clicked — see onAuthStateChange in the supabase/mock providers.
+  const [pendingConfirmationEmail, setPendingConfirmationEmail] = useState(null)
 
   useEffect(() => {
     api.auth
@@ -13,9 +16,12 @@ export function AuthProvider({ children }) {
       .then(setUser)
       .finally(() => setLoading(false))
 
-    // Picks up the session Supabase creates once a Google/Apple OAuth
-    // redirect lands back on the site; a no-op under the mock provider.
-    return api.auth.onAuthStateChange(setUser)
+    // Picks up both the OAuth confirmation state and the real session once
+    // the confirmation email's link (or the mock's dev button) is used.
+    return api.auth.onAuthStateChange(({ user: nextUser, pendingConfirmationEmail: pending }) => {
+      setUser(nextUser)
+      setPendingConfirmationEmail(pending ?? null)
+    })
   }, [])
 
   async function signIn(credentials) {
@@ -30,22 +36,36 @@ export function AuthProvider({ children }) {
     return newUser
   }
 
-  // Resolves to a User under the mock provider (instant fake sign-in); under
-  // Supabase it redirects the browser away, so there's nothing useful to
-  // return — onAuthStateChange above picks up the session on return.
+  // Never resolves a signed-in user directly — Google/Apple sign-in always
+  // holds for the confirmation email; onAuthStateChange above reports the
+  // pending state and, later, the real session.
   async function signInWithOAuth(provider) {
-    const signedInUser = await api.auth.signInWithOAuth(provider)
-    if (signedInUser) setUser(signedInUser)
-    return signedInUser
+    await api.auth.signInWithOAuth(provider)
+  }
+
+  async function confirmPendingOAuth() {
+    return api.auth.confirmPendingOAuth()
   }
 
   async function signOut() {
     await api.auth.signOut()
     setUser(null)
+    setPendingConfirmationEmail(null)
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signInWithOAuth, signOut }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        pendingConfirmationEmail,
+        signIn,
+        signUp,
+        signInWithOAuth,
+        confirmPendingOAuth,
+        signOut,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )

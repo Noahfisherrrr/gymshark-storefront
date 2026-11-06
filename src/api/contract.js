@@ -17,6 +17,7 @@
  * @property {string} name
  * @property {string} category
  * @property {'f'|'m'|'u'} gender  f = women, m = men, u = unisex
+ * @property {string[]} activities  slugs from src/config/activities.js (e.g. 'running', 'yoga')
  * @property {number} price
  * @property {number|null} compareAtPrice  original price when on sale, else null
  * @property {string} description
@@ -54,6 +55,7 @@
  *     search?: string,
  *     sort?: string,
  *     gender?: 'f'|'m',   // includes unisex products
+ *     activity?: string,  // activity slug, matches if it's in the product's `activities`
  *     onSale?: boolean,   // only products with a compareAtPrice
  *     limit?: number,
  *   }) => Promise<Product[]>,

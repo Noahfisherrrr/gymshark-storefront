@@ -31,12 +31,14 @@ function notImplemented(feature) {
 // Aliases snake_case columns to the contract's camelCase field names.
 const PRODUCT_COLUMNS = '*, compareAtPrice:compare_at_price, variants:product_variants(*)'
 
-async function listProducts({ category, search, sort, gender, onSale, limit } = {}) {
+async function listProducts({ category, search, sort, gender, activity, onSale, limit } = {}) {
   assertConfigured()
   let query = supabase.from('products').select(PRODUCT_COLUMNS)
 
   if (category && category !== 'all') query = query.eq('category', category)
   if (gender) query = query.in('gender', [gender, 'u'])
+  // Assumes `activities` is a text[] column (see src/config/activities.js for slugs).
+  if (activity) query = query.contains('activities', [activity])
   if (onSale) query = query.not('compare_at_price', 'is', null)
   if (search) query = query.ilike('name', `%${search}%`)
   if (sort === 'price-asc') query = query.order('price', { ascending: true })

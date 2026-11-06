@@ -21,7 +21,7 @@ function findVariant(productId, variantId) {
 
 // ---- products ---------------------------------------------------------
 
-async function listProducts({ category, search, sort, gender, onSale, limit } = {}) {
+async function listProducts({ category, search, sort, gender, activity, onSale, limit } = {}) {
   await delay()
   let items = [...MOCK_PRODUCTS]
 
@@ -29,6 +29,7 @@ async function listProducts({ category, search, sort, gender, onSale, limit } = 
     items = items.filter((p) => p.category === category)
   }
   if (gender) items = items.filter((p) => matchesGender(gender, p.gender))
+  if (activity) items = items.filter((p) => p.activities.includes(activity))
   if (onSale) items = items.filter((p) => p.compareAtPrice !== null)
 
   if (search) {

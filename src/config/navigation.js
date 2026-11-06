@@ -1,3 +1,5 @@
+import { ACTIVITIES } from './activities'
+
 // Header content. Structure mirrors gymshark.com's mega-menu one-to-one;
 // labels are generic placeholders until the client supplies their own
 // taxonomy and collection names (Brief.md #4, #6). Eventually this should
@@ -27,6 +29,18 @@ function group(category, label, links) {
   return { label, links: links.map((l) => shop(category, l)) }
 }
 
+// Activity links filter by the product's `activities` tags (src/api/data/
+// products.mock.js), unlike `shop()`'s `collection` param which is cosmetic.
+function activityGroup(category) {
+  return {
+    label: 'Shop By Activity',
+    links: ACTIVITIES.map(({ slug, label }) => ({
+      label,
+      href: `/shop?category=${category}&activity=${slug}`,
+    })),
+  }
+}
+
 export const NAV_CATEGORIES = [
   {
     id: 'women',
@@ -37,7 +51,7 @@ export const NAV_CATEGORIES = [
       group('women', 'Leggings', ['All Leggings', 'Straight Leg Leggings', 'Scrunch Leggings', 'High-Waisted Leggings', 'Flare Leggings', 'Leggings With Pockets', 'Seamless Leggings', 'Short Leggings', 'Tall Leggings']),
       group('women', 'Products', ['All Products', 'Leggings', 'Sports Bras', 'T-Shirts & Tops', 'Shorts', 'Hoodies & Sweatshirts', 'Joggers & Sweatpants', 'Matching Sets', 'Tracksuits', 'Jackets', 'Outerwear', 'Modest Workout Clothes', 'One Piece Bodysuits']),
       group('women', 'Shop By Collection', ['Vital', 'Everyday Seamless', 'Lift Seamless', 'Training', 'Soft Touch']),
-      group('women', 'Shop By Activity', ['Running', 'Lifting', 'Hybrid Training', 'Pilates', 'Athleisure']),
+      activityGroup('women'),
       group('women', 'Accessories', ['All Accessories', 'All Socks', 'Gym Bags', 'All Equipment', "Women's Underwear & Basics"]),
       group('women', 'Last Chance', ['Last Chance']),
       group('women', 'Explore', ['Leggings Guide', 'Leggings Size Guide', 'Sports Bra Guide', 'Running Guide', 'New Here?', 'Your Edit', 'Loyalty']),
@@ -56,7 +70,7 @@ export const NAV_CATEGORIES = [
       group('men', 'T-Shirts & Tops', ['T-Shirts & Tops', 'Tank Tops', 'Muscle Fit Shirts', 'Short Sleeve', 'Long Sleeve Tops', 'Oversized T-Shirts', 'Compression Fit T-Shirts', 'Black T-Shirts']),
       group('men', 'Products', ['All Products', 'T-Shirts & Tops', 'Shorts', 'Hoodies & Sweatshirts', 'Joggers & Sweatpants', 'Pants', 'Tracksuits', 'Long Sleeve Tops', 'Jackets', 'Outerwear', "Men's Underwear & Basics", 'Base Layers']),
       group('men', 'Shop By Collection', ['Power', 'Conditioning Club', 'Arrival', 'Crest', 'Vital Seamless', 'Geo Seamless']),
-      group('men', 'Shop By Activity', ['Running', 'Hybrid Training', 'Lifting', 'Rest Day']),
+      activityGroup('men'),
       group('men', 'Accessories', ['All Accessories', 'All Socks', 'Gym Bags', 'All Equipment', "Men's Underwear & Basics"]),
       group('men', 'Last Chance', ['Last Chance Styles']),
       group('men', 'Explore', ['Shorts Guide', 'Shorts Length Guide', 'Running Guide', 'Your Edit', 'New Here?', 'Loyalty']),

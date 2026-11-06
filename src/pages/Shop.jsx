@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { api } from '../api'
 import ProductCard from '../components/product/ProductCard'
+import { ACTIVITIES } from '../config/activities'
 
 const CATEGORIES = ['all', 'men', 'women', 'accessories', 'new', 'sale']
 
@@ -17,6 +18,7 @@ function listQuery(category) {
 export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams()
   const category = searchParams.get('category') ?? 'all'
+  const activity = searchParams.get('activity') ?? 'all'
   const sort = searchParams.get('sort') ?? 'featured'
   const search = searchParams.get('q') ?? ''
 
@@ -26,10 +28,10 @@ export default function Shop() {
   useEffect(() => {
     setLoading(true)
     api.products
-      .list({ ...listQuery(category), sort, search })
+      .list({ ...listQuery(category), activity: activity === 'all' ? undefined : activity, sort, search })
       .then(setProducts)
       .finally(() => setLoading(false))
-  }, [category, sort, search])
+  }, [category, activity, sort, search])
 
   function updateParam(key, value) {
     const next = new URLSearchParams(searchParams)
@@ -58,6 +60,31 @@ export default function Shop() {
               </li>
             ))}
           </ul>
+
+          <p className="mt-6 text-sm font-semibold uppercase">Activity</p>
+          <ul className="mt-3 space-y-2 text-sm">
+            <li>
+              <button
+                type="button"
+                onClick={() => updateParam('activity', 'all')}
+                className={activity === 'all' ? 'font-bold' : 'text-black/60'}
+              >
+                All
+              </button>
+            </li>
+            {ACTIVITIES.map(({ slug, label }) => (
+              <li key={slug}>
+                <button
+                  type="button"
+                  onClick={() => updateParam('activity', slug)}
+                  className={slug === activity ? 'font-bold' : 'text-black/60'}
+                >
+                  {label}
+                </button>
+              </li>
+            ))}
+          </ul>
+
           <p className="mt-6 text-xs text-black/50">
             Size/color/price filters pending catalog taxonomy (Brief.md #6, #7).
           </p>

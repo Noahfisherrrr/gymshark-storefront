@@ -31,18 +31,34 @@ function notImplemented(feature) {
 // Aliases snake_case columns to the contract's camelCase field names.
 const PRODUCT_COLUMNS = '*, compareAtPrice:compare_at_price, variants:product_variants(*)'
 
-async function listProducts({ category, search, sort, gender, activity, onSale, limit } = {}) {
+async function listProducts({
+  category,
+  search,
+  sort,
+  gender,
+  activity,
+  type,
+  priceMin,
+  priceMax,
+  onSale,
+  limit,
+} = {}) {
   assertConfigured()
   let query = supabase.from('products').select(PRODUCT_COLUMNS)
 
   if (category && category !== 'all') query = query.eq('category', category)
   if (gender) query = query.in('gender', [gender, 'u'])
-  // Assumes `activities` is a text[] column (see src/config/activities.js for slugs).
-  if (activity) query = query.contains('activities', [activity])
+  // Assumes `activities` is a text[] column (see src/config/activities.js for slugs);
+  // `overlaps` matches rows where any of the given activities is present.
+  if (activity) query = query.overlaps('activities', activity.split(',').filter(Boolean))
+  if (type) query = query.in('type', type.split(',').filter(Boolean))
+  if (priceMin != null) query = query.gte('price', priceMin)
+  if (priceMax != null) query = query.lte('price', priceMax)
   if (onSale) query = query.not('compare_at_price', 'is', null)
   if (search) query = query.ilike('name', `%${search}%`)
   if (sort === 'price-asc') query = query.order('price', { ascending: true })
   if (sort === 'price-desc') query = query.order('price', { ascending: false })
+  if (sort === 'newest') query = query.order('created_at', { ascending: false })
   if (limit) query = query.limit(limit)
 
   const { data, error } = await query

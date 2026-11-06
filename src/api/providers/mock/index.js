@@ -21,7 +21,18 @@ function findVariant(productId, variantId) {
 
 // ---- products ---------------------------------------------------------
 
-async function listProducts({ category, search, sort, gender, activity, onSale, limit } = {}) {
+async function listProducts({
+  category,
+  search,
+  sort,
+  gender,
+  activity,
+  type,
+  priceMin,
+  priceMax,
+  onSale,
+  limit,
+} = {}) {
   await delay()
   let items = [...MOCK_PRODUCTS]
 
@@ -29,7 +40,16 @@ async function listProducts({ category, search, sort, gender, activity, onSale, 
     items = items.filter((p) => p.category === category)
   }
   if (gender) items = items.filter((p) => matchesGender(gender, p.gender))
-  if (activity) items = items.filter((p) => p.activities.includes(activity))
+  if (activity) {
+    const slugs = activity.split(',').filter(Boolean)
+    items = items.filter((p) => p.activities.some((a) => slugs.includes(a)))
+  }
+  if (type) {
+    const slugs = type.split(',').filter(Boolean)
+    items = items.filter((p) => slugs.includes(p.type))
+  }
+  if (priceMin != null) items = items.filter((p) => p.price >= priceMin)
+  if (priceMax != null) items = items.filter((p) => p.price <= priceMax)
   if (onSale) items = items.filter((p) => p.compareAtPrice !== null)
 
   if (search) {
@@ -41,6 +61,7 @@ async function listProducts({ category, search, sort, gender, activity, onSale, 
 
   if (sort === 'price-asc') items.sort((a, b) => a.price - b.price)
   if (sort === 'price-desc') items.sort((a, b) => b.price - a.price)
+  if (sort === 'newest') items.reverse()
 
   return limit ? items.slice(0, limit) : items
 }

@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { api } from '../../api'
 import { useAuth } from '../../context/AuthContext'
 import { formatDate, formatPrice } from '../../lib/format'
-import { ChevronLeftIcon } from '../../components/header/icons'
+import BackToAccountLink from '../../components/account/BackToAccountLink'
 
 export default function OrderHistory() {
   const { user } = useAuth()
@@ -15,10 +14,7 @@ export default function OrderHistory() {
 
   return (
     <div>
-      <Link to="/account" className="mb-4 inline-flex items-center gap-1 text-sm uppercase text-black/60 hover:text-brand-black">
-        <ChevronLeftIcon size={16} />
-        Account
-      </Link>
+      <BackToAccountLink />
       <h2 className="text-lg font-bold uppercase">Order History</h2>
       {orders.length === 0 ? (
         <p className="mt-2 text-sm text-black/50">No orders yet.</p>

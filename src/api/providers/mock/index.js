@@ -371,7 +371,7 @@ async function changePassword(userId, { currentPassword, newPassword }) {
   writeStore('users', users.map((u) => (u.id === userId ? { ...u, password: newPassword } : u)))
 }
 
-const UNRESOLVED_ORDER_STATUSES = new Set(['delivered', 'cancelled'])
+const RESOLVED_ORDER_STATUSES = new Set(['delivered', 'cancelled'])
 
 async function deleteAccount(userId, { currentPassword }) {
   await delay()
@@ -383,7 +383,7 @@ async function deleteAccount(userId, { currentPassword }) {
   }
 
   const pendingOrders = readStore('orders', []).filter(
-    (o) => o.userId === userId && !UNRESOLVED_ORDER_STATUSES.has(o.status?.toLowerCase()),
+    (o) => o.userId === userId && !RESOLVED_ORDER_STATUSES.has(o.status?.toLowerCase()),
   )
   if (pendingOrders.length > 0) {
     throw new Error(

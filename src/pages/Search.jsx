@@ -2,13 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { api } from '../api'
 import ProductCard from '../components/product/ProductCard'
+import { GENDER_TABS } from '../components/search/shared'
 import '../components/search/search.css'
-
-const GENDER_TABS = [
-  { label: 'All', value: null },
-  { label: 'Women', value: 'f' },
-  { label: 'Men', value: 'm' },
-]
 
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams()

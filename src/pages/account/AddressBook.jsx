@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { api } from '../../api'
 import { useAuth } from '../../context/AuthContext'
-import { ChevronLeftIcon } from '../../components/header/icons'
+import BackToAccountLink from '../../components/account/BackToAccountLink'
 
 const EMPTY_FORM = {
   label: '',
@@ -60,10 +59,7 @@ export default function AddressBook() {
 
   return (
     <div>
-      <Link to="/account" className="mb-4 inline-flex items-center gap-1 text-sm uppercase text-black/60 hover:text-brand-black">
-        <ChevronLeftIcon size={16} />
-        Account
-      </Link>
+      <BackToAccountLink />
       <h2 className="text-lg font-bold uppercase">Address Book</h2>
 
       {addresses.length === 0 && !form && <p className="mt-2 text-sm text-black/50">No saved addresses yet.</p>}

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { api } from '../api'
 import { useCart } from '../context/CartContext'
 import { useCartLines } from '../hooks/useCartLines'
+import { formatPrice } from '../lib/format'
 import { productThumb } from '../lib/images'
 
 export default function Cart() {
@@ -72,7 +73,7 @@ export default function Cart() {
               className="w-16 border border-black/20 px-2 py-1 text-sm"
             />
             <p className="w-20 text-right text-sm font-semibold">
-              ${line.lineTotal.toFixed(2)}
+              {formatPrice(line.lineTotal)}
             </p>
           </div>
         ))}
@@ -96,17 +97,17 @@ export default function Cart() {
       <div className="mt-6 space-y-1 border-t border-black/10 pt-4 text-sm">
         <div className="flex justify-between">
           <span>Subtotal</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>{formatPrice(subtotal)}</span>
         </div>
         {discountAmount > 0 && (
           <div className="flex justify-between text-green-700">
             <span>Discount</span>
-            <span>-${discountAmount.toFixed(2)}</span>
+            <span>-{formatPrice(discountAmount)}</span>
           </div>
         )}
         <div className="flex justify-between text-base font-bold">
           <span>Total</span>
-          <span>${total.toFixed(2)}</span>
+          <span>{formatPrice(total)}</span>
         </div>
       </div>
 

@@ -5,14 +5,9 @@ import { useDebouncedValue } from '../../hooks/useDebouncedValue'
 import Modal from '../ui/Modal'
 import { CloseIcon } from '../header/icons'
 import { NoResults, RecentActivity, ResultsGrid, SuggestedTerms, TrendingPages } from './SearchSections'
-import { SEARCH_PLACEHOLDER, searchHref } from './shared'
+import { GENDER_TABS, SEARCH_PLACEHOLDER, searchHref } from './shared'
 import './search.css'
 
-const GENDER_TABS = [
-  { label: 'All', value: null },
-  { label: 'Women', value: 'f' },
-  { label: 'Men', value: 'm' },
-]
 const GENDER_KEY = 'gs-search-gender-preference'
 const DEBOUNCE_MS = 500
 const RESULT_LIMIT = 20

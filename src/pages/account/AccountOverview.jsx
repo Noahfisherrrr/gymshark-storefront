@@ -63,13 +63,13 @@ export default function AccountOverview() {
             </p>
             <div className="mt-6 flex gap-3">
               <Link
-                to="/shop"
+                to="/shop?category=women"
                 className="bg-brand-black px-6 py-3 text-sm font-semibold uppercase text-brand-white"
               >
                 Shop Womens
               </Link>
               <Link
-                to="/shop"
+                to="/shop?category=men"
                 className="bg-brand-black px-6 py-3 text-sm font-semibold uppercase text-brand-white"
               >
                 Shop Mens

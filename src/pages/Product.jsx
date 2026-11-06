@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { api } from '../api'
 import { getProductContent } from '../api/cms'
 import { useCart } from '../context/CartContext'
+import { formatPrice } from '../lib/format'
 import { addRecentlyViewed } from '../lib/recentlyViewed'
 
 export default function Product() {
@@ -72,7 +73,7 @@ export default function Product() {
 
         <div>
           <h1 className="text-2xl font-bold uppercase">{product.name}</h1>
-          <p className="mt-2 text-lg">${product.price.toFixed(2)}</p>
+          <p className="mt-2 text-lg">{formatPrice(product.price)}</p>
           <p className="mt-4 text-sm text-black/60">{product.description}</p>
 
           <div className="mt-6">
@@ -101,7 +102,7 @@ export default function Product() {
             type="button"
             onClick={handleAddToCart}
             disabled={!selectedVariant || selectedVariant.stock === 0}
-            className="mt-8 w-full bg-brand-black py-3 text-sm font-semibold uppercase text-brand-white transition-colors duration-200 hover:bg-ink-hover disabled:opacity-40"
+            className="mt-8 w-full bg-brand-black py-3 text-sm font-semibold uppercase text-brand-white disabled:opacity-40"
           >
             Add to Cart
           </button>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { PAYMENT_METHODS } from '../../config/store'
 import Modal from '../ui/Modal'
 import {
   ChevronDownIcon,
@@ -78,20 +79,6 @@ const LEGAL_LINKS = [
   { label: 'Privacy Notice', href: '/help' },
   { label: 'Cookie Policy', href: '/help' },
   { label: 'Modern Slavery Statement', href: '/help' },
-]
-
-// Generic payment-network badges, not Gymshark's assets. Which of these the
-// client actually accepts is pending their verified Stripe account
-// (Brief.md #9) — shown as plain text so nothing implies a live integration.
-const PAYMENT_METHODS = [
-  'Visa',
-  'Mastercard',
-  'PayPal',
-  'Apple Pay',
-  'Klarna',
-  'American Express',
-  'Afterpay',
-  'Sezzle',
 ]
 
 function FooterLink({ href, children, mobile = false }) {

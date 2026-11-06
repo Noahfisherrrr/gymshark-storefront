@@ -1,11 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { api } from '../../api'
 import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
 import { useCartLines } from '../../hooks/useCartLines'
 import { formatPrice } from '../../lib/format'
-import { FREE_STANDARD_SHIPPING_THRESHOLD, MAX_LINE_QUANTITY } from '../../config/store'
+import {
+  FREE_STANDARD_SHIPPING_THRESHOLD,
+  LOW_STOCK_THRESHOLD,
+  MAX_LINE_QUANTITY,
+  PAYMENT_METHODS,
+  STANDARD_SHIPPING_COST,
+} from '../../config/store'
 import Modal from '../ui/Modal'
 import {
   BagFilledIcon,
@@ -142,14 +148,20 @@ function LineItem({ line, onRemoved, onNavigate }) {
           <Thumb src={line.product.image} />
         </Link>
         <div className="flex min-w-0 flex-1 flex-col text-[14px] leading-[1.4]">
-          <Link to={href} onClick={onNavigate} className="capitalize text-ink">
-            {line.product.name}
-          </Link>
+          <div className="flex items-start justify-between gap-2">
+            <Link to={href} onClick={onNavigate} className="capitalize text-ink">
+              {line.product.name}
+            </Link>
+            <WishlistButton productId={line.product.id} />
+          </div>
           <p className="capitalize text-muted">
             {line.variant.color} | {line.variant.size}
           </p>
           <p className="font-bold">{formatPrice(line.product.price)}</p>
-          <div className="mt-auto flex items-center justify-between pt-2">
+          {line.variant.stock <= LOW_STOCK_THRESHOLD && (
+            <p className="mt-1 text-[12px] font-bold text-sale">Last Few Remaining</p>
+          )}
+          <div className="mt-auto pt-2">
             <QuantitySelector
               quantity={line.quantity}
               max={max}
@@ -157,7 +169,6 @@ function LineItem({ line, onRemoved, onNavigate }) {
               onDecrease={() => change(-1)}
               onIncrease={() => change(1)}
             />
-            <WishlistButton productId={line.product.id} />
           </div>
         </div>
       </article>
@@ -273,12 +284,228 @@ function WishlistView({ onNavigate }) {
   )
 }
 
+function CrossSell({ exclude, onAdd }) {
+  const [products, setProducts] = useState(null)
+
+  useEffect(() => {
+    api.products.list({ category: 'accessories' }).then(setProducts)
+  }, [])
+
+  if (!products) return null
+  const candidates = products
+    .filter((p) => !exclude.includes(p.id))
+    .sort((a, b) => a.price - b.price)
+    .slice(0, 4)
+  if (candidates.length === 0) return null
+
+  return (
+    <div className="mb-6 bg-surface-subtle py-4">
+      <div className="px-4 md:px-6">
+        <h3 className={`${HEADING} text-[14px]`}>Add a little extra</h3>
+        <p className="mt-1 text-[12px] leading-[1.4] text-muted">
+          Add one or more of these items to get free delivery
+        </p>
+      </div>
+      <ul className="mt-3 flex gap-3 overflow-x-auto px-4 pb-1 md:px-6">
+        {candidates.map((product) => (
+          <li
+            key={product.id}
+            className="flex w-[200px] shrink-0 items-center gap-2 bg-white p-2 text-[12px] leading-[1.3]"
+          >
+            <div className="h-14 w-14 shrink-0 overflow-hidden bg-surface-subtle">
+              <Thumb src={product.image} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate">{product.name}</p>
+              <p className="font-bold">{formatPrice(product.price)}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => onAdd(product)}
+              className="flex shrink-0 items-center gap-1 whitespace-nowrap font-bold"
+            >
+              <PlusIcon size={14} />
+              Add
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function DiscountCode({ discount, onApplied }) {
+  const [code, setCode] = useState('')
+  const [error, setError] = useState(null)
+  const [busy, setBusy] = useState(false)
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setBusy(true)
+    setError(null)
+    try {
+      const result = await api.orders.applyDiscountCode(code)
+      if (!result.valid) {
+        onApplied(null)
+        setError(result.message)
+      } else {
+        onApplied(result)
+      }
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className="mx-4 mb-6 md:mx-6">
+      <h3 className={`${HEADING} mb-3 text-[14px]`}>Discount Code</h3>
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <input
+          type="text"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          placeholder="Enter code"
+          className="h-12 min-w-0 flex-1 border border-line px-3 text-[14px]"
+        />
+        <button
+          type="submit"
+          disabled={busy || !code}
+          className="h-12 shrink-0 bg-ink px-6 text-[14px] font-bold text-white disabled:opacity-40"
+        >
+          Apply
+        </button>
+      </form>
+      {error && <p className="mt-2 text-[12px] leading-[1.4] text-sale">{error}</p>}
+      {discount?.valid && <p className="mt-2 text-[12px] leading-[1.4] text-ink">{discount.message}</p>}
+      <p className="mt-3 flex gap-2 text-[12px] leading-[1.4] text-faint">
+        <InfoIcon size={14} className="mt-0.5 shrink-0" />
+        Gift card codes can be applied at checkout.
+      </p>
+    </div>
+  )
+}
+
+function OrderSummary({ subtotal, shipping, discountAmount, total }) {
+  return (
+    <div className="mx-4 mb-6 md:mx-6">
+      <h3 className={`${HEADING} mb-3 text-[14px]`}>Order Summary</h3>
+      <div className="space-y-2 text-[14px] leading-[1.4]">
+        <div className="flex justify-between">
+          <span className="text-muted">Sub Total</span>
+          <span>{formatPrice(subtotal)}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted">Estimated Shipping</span>
+          <span>{shipping > 0 ? formatPrice(shipping) : 'Free'}</span>
+        </div>
+        {discountAmount > 0 && (
+          <div className="flex justify-between">
+            <span className="text-muted">Discount</span>
+            <span>-{formatPrice(discountAmount)}</span>
+          </div>
+        )}
+        <div className="flex justify-between border-t border-line pt-2 font-bold">
+          <span>Total</span>
+          <span>{formatPrice(total)}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PaymentBadges() {
+  return (
+    <div className="flex flex-wrap justify-center gap-1.5 bg-ink px-4 pb-4">
+      {PAYMENT_METHODS.map((method) => (
+        <span
+          key={method}
+          className="rounded border border-white/15 px-2 py-1 text-[10px] uppercase tracking-wide text-white/60"
+        >
+          {method}
+        </span>
+      ))}
+    </div>
+  )
+}
+
+function VariantPickerModal({ product, onClose, onAdd }) {
+  const [variantId, setVariantId] = useState(product?.variants[0]?.id ?? null)
+  const [busy, setBusy] = useState(false)
+  const prevProduct = useRef(product)
+
+  if (product && product !== prevProduct.current) {
+    prevProduct.current = product
+    setVariantId(product.variants[0]?.id ?? null)
+  }
+
+  async function handleAdd() {
+    setBusy(true)
+    try {
+      await onAdd({ productId: product.id, variantId, quantity: 1 })
+      onClose()
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <Modal
+      isOpen={!!product}
+      onRequestClose={onClose}
+      label="Choose options"
+      overlayClassName="gs-overlay--fade flex items-center justify-center p-4"
+      className="w-full max-w-sm bg-white"
+    >
+      {product && (
+        <div className="flex flex-col gap-4 p-6">
+          <div className="flex items-start justify-between gap-2">
+            <h2 className={`${HEADING} text-[16px]`}>{product.name}</h2>
+            <button type="button" onClick={onClose} aria-label="Close" className="shrink-0">
+              <CloseIcon size={20} />
+            </button>
+          </div>
+          <div className="flex gap-4">
+            <div className="h-24 w-24 shrink-0 overflow-hidden bg-surface-subtle">
+              <Thumb src={product.image} />
+            </div>
+            <p className="self-center font-bold">{formatPrice(product.price)}</p>
+          </div>
+          <div>
+            <p className="mb-2 text-[12px] font-bold uppercase text-muted">Size / Color</p>
+            <div className="flex flex-wrap gap-2">
+              {product.variants.map((v) => (
+                <button
+                  key={v.id}
+                  type="button"
+                  disabled={v.stock === 0}
+                  onClick={() => setVariantId(v.id)}
+                  className={`border px-3 py-2 text-[12px] font-bold uppercase transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-30 ${
+                    v.id === variantId ? 'border-ink bg-ink text-white' : 'border-line hover:border-ink'
+                  }`}
+                >
+                  {v.size} / {v.color}
+                  {v.stock === 0 ? ' (Out of stock)' : ''}
+                </button>
+              ))}
+            </div>
+          </div>
+          <button type="button" onClick={handleAdd} disabled={!variantId || busy} className={PRIMARY_BUTTON}>
+            {busy ? 'Adding…' : 'Add to bag'}
+          </button>
+        </div>
+      )}
+    </Modal>
+  )
+}
+
 function MiniBagPanel({ onClose }) {
   const { addItem } = useCart()
   const { lines, subtotal, loading } = useCartLines()
   const [view, setView] = useState('bag')
   const [scroll, setScroll] = useState({ scrolled: false, atBottom: false })
   const [removed, setRemoved] = useState(null)
+  const [discount, setDiscount] = useState(null)
+  const [pickerProduct, setPickerProduct] = useState(null)
 
   useEffect(() => {
     if (!removed) return
@@ -302,6 +529,9 @@ function MiniBagPanel({ onClose }) {
 
   const empty = !loading && lines.length === 0
   const showingWishlist = view === 'wishlist'
+  const shipping = subtotal > 0 && subtotal < FREE_STANDARD_SHIPPING_THRESHOLD ? STANDARD_SHIPPING_COST : 0
+  const discountAmount = discount?.valid ? subtotal * discount.amountOff : 0
+  const total = subtotal + shipping - discountAmount
 
   return (
     <div className="gs-minibag-panel" onScroll={handleScroll}>
@@ -365,6 +595,14 @@ function MiniBagPanel({ onClose }) {
             ))}
           </ul>
 
+          {shipping > 0 && (
+            <CrossSell exclude={lines.map((line) => line.product.id)} onAdd={setPickerProduct} />
+          )}
+
+          <DiscountCode discount={discount} onApplied={setDiscount} />
+
+          <OrderSummary subtotal={subtotal} shipping={shipping} discountAmount={discountAmount} total={total} />
+
           <div className="gs-minibag-actions">
             {removed && (
               <RemovedSnackbox
@@ -374,18 +612,23 @@ function MiniBagPanel({ onClose }) {
               />
             )}
             <div
-              className="gs-minibag-cta flex flex-col bg-white p-4 md:px-4 md:py-6 lg:p-6"
+              className="gs-minibag-cta flex flex-col bg-white"
               data-scrolling={scroll.scrolled && !scroll.atBottom}
             >
               {/* The bag page stands in for checkout until Stripe is wired (Brief.md #9). */}
-              <Link to="/cart" onClick={onClose} className={PRIMARY_BUTTON}>
-                <BagFilledIcon size={20} />
-                Checkout securely
-              </Link>
+              <div className="p-4 md:px-4 md:py-6 lg:p-6">
+                <Link to="/cart" onClick={onClose} className={PRIMARY_BUTTON}>
+                  <BagFilledIcon size={20} />
+                  Checkout securely
+                </Link>
+              </div>
+              <PaymentBadges />
             </div>
           </div>
         </>
       )}
+
+      <VariantPickerModal product={pickerProduct} onClose={() => setPickerProduct(null)} onAdd={addItem} />
     </div>
   )
 }

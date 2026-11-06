@@ -47,7 +47,7 @@
   height: calc(100% - 52px);
   flex-shrink: 0;
   overflow: auto;
-  padding-bottom: 128px;
+  padding-bottom: 172px;
   background: #fff;
 }
 @media (min-width: 768px) {

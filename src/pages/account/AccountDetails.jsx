@@ -1,28 +1,92 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { api } from '../../api'
 import { useAuth } from '../../context/AuthContext'
+import Modal from '../../components/ui/Modal'
 
 export default function AccountDetails() {
-  const { user } = useAuth()
+  const { user, updateUser, signOut } = useAuth()
+  const navigate = useNavigate()
   const [firstName, setFirstName] = useState(user.firstName ?? '')
   const [lastName, setLastName] = useState(user.lastName ?? '')
   const [dateOfBirth, setDateOfBirth] = useState(user.dateOfBirth ?? '')
+  const [email, setEmail] = useState(user.email ?? '')
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+
+  const [confirming, setConfirming] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
 
-  async function handleSubmit(e) {
+  const [deleting, setDeleting] = useState(false)
+  const [deletePassword, setDeletePassword] = useState('')
+  const [deleteError, setDeleteError] = useState(null)
+  const [deleteSubmitting, setDeleteSubmitting] = useState(false)
+
+  const emailChanged = email !== user.email
+  const wantsPasswordChange = newPassword.length > 0
+  const needsConfirmation = emailChanged || wantsPasswordChange
+
+  function handleSubmit(e) {
     e.preventDefault()
     setError(null)
     setSaved(false)
+
+    if (wantsPasswordChange && newPassword !== confirmPassword) {
+      setError('New passwords do not match')
+      return
+    }
+    if (needsConfirmation && !currentPassword) {
+      setError('Enter your current password to confirm this change')
+      return
+    }
+
+    if (needsConfirmation) {
+      setConfirming(true)
+      return
+    }
+    applyChanges()
+  }
+
+  async function applyChanges() {
+    setConfirming(false)
     setSubmitting(true)
     try {
-      await api.account.updateProfile(user.id, { firstName, lastName, dateOfBirth })
+      const nextUser = await api.account.updateProfile(user.id, {
+        firstName,
+        lastName,
+        dateOfBirth,
+        email,
+        currentPassword,
+      })
+      if (wantsPasswordChange) {
+        await api.account.changePassword(user.id, { currentPassword, newPassword })
+      }
+      updateUser(nextUser)
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmPassword('')
       setSaved(true)
     } catch (err) {
       setError(err.message)
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  async function handleDeleteAccount() {
+    setDeleteError(null)
+    setDeleteSubmitting(true)
+    try {
+      await api.account.deleteAccount(user.id, { currentPassword: deletePassword })
+      await signOut()
+      navigate('/')
+    } catch (err) {
+      setDeleteError(err.message)
+    } finally {
+      setDeleteSubmitting(false)
     }
   }
 
@@ -61,11 +125,47 @@ export default function AccountDetails() {
           Email
           <input
             type="email"
-            value={user.email}
-            disabled
-            className="mt-1 w-full border border-black/10 bg-surface-subtle px-3 py-2 text-sm normal-case text-black/50"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="mt-1 w-full border border-black/20 px-3 py-2 text-sm normal-case"
           />
         </label>
+
+        <div className="border-t border-line pt-4">
+          <p className="text-xs uppercase text-black/40">Change Password</p>
+          <div className="mt-2 space-y-3">
+            <input
+              type="password"
+              placeholder="New password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              autoComplete="new-password"
+              className="w-full border border-black/20 px-3 py-2 text-sm"
+            />
+            <input
+              type="password"
+              placeholder="Confirm new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              autoComplete="new-password"
+              className="w-full border border-black/20 px-3 py-2 text-sm"
+            />
+          </div>
+        </div>
+
+        {needsConfirmation && (
+          <input
+            type="password"
+            placeholder="Current password"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+            className="w-full border border-black/20 px-3 py-2 text-sm"
+          />
+        )}
+
         {error && <p className="text-sm text-red-600">{error}</p>}
         {saved && <p className="text-sm text-black/60">Saved.</p>}
         <button
@@ -76,6 +176,87 @@ export default function AccountDetails() {
           {submitting ? 'Saving…' : 'Save Changes'}
         </button>
       </form>
+
+      <Modal isOpen={confirming} onRequestClose={() => setConfirming(false)} label="Confirm account changes">
+        <div className="w-80 bg-brand-white p-6">
+          <h3 className="text-sm font-bold uppercase">Confirm Changes</h3>
+          <ul className="mt-3 space-y-1 text-sm text-black/70">
+            {emailChanged && <li>Change email to {email}</li>}
+            {wantsPasswordChange && <li>Change your password</li>}
+          </ul>
+          <div className="mt-6 flex gap-3">
+            <button
+              type="button"
+              onClick={applyChanges}
+              disabled={submitting}
+              className="bg-brand-black px-4 py-2 text-sm font-semibold uppercase text-brand-white disabled:opacity-40"
+            >
+              {submitting ? 'Confirming…' : 'Confirm'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirming(false)}
+              className="px-4 py-2 text-sm font-semibold uppercase underline"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <div className="mt-10 max-w-md border-t border-line pt-6">
+        <p className="text-xs uppercase text-red-600">Danger Zone</p>
+        <p className="mt-2 text-sm text-black/60">
+          Permanently delete your account and all associated data. This can't be undone.
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteError(null)
+            setDeletePassword('')
+            setDeleting(true)
+          }}
+          className="mt-3 border border-red-600 px-6 py-3 text-sm font-semibold uppercase text-red-600"
+        >
+          Delete Account
+        </button>
+      </div>
+
+      <Modal isOpen={deleting} onRequestClose={() => setDeleting(false)} label="Confirm account deletion">
+        <div className="w-80 bg-brand-white p-6">
+          <h3 className="text-sm font-bold uppercase text-red-600">Delete Account</h3>
+          <p className="mt-2 text-sm text-black/70">
+            This permanently deletes your account, addresses, orders, and referral history. This can't be undone.
+          </p>
+          <input
+            type="password"
+            placeholder="Current password"
+            value={deletePassword}
+            onChange={(e) => setDeletePassword(e.target.value)}
+            autoComplete="current-password"
+            required
+            className="mt-4 w-full border border-black/20 px-3 py-2 text-sm"
+          />
+          {deleteError && <p className="mt-2 text-sm text-red-600">{deleteError}</p>}
+          <div className="mt-6 flex gap-3">
+            <button
+              type="button"
+              onClick={handleDeleteAccount}
+              disabled={deleteSubmitting || !deletePassword}
+              className="bg-red-600 px-4 py-2 text-sm font-semibold uppercase text-white disabled:opacity-40"
+            >
+              {deleteSubmitting ? 'Deleting…' : 'Delete Account'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setDeleting(false)}
+              className="px-4 py-2 text-sm font-semibold uppercase underline"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

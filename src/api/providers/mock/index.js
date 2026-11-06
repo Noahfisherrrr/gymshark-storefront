@@ -326,16 +326,68 @@ async function applyDiscountCode(code) {
 
 // ---- account: profile, address book, returns, referrals, offers ----------
 
-async function updateProfile(userId, { firstName, lastName, dateOfBirth }) {
+async function updateProfile(userId, { firstName, lastName, dateOfBirth, email, currentPassword }) {
   await delay()
   const users = getUsersDb()
+  const current = users.find((u) => u.id === userId)
+  if (!current) throw new Error('User not found')
+
+  const emailChanged = email != null && email !== current.email
+  if (emailChanged) {
+    if (current.password !== null && current.password !== currentPassword) {
+      throw new Error('Current password is incorrect')
+    }
+    if (users.some((u) => u.id !== userId && u.email === email)) {
+      throw new Error('An account with that email already exists')
+    }
+  }
+
   const next = users.map((u) =>
-    u.id === userId ? { ...u, firstName, lastName, dateOfBirth, name: `${firstName} ${lastName}`.trim() } : u,
+    u.id === userId
+      ? {
+          ...u,
+          firstName,
+          lastName,
+          dateOfBirth,
+          email: emailChanged ? email : u.email,
+          name: `${firstName} ${lastName}`.trim(),
+        }
+      : u,
   )
   writeStore('users', next)
   const session = toSession(next.find((u) => u.id === userId))
   writeStore('session', session)
   return session
+}
+
+async function changePassword(userId, { currentPassword, newPassword }) {
+  await delay()
+  const users = getUsersDb()
+  const current = users.find((u) => u.id === userId)
+  if (!current) throw new Error('User not found')
+  if (current.password !== null && current.password !== currentPassword) {
+    throw new Error('Current password is incorrect')
+  }
+  writeStore('users', users.map((u) => (u.id === userId ? { ...u, password: newPassword } : u)))
+}
+
+async function deleteAccount(userId, { currentPassword }) {
+  await delay()
+  const users = getUsersDb()
+  const current = users.find((u) => u.id === userId)
+  if (!current) throw new Error('User not found')
+  if (current.password !== null && current.password !== currentPassword) {
+    throw new Error('Current password is incorrect')
+  }
+  writeStore('users', users.filter((u) => u.id !== userId))
+  writeStore('session', null)
+  // The mock store isn't namespaced per user — these all belong to the
+  // single local session being deleted, so they go with the account.
+  writeStore('addresses', [])
+  writeStore('cart', [])
+  writeStore('wishlist', [])
+  writeStore('returns', [])
+  writeStore('referralStats', { referralsCount: 0, creditsEarned: 0 })
 }
 
 function getAddressesDb() {
@@ -418,6 +470,8 @@ export const mockApi = {
   orders: { list: listOrders, applyDiscountCode },
   account: {
     updateProfile,
+    changePassword,
+    deleteAccount,
     listAddresses,
     addAddress,
     updateAddress,

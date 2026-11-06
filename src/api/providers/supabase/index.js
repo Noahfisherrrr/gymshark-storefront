@@ -146,8 +146,63 @@ async function applyDiscountCode() {
 
 // ---- account: profile, address book, returns, referrals, offers ----------
 
-async function updateProfile() {
-  notImplemented('Profile updates')
+// Profile fields live in Supabase Auth user_metadata, so this works today —
+// no `profiles` table needed, unlike address book/returns/referrals below.
+async function updateProfile(userId, { firstName, lastName, dateOfBirth, email, currentPassword }) {
+  assertConfigured()
+  const { data: current, error: getError } = await supabase.auth.getUser()
+  if (getError) throw getError
+
+  const emailChanged = email != null && email !== current.user.email
+  if (emailChanged) {
+    const { error: reauthError } = await supabase.auth.signInWithPassword({
+      email: current.user.email,
+      password: currentPassword,
+    })
+    if (reauthError) throw new Error('Current password is incorrect')
+  }
+
+  const name = `${firstName} ${lastName}`.trim()
+  const { data, error } = await supabase.auth.updateUser({
+    ...(emailChanged ? { email } : {}),
+    data: { name, firstName, lastName, dateOfBirth },
+  })
+  if (error) throw error
+  return toUser(data.user)
+}
+
+async function changePassword(userId, { currentPassword, newPassword }) {
+  assertConfigured()
+  const { data: current, error: getError } = await supabase.auth.getUser()
+  if (getError) throw getError
+
+  const { error: reauthError } = await supabase.auth.signInWithPassword({
+    email: current.user.email,
+    password: currentPassword,
+  })
+  if (reauthError) throw new Error('Current password is incorrect')
+
+  const { error } = await supabase.auth.updateUser({ password: newPassword })
+  if (error) throw error
+}
+
+async function deleteAccount(userId, { currentPassword }) {
+  assertConfigured()
+  const { data: current, error: getError } = await supabase.auth.getUser()
+  if (getError) throw getError
+
+  const { error: reauthError } = await supabase.auth.signInWithPassword({
+    email: current.user.email,
+    password: currentPassword,
+  })
+  if (reauthError) throw new Error('Current password is incorrect')
+
+  // The Supabase client SDK can't delete the current user itself (that's an
+  // admin/service-role call) — this needs a server-side function (e.g. a
+  // Supabase Edge Function calling auth.admin.deleteUser) once Brief.md #14's
+  // project exists. Until then this fails after confirming the password is
+  // correct, rather than silently doing nothing.
+  notImplemented('Account deletion (needs a server-side admin call)')
 }
 async function listAddresses() {
   notImplemented('Address book')
@@ -322,6 +377,8 @@ export const supabaseApi = {
   orders: { list: listOrders, applyDiscountCode },
   account: {
     updateProfile,
+    changePassword,
+    deleteAccount,
     listAddresses,
     addAddress,
     updateAddress,

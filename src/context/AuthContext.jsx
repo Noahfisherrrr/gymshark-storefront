@@ -53,6 +53,12 @@ export function AuthProvider({ children }) {
     setPendingConfirmationEmail(null)
   }
 
+  // Lets pages like Account Details apply an updated session (e.g. after
+  // changing name/email) without a full getCurrentUser() round trip.
+  function updateUser(nextUser) {
+    setUser(nextUser)
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -64,6 +70,7 @@ export function AuthProvider({ children }) {
         signInWithOAuth,
         confirmPendingOAuth,
         signOut,
+        updateUser,
       }}
     >
       {children}

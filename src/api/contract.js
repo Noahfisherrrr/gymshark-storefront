@@ -132,7 +132,9 @@
  *   applyDiscountCode: (code: string) => Promise<{ valid: boolean, amountOff: number, message: string }>,
  * }} orders
  * @property {{
- *   updateProfile: (userId: string, input: { firstName: string, lastName: string, dateOfBirth: string }) => Promise<User>,
+ *   updateProfile: (userId: string, input: { firstName: string, lastName: string, dateOfBirth: string, email?: string, currentPassword?: string }) => Promise<User>,  // currentPassword is required when email is included and differs from the current one
+ *   changePassword: (userId: string, input: { currentPassword: string, newPassword: string }) => Promise<void>,
+ *   deleteAccount: (userId: string, input: { currentPassword: string }) => Promise<void>,
  *   listAddresses: (userId: string) => Promise<Address[]>,
  *   addAddress: (userId: string, input: Omit<Address, 'id'|'isDefault'>) => Promise<Address[]>,
  *   updateAddress: (userId: string, addressId: string, input: Partial<Address>) => Promise<Address[]>,

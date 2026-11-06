@@ -98,6 +98,29 @@
   color: var(--color-ink);
 }
 
+/* Cross-sell row: keep the scrollbar track, drop the arrow buttons. */
+.gs-crosssell-scroller {
+  scrollbar-width: thin;
+}
+.gs-crosssell-scroller::-webkit-scrollbar {
+  height: 4px;
+}
+.gs-crosssell-scroller::-webkit-scrollbar-button,
+.gs-crosssell-scroller::-webkit-scrollbar-button:single-button,
+.gs-crosssell-scroller::-webkit-scrollbar-button:start:decrement,
+.gs-crosssell-scroller::-webkit-scrollbar-button:end:increment {
+  display: none;
+  width: 0;
+  height: 0;
+  background: none;
+}
+.gs-crosssell-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+.gs-crosssell-scroller::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+}
+
 /* "You removed an item" snackbox. */
 @keyframes gs-snackbox-in {
   from {

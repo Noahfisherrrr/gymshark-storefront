@@ -286,10 +286,19 @@ function WishlistView({ onNavigate }) {
 
 function CrossSell({ exclude, onAdd }) {
   const [products, setProducts] = useState(null)
+  const scrollerRef = useRef(null)
 
   useEffect(() => {
     api.products.list({ category: 'accessories' }).then(setProducts)
   }, [])
+
+  function handleWheel(e) {
+    const el = scrollerRef.current
+    if (!el || el.scrollWidth <= el.clientWidth) return
+    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return
+    e.preventDefault()
+    el.scrollLeft += e.deltaY
+  }
 
   if (!products) return null
   const candidates = products
@@ -306,7 +315,11 @@ function CrossSell({ exclude, onAdd }) {
           Add one or more of these items to get free delivery
         </p>
       </div>
-      <ul className="mt-3 flex gap-3 overflow-x-auto px-4 pb-1 md:px-6">
+      <ul
+        ref={scrollerRef}
+        onWheel={handleWheel}
+        className="gs-crosssell-scroller mt-3 flex gap-3 overflow-x-auto px-4 pb-1 md:px-6"
+      >
         {candidates.map((product) => (
           <li
             key={product.id}

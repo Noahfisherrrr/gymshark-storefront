@@ -11,6 +11,20 @@ import { HeartFilledIcon, HeartIcon } from '../header/icons'
 // card eases the image in (their banner hover: .25s ease-in-out) and, on
 // desktop, raises their quick-add tray over the image bottom: a 4-column size
 // grid whose cells invert on hover. Picking a size adds it and opens the mini bag.
+const SIZE_RUN = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL']
+
+// Apparel always shows the full run (like theirs); sizes we don't carry in this
+// colour render as sold out. Anything off-run (e.g. "One Size") lists as-is.
+function quickAddSizes(variants) {
+  if (!variants.every((v) => SIZE_RUN.includes(v.size))) {
+    return variants.map((v) => ({ size: v.size, variant: v.stock > 0 ? v : null }))
+  }
+  return SIZE_RUN.map((size) => {
+    const variant = variants.find((v) => v.size === size && v.stock > 0) ?? null
+    return { size, variant }
+  })
+}
+
 export default function ProductCard({ product, onNavigate, infoClassName = 'p-2 min-[1440px]:p-4' }) {
   const { isWishlisted, toggle } = useWishlist()
   const { addItem, openMiniBag } = useCart()
@@ -18,11 +32,11 @@ export default function ProductCard({ product, onNavigate, infoClassName = 'p-2 
   const saved = isWishlisted(product.id)
   const href = `/product/${product.id}`
   const colour = product.variants[0]?.color
-  const sizes = product.variants.filter((v) => v.color === colour)
+  const sizes = quickAddSizes(product.variants.filter((v) => v.color === colour))
   const onSale = product.compareAtPrice != null && product.compareAtPrice > product.price
 
   async function handlePickSize(variant) {
-    if (variant.stock === 0 || addingVariantId) return
+    if (addingVariantId) return
     setAddingVariantId(variant.id)
     try {
       await addItem({ productId: product.id, variantId: variant.id, quantity: 1 })
@@ -64,48 +78,43 @@ export default function ProductCard({ product, onNavigate, infoClassName = 'p-2 
           {saved ? <HeartFilledIcon size={22} /> : <HeartIcon size={22} />}
         </button>
 
-        {/* Desktop-only like theirs: after a 500ms hover the tray appears and the grid slides up. */}
+        {/* Desktop-only like theirs; unlike theirs, opens the instant you hover — no 500ms delay. */}
         {sizes.length > 0 && (
           <div
             role="region"
             aria-label={`Quick add ${product.name} sizes`}
-            className="invisible absolute inset-x-0 bottom-0 z-[1] flex items-center justify-center overflow-hidden bg-white p-4 opacity-0 transition-[visibility,opacity] delay-500 duration-0 max-lg:hidden group-hover/card:visible group-hover/card:opacity-100"
+            className="invisible absolute inset-x-0 bottom-0 z-[1] flex items-center justify-center overflow-hidden bg-white p-4 opacity-0 max-lg:hidden group-hover/card:visible group-hover/card:opacity-100"
           >
-            <div className="-mb-[140px] w-full transition-[margin] delay-500 duration-[80ms] ease-in-out group-hover/card:mb-0">
-              <ul className="flex w-full flex-wrap [&>li:nth-child(-n+4)>button]:mt-0 [&>li:nth-child(4n+1)>button]:ml-0 [&>li:only-child>button]:basis-auto [&>li:only-child>button]:grow">
-                {sizes.map((v) => {
-                  const soldOut = v.stock === 0
-                  const adding = addingVariantId === v.id
-                  return (
-                    <li key={v.id} className="contents">
-                      <button
-                        type="button"
-                        disabled={soldOut || adding}
-                        onClick={() => handlePickSize(v)}
-                        aria-label={`Add ${product.name}, size ${v.size}, to bag`}
-                        className={`relative -ml-px -mt-px flex min-h-[52px] shrink-0 grow-0 basis-1/4 flex-col items-start justify-end overflow-hidden border px-2 py-1 text-left text-[12px] leading-[1.3] uppercase ${
-                          soldOut
-                            ? 'cursor-not-allowed border-line bg-white text-[#bec2c6] hover:bg-line hover:text-faint'
-                            : adding
-                              ? 'cursor-progress border-ink bg-ink text-white'
-                              : 'border-line bg-white text-ink hover:z-[1] hover:border-ink hover:bg-ink hover:text-white'
-                        }`}
-                      >
-                        <span>{v.size}</span>
-                        {soldOut && (
-                          <svg
-                            aria-hidden="true"
-                            className="absolute left-[10%] top-[11%] z-[1] h-[79%] w-[80%]"
-                          >
-                            <line x1="0" y1="100%" x2="100%" y2="0" className="stroke-line" strokeWidth="1" />
-                          </svg>
-                        )}
-                      </button>
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
+            <ul className="flex w-full flex-wrap [&>li:nth-child(-n+4)>button]:mt-0 [&>li:nth-child(4n+1)>button]:ml-0 [&>li:only-child>button]:basis-auto [&>li:only-child>button]:grow">
+              {sizes.map(({ size, variant }) => {
+                const soldOut = !variant
+                const adding = variant && addingVariantId === variant.id
+                return (
+                  <li key={size} className="contents">
+                    <button
+                      type="button"
+                      disabled={soldOut || adding}
+                      onClick={() => variant && handlePickSize(variant)}
+                      aria-label={soldOut ? `${product.name}, size ${size}, sold out` : `Add ${product.name}, size ${size}, to bag`}
+                      className={`relative -ml-px -mt-px flex min-h-[52px] shrink-0 grow-0 basis-1/4 flex-col items-start justify-end overflow-hidden border px-2 py-1 text-left text-[12px] leading-[1.3] uppercase ${
+                        soldOut
+                          ? 'cursor-not-allowed border-line bg-white text-[#bec2c6] hover:bg-line hover:text-faint'
+                          : adding
+                            ? 'cursor-progress border-ink bg-ink text-white'
+                            : 'border-line bg-white text-ink hover:z-[1] hover:border-ink hover:bg-ink hover:text-white'
+                      }`}
+                    >
+                      <span>{size}</span>
+                      {soldOut && (
+                        <svg aria-hidden="true" className="absolute left-[10%] top-[11%] z-[1] h-[79%] w-[80%]">
+                          <line x1="0" y1="100%" x2="100%" y2="0" className="stroke-line" strokeWidth="1" />
+                        </svg>
+                      )}
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
           </div>
         )}
       </div>

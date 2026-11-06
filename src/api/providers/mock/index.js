@@ -3,6 +3,7 @@ import {
   MOCK_DISCOUNT_CODES,
   MOCK_SEARCH_TERMS,
   MOCK_TRENDING_PRODUCT_IDS,
+  MOCK_ACTIVE_OFFER,
 } from '../../data/products.mock'
 import { readStore, writeStore, makeId } from './storage'
 
@@ -323,6 +324,84 @@ async function applyDiscountCode(code) {
   return { valid: true, amountOff, message: `${Math.round(amountOff * 100)}% off applied` }
 }
 
+// ---- account: profile, address book, returns, referrals, offers ----------
+
+async function updateProfile(userId, { firstName, lastName, dateOfBirth }) {
+  await delay()
+  const users = getUsersDb()
+  const next = users.map((u) =>
+    u.id === userId ? { ...u, firstName, lastName, dateOfBirth, name: `${firstName} ${lastName}`.trim() } : u,
+  )
+  writeStore('users', next)
+  const session = toSession(next.find((u) => u.id === userId))
+  writeStore('session', session)
+  return session
+}
+
+function getAddressesDb() {
+  return readStore('addresses', [])
+}
+
+async function listAddresses() {
+  await delay()
+  return getAddressesDb()
+}
+
+async function addAddress(userId, input) {
+  await delay()
+  const addresses = getAddressesDb()
+  const address = { id: makeId('addr'), isDefault: addresses.length === 0, ...input }
+  const next = [...addresses, address]
+  writeStore('addresses', next)
+  return next
+}
+
+async function updateAddress(userId, addressId, input) {
+  await delay()
+  let addresses = getAddressesDb().map((a) => (a.id === addressId ? { ...a, ...input } : a))
+  // Only one address can be the default — clear it on every other one.
+  if (input.isDefault) {
+    addresses = addresses.map((a) => (a.id === addressId ? a : { ...a, isDefault: false }))
+  }
+  writeStore('addresses', addresses)
+  return addresses
+}
+
+async function removeAddress(userId, addressId) {
+  await delay()
+  const next = getAddressesDb().filter((a) => a.id !== addressId)
+  writeStore('addresses', next)
+  return next
+}
+
+async function listReturns() {
+  await delay()
+  return readStore('returns', [])
+}
+
+async function requestReturn(userId, { orderId, reason }) {
+  await delay()
+  const returns = readStore('returns', [])
+  const next = [
+    ...returns,
+    { id: makeId('return'), orderId, reason, status: 'Requested', createdAt: new Date().toISOString() },
+  ]
+  writeStore('returns', next)
+  return next
+}
+
+async function getReferralInfo(userId) {
+  await delay()
+  const code = `GS-${userId.slice(-6).toUpperCase()}`
+  const stats = readStore('referralStats', { referralsCount: 0, creditsEarned: 0 })
+  return { code, link: `https://www.gymshark.com/refer/${code}`, rewardAmount: 10, ...stats }
+}
+
+async function getActiveOffer() {
+  await delay()
+  return MOCK_ACTIVE_OFFER
+}
+
 /** @type {import('../../contract').ApiProvider} */
 export const mockApi = {
   products: { list: listProducts, getById: getProductById, listCategories },
@@ -337,4 +416,15 @@ export const mockApi = {
   wishlist: { get: getWishlist, toggle: toggleWishlist },
   auth: { getCurrentUser, signUp, signIn, signInWithOAuth, confirmPendingOAuth, onAuthStateChange, signOut },
   orders: { list: listOrders, applyDiscountCode },
+  account: {
+    updateProfile,
+    listAddresses,
+    addAddress,
+    updateAddress,
+    removeAddress,
+    listReturns,
+    requestReturn,
+    getReferralInfo,
+    getActiveOffer,
+  },
 }

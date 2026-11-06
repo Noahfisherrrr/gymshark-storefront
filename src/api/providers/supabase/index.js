@@ -144,6 +144,36 @@ async function applyDiscountCode() {
   notImplemented('Discount codes')
 }
 
+// ---- account: profile, address book, returns, referrals, offers ----------
+
+async function updateProfile() {
+  notImplemented('Profile updates')
+}
+async function listAddresses() {
+  notImplemented('Address book')
+}
+async function addAddress() {
+  notImplemented('Address book')
+}
+async function updateAddress() {
+  notImplemented('Address book')
+}
+async function removeAddress() {
+  notImplemented('Address book')
+}
+async function listReturns() {
+  notImplemented('Returns')
+}
+async function requestReturn() {
+  notImplemented('Returns')
+}
+async function getReferralInfo() {
+  notImplemented('Refer a friend')
+}
+async function getActiveOffer() {
+  notImplemented('Account offers')
+}
+
 // ---- auth (real Supabase Auth calls — this part is stable today) -------
 
 async function getCurrentUser() {
@@ -290,4 +320,15 @@ export const supabaseApi = {
   wishlist: { get: getWishlist, toggle: toggleWishlist },
   auth: { getCurrentUser, signUp, signIn, signInWithOAuth, confirmPendingOAuth, onAuthStateChange, signOut },
   orders: { list: listOrders, applyDiscountCode },
+  account: {
+    updateProfile,
+    listAddresses,
+    addAddress,
+    updateAddress,
+    removeAddress,
+    listReturns,
+    requestReturn,
+    getReferralInfo,
+    getActiveOffer,
+  },
 }

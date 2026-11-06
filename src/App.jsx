@@ -7,7 +7,12 @@ import Cart from './pages/Cart'
 import Wishlist from './pages/Wishlist'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import Account from './pages/Account'
+import AccountLayout from './pages/account/AccountLayout'
+import AccountDetails from './pages/account/AccountDetails'
+import AddressBook from './pages/account/AddressBook'
+import OrderHistory from './pages/account/OrderHistory'
+import Returns from './pages/account/Returns'
+import ReferFriend from './pages/account/ReferFriend'
 import Search from './pages/Search'
 import Help from './pages/Help'
 import NotFound from './pages/NotFound'
@@ -23,7 +28,13 @@ export default function App() {
         <Route path="wishlist" element={<Wishlist />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="account" element={<Account />} />
+        <Route path="account" element={<AccountLayout />}>
+          <Route index element={<AccountDetails />} />
+          <Route path="addresses" element={<AddressBook />} />
+          <Route path="orders" element={<OrderHistory />} />
+          <Route path="returns" element={<Returns />} />
+          <Route path="refer-a-friend" element={<ReferFriend />} />
+        </Route>
         <Route path="search" element={<Search />} />
         <Route path="help" element={<Help />} />
         <Route path="*" element={<NotFound />} />

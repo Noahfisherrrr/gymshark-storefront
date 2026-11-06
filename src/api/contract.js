@@ -47,6 +47,39 @@
  * @property {string} status
  * @property {string} createdAt
  *
+ * @typedef {Object} Address
+ * @property {string} id
+ * @property {string} label  e.g. "Home", "Work" — user-chosen
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} line1
+ * @property {string} line2
+ * @property {string} city
+ * @property {string} postcode
+ * @property {string} country
+ * @property {string} phone
+ * @property {boolean} isDefault
+ *
+ * @typedef {Object} ReturnRequest
+ * @property {string} id
+ * @property {string} orderId
+ * @property {string} reason
+ * @property {string} status
+ * @property {string} createdAt  ISO datetime string
+ *
+ * @typedef {Object} ReferralInfo
+ * @property {string} code
+ * @property {string} link
+ * @property {number} rewardAmount  credit (in store currency) earned per successful referral
+ * @property {number} referralsCount
+ * @property {number} creditsEarned
+ *
+ * @typedef {Object} AccountOffer
+ * @property {string} code
+ * @property {string} description
+ * @property {number} amountOff  fraction, e.g. 0.1 = 10% off
+ * @property {string|null} expiresAt  ISO date string, or null if it never expires
+ *
  * @typedef {Object} SearchResult
  * @property {Product[]} products   first `limit` matches
  * @property {number} total         total matches before `limit`
@@ -98,6 +131,17 @@
  *   list: (userId: string) => Promise<Order[]>,
  *   applyDiscountCode: (code: string) => Promise<{ valid: boolean, amountOff: number, message: string }>,
  * }} orders
+ * @property {{
+ *   updateProfile: (userId: string, input: { firstName: string, lastName: string, dateOfBirth: string }) => Promise<User>,
+ *   listAddresses: (userId: string) => Promise<Address[]>,
+ *   addAddress: (userId: string, input: Omit<Address, 'id'|'isDefault'>) => Promise<Address[]>,
+ *   updateAddress: (userId: string, addressId: string, input: Partial<Address>) => Promise<Address[]>,
+ *   removeAddress: (userId: string, addressId: string) => Promise<Address[]>,
+ *   listReturns: (userId: string) => Promise<ReturnRequest[]>,
+ *   requestReturn: (userId: string, input: { orderId: string, reason: string }) => Promise<ReturnRequest[]>,
+ *   getReferralInfo: (userId: string) => Promise<ReferralInfo>,
+ *   getActiveOffer: (userId: string) => Promise<AccountOffer|null>,
+ * }} account
  */
 
 export {}

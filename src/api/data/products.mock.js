@@ -321,3 +321,13 @@ export const MOCK_DISCOUNT_CODES = {
   WELCOME10: 0.1,
   LAUNCH20: 0.2,
 }
+
+// The one offer shown on the account page's discount banner. Pending a real
+// promotions source (Brief.md #9) — swap this for whatever CRM/CMS ends up
+// owning personalized offers.
+export const MOCK_ACTIVE_OFFER = {
+  code: 'WELCOME10',
+  description: 'Welcome back — 10% off your next order',
+  amountOff: 0.1,
+  expiresAt: '2026-11-20',
+}

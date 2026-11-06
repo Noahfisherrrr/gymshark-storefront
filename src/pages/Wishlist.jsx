@@ -58,9 +58,9 @@ export default function Wishlist() {
   const isEmpty = wishlisted.length === 0
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8 mb-20">
       <div className="flex items-baseline gap-2">
-        <h1 className="text-xl font-bold uppercase tracking-tight">Your Wishlist</h1>
+        <h1 className="text-xl font-medium uppercase tracking-tight">Your Wishlist</h1>
         <span className="text-xs text-black/50">{wishlisted.length} Products</span>
       </div>
 
@@ -68,7 +68,7 @@ export default function Wishlist() {
         <div className="mx-auto mt-10 max-w-sm text-center">
           <EmptyWishlistIllustration />
 
-          <h2 className="mt-4 text-base font-bold uppercase tracking-tight">
+          <h2 className="mt-4 text-base font-medium uppercase tracking-tight">
             Your Wishlist is Empty
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-black/60">
@@ -76,16 +76,16 @@ export default function Wishlist() {
             when you&apos;re ready, add it to your bag, check out, put it on, and then let&apos;s go gym.
           </p>
 
-          <div className="mt-6 flex flex-col gap-3">
+          <div className="mt-6 flex flex-col gap-3 ">
             <Link
               to="/shop?category=men"
-              className="bg-black py-3 text-sm font-semibold uppercase text-white"
+              className="bg-black py-3 text-sm font-medium uppercase text-white"
             >
               Shop Mens
             </Link>
             <Link
               to="/shop?category=women"
-              className="bg-black/10 py-3 text-sm font-semibold uppercase text-black"
+              className="bg-black/10 py-3 text-sm font-medium uppercase text-black"
             >
               Shop Womens
             </Link>
@@ -98,11 +98,6 @@ export default function Wishlist() {
           ))}
         </div>
       )}
-
-      <p className="mt-10 text-xs text-black/50">
-        Persisted to this browser only for now — moves to per-account storage once Supabase
-        auth + wishlist table are live.
-      </p>
     </div>
   )
 }

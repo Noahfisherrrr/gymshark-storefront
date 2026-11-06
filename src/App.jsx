@@ -8,6 +8,7 @@ import Wishlist from './pages/Wishlist'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import AccountLayout from './pages/account/AccountLayout'
+import AccountOverview from './pages/account/AccountOverview'
 import AccountDetails from './pages/account/AccountDetails'
 import AddressBook from './pages/account/AddressBook'
 import OrderHistory from './pages/account/OrderHistory'
@@ -29,11 +30,12 @@ export default function App() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="account" element={<AccountLayout />}>
-          <Route index element={<AccountDetails />} />
-          <Route path="addresses" element={<AddressBook />} />
+          <Route index element={<AccountOverview />} />
           <Route path="orders" element={<OrderHistory />} />
           <Route path="returns" element={<Returns />} />
+          <Route path="addresses" element={<AddressBook />} />
           <Route path="refer-a-friend" element={<ReferFriend />} />
+          <Route path="details" element={<AccountDetails />} />
         </Route>
         <Route path="search" element={<Search />} />
         <Route path="help" element={<Help />} />

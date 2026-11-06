@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { api } from '../../api'
 import { useAuth } from '../../context/AuthContext'
 import { formatDate } from '../../lib/format'
+import { ChevronLeftIcon } from '../../components/header/icons'
 
 export default function Returns() {
   const { user } = useAuth()
@@ -37,6 +39,10 @@ export default function Returns() {
 
   return (
     <div>
+      <Link to="/account" className="mb-4 inline-flex items-center gap-1 text-sm uppercase text-black/60 hover:text-brand-black">
+        <ChevronLeftIcon size={16} />
+        Account
+      </Link>
       <h2 className="text-lg font-bold uppercase">Returns</h2>
 
       {returns.length === 0 ? (

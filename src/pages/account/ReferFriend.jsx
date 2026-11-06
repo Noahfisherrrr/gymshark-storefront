@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { api } from '../../api'
 import { useAuth } from '../../context/AuthContext'
 import { formatPrice } from '../../lib/format'
+import { ChevronLeftIcon } from '../../components/header/icons'
 
 export default function ReferFriend() {
   const { user } = useAuth()
@@ -26,6 +28,10 @@ export default function ReferFriend() {
 
   return (
     <div>
+      <Link to="/account" className="mb-4 inline-flex items-center gap-1 text-sm uppercase text-black/60 hover:text-brand-black">
+        <ChevronLeftIcon size={16} />
+        Account
+      </Link>
       <h2 className="text-lg font-bold uppercase">Refer a Friend</h2>
       <p className="mt-2 max-w-md text-sm text-black/60">
         Share your link — when a friend makes their first order, you both get {formatPrice(referral.rewardAmount)}{' '}

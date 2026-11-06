@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { api } from '../../api'
 import { useAuth } from '../../context/AuthContext'
 import Modal from '../../components/ui/Modal'
+import { ChevronLeftIcon } from '../../components/header/icons'
 
 const RESOLVED_ORDER_STATUSES = new Set(['delivered', 'cancelled'])
 
@@ -101,6 +102,10 @@ export default function AccountDetails() {
 
   return (
     <div>
+      <Link to="/account" className="mb-4 inline-flex items-center gap-1 text-sm uppercase text-black/60 hover:text-brand-black">
+        <ChevronLeftIcon size={16} />
+        Account
+      </Link>
       <h2 className="text-lg font-bold uppercase">Account Details</h2>
       <form onSubmit={handleSubmit} className="mt-4 max-w-md space-y-4">
         <div className="flex gap-4">

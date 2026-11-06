@@ -1,9 +1,18 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api'
 import Banner from '../components/home/Banner'
+import BannerSlim from '../components/home/BannerSlim'
+import BlogCards from '../components/home/BlogCards'
 import ProductCarousel from '../components/home/ProductCarousel'
 import TabbedProductGrid from '../components/home/TabbedProductGrid'
-import { HOME_CAROUSELS, HOME_HERO, HOME_POPULAR, HOME_VIDEO_BANNER } from '../config/home'
+import {
+  HOME_BLOG,
+  HOME_CAROUSELS,
+  HOME_HERO,
+  HOME_POPULAR,
+  HOME_PROMO_BANNER,
+  HOME_VIDEO_BANNER,
+} from '../config/home'
 
 function useProductList(query) {
   const [products, setProducts] = useState([])
@@ -31,12 +40,15 @@ export default function Home() {
   return (
     <div>
       <Banner {...HOME_HERO} headingLevel="h1" />
+      <Carousel config={HOME_CAROUSELS.newIn} />
+      <BannerSlim {...HOME_PROMO_BANNER} />
       <Carousel config={HOME_CAROUSELS.women} />
       <Banner {...HOME_VIDEO_BANNER} />
       <Carousel config={HOME_CAROUSELS.men} />
       <Carousel config={HOME_CAROUSELS.accessories} />
       <Carousel config={HOME_CAROUSELS.sale} title={saleTitle} />
       <TabbedProductGrid {...HOME_POPULAR} />
+      <BlogCards {...HOME_BLOG} />
     </div>
   )
 }

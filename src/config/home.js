@@ -16,6 +16,15 @@ export const HOME_HERO = {
   ],
 }
 
+// First-order discount promo — gymshark.com's "Banner-slim" block (solid
+// black, no media). Rate is a placeholder; swap for whatever offer the
+// client is actually running (Brief.md #7).
+export const HOME_PROMO_BANNER = {
+  title: 'NEW HERE?\nWANT AN EXTRA 15% OFF?',
+  copy: 'Sign up to get an extra 15% off your first order.',
+  cta: { label: 'Sign up', href: '/register' },
+}
+
 // Placeholder footage: "Fitness man lifting weights at the gym" from
 // Mixkit (mixkit.co, free under the Mixkit License). Swap for the
 // client's own campaign video.
@@ -32,6 +41,7 @@ export const HOME_VIDEO_BANNER = {
 
 // `query` is passed straight to api.products.list().
 export const HOME_CAROUSELS = {
+  newIn: { title: 'New in for 2026', href: '/shop?category=new', query: { category: 'new', limit: 10 } },
   women: { title: 'Women', href: '/shop?category=women', query: { gender: 'f', limit: 10 } },
   men: { title: 'Men', href: '/shop?category=men', query: { gender: 'm', limit: 10 } },
   accessories: {
@@ -47,5 +57,37 @@ export const HOME_POPULAR = {
   tabs: [
     { label: 'Women', gender: 'f', href: '/shop?category=women' },
     { label: 'Men', gender: 'm', href: '/shop?category=men' },
+  ],
+}
+
+// Editorial/news cards (gymshark.com's "Conditioning" blog). Posts and
+// imagery are placeholders — the client's content manager will publish the
+// real ones (new drops, styling guides, etc.) through the CMS; link to
+// /help, the only reads-more page we have, until a blog page exists.
+export const HOME_BLOG = {
+  title: 'From the blog',
+  href: '/help',
+  posts: [
+    {
+      id: 'blog-1',
+      title: 'New in: the 2026 drop, decoded',
+      excerpt: 'Everything landing this season, from everyday leggings to the next training essentials.',
+      image: '/media/products/p3.jpg',
+      href: '/help',
+    },
+    {
+      id: 'blog-2',
+      title: 'Dresses, re-imagined for the gym bag',
+      excerpt: 'Why athleisure dresses are the move for rest days — more coming soon.',
+      image: '/media/products/p16.jpg',
+      href: '/help',
+    },
+    {
+      id: 'blog-3',
+      title: 'How we train: tips from the team',
+      excerpt: 'Short, sharp advice for getting the most out of every session.',
+      image: '/media/products/p9.jpg',
+      href: '/help',
+    },
   ],
 }

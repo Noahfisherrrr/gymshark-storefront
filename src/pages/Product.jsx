@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { api } from '../api'
+import { getProductContent } from '../api/cms'
 import { useCart } from '../context/CartContext'
 import { addRecentlyViewed } from '../lib/recentlyViewed'
 
@@ -15,10 +16,27 @@ export default function Product() {
 
   useEffect(() => {
     setLoading(true)
-    api.products.getById(productId).then((p) => {
-      if (p) addRecentlyViewed(p.id)
-      setProduct(p)
-      setSelectedVariantId(p?.variants[0]?.id ?? null)
+    api.products.getById(productId).then(async (p) => {
+      if (!p) {
+        setProduct(null)
+        setLoading(false)
+        return
+      }
+      addRecentlyViewed(p.id)
+      // CMS editorial content (description, extra gallery images) overrides
+      // the commerce record's placeholder copy when a client editor has
+      // published it; price/stock/variants always stay commerce-authoritative.
+      const content = await getProductContent(p.id)
+      setProduct(
+        content
+          ? {
+              ...p,
+              description: content.description ?? p.description,
+              gallery: content.gallery.length ? content.gallery : [p.image].filter(Boolean),
+            }
+          : p,
+      )
+      setSelectedVariantId(p.variants[0]?.id ?? null)
       setLoading(false)
     })
   }, [productId])
@@ -43,8 +61,12 @@ export default function Product() {
     <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
       <div className="grid gap-10 lg:grid-cols-2">
         <div className="aspect-[4/5] overflow-hidden bg-surface-subtle">
-          {product.image && (
-            <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+          {(product.gallery?.[0] ?? product.image) && (
+            <img
+              src={product.gallery?.[0] ?? product.image}
+              alt={product.name}
+              className="h-full w-full object-cover"
+            />
           )}
         </div>
 

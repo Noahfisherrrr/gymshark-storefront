@@ -15,6 +15,8 @@ dist-ssr
 # Private planning notes
 futurePlans.md
 glossary.md
+cms-plan.md
+*.md
 
 # Editor directories and files
 .vscode/*

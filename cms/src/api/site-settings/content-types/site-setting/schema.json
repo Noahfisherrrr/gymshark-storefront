@@ -1,0 +1,39 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_settings",
+  "info": {
+    "singularName": "site-setting",
+    "pluralName": "site-settings",
+    "displayName": "Site settings",
+    "description": "Global storefront settings: logo, announcement bar, navigation, footer, social links"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "announcement": {
+      "type": "string"
+    },
+    "navigation": {
+      "type": "component",
+      "component": "shared.nav-link",
+      "repeatable": true
+    },
+    "footerColumns": {
+      "type": "component",
+      "component": "layout.footer-column",
+      "repeatable": true
+    },
+    "socialLinks": {
+      "type": "component",
+      "component": "layout.social-link",
+      "repeatable": true
+    }
+  }
+}

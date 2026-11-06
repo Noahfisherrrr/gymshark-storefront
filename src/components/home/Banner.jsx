@@ -9,7 +9,7 @@ const prefersReducedMotion = () =>
 // gymshark.com's "Standard" banner: full-bleed media (2:3 on mobile, 8:3
 // from tablet up), a bottom gradient, copy + underline CTAs bottom-left,
 // and a pause control when the media is a video.
-export default function Banner({ title, copy, ctas = [], video, poster, headingLevel = 'h2' }) {
+export default function Banner({ title, copy, ctas = [], video, poster, image, headingLevel = 'h2' }) {
   const videoRef = useRef(null)
   const [paused, setPaused] = useState(prefersReducedMotion)
   const Heading = headingLevel
@@ -24,7 +24,7 @@ export default function Banner({ title, copy, ctas = [], video, poster, headingL
   return (
     <section className="relative flex aspect-[2/3] w-full items-end overflow-hidden bg-ink md:aspect-[8/3]">
       <div className="absolute inset-0">
-        {video && (
+        {video ? (
           <video
             ref={videoRef}
             src={video}
@@ -36,6 +36,8 @@ export default function Banner({ title, copy, ctas = [], video, poster, headingL
             aria-hidden="true"
             className="h-full w-full object-cover"
           />
+        ) : (
+          image && <img src={image} alt="" aria-hidden="true" className="h-full w-full object-cover" />
         )}
         <div className="absolute inset-x-0 bottom-0 h-60 bg-gradient-to-b from-transparent to-ink opacity-80" />
       </div>

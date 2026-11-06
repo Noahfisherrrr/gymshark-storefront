@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { api } from '../../api'
 import { useCart } from '../../context/CartContext'
@@ -300,12 +300,18 @@ function CrossSell({ exclude, onAdd }) {
     el.scrollLeft += e.deltaY
   }
 
-  if (!products) return null
-  const candidates = products
-    .filter((p) => !exclude.includes(p.id))
-    .sort((a, b) => a.price - b.price)
-    .slice(0, 4)
-  if (candidates.length === 0) return null
+  const candidates = useMemo(() => {
+    if (!products) return []
+    const pool = products.filter((p) => !exclude.includes(p.id))
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[pool[i], pool[j]] = [pool[j], pool[i]]
+    }
+    return pool.slice(0, 4)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [products, exclude])
+
+  if (!products || candidates.length === 0) return null
 
   return (
     <div className="mb-6 bg-surface-subtle py-4">

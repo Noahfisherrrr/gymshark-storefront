@@ -29,6 +29,15 @@
     "description": {
       "type": "richtext"
     },
+    "price": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "compareAtPrice": {
+      "type": "decimal",
+      "min": 0
+    },
     "gallery": {
       "type": "media",
       "multiple": true,

@@ -86,6 +86,8 @@
  *   getCurrentUser: () => Promise<User|null>,
  *   signUp: (input: { email: string, password: string, name: string }) => Promise<User>,
  *   signIn: (input: { email: string, password: string }) => Promise<User>,
+ *   signInWithOAuth: (provider: 'google'|'apple') => Promise<User|void>,  // mock resolves a User; supabase redirects the browser and resolves void
+ *   onAuthStateChange: (callback: (user: User|null) => void) => (() => void),  // returns an unsubscribe function
  *   signOut: () => Promise<void>,
  * }} auth
  * @property {{

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import SocialSignInButtons from '../components/auth/SocialSignInButtons'
 
 export default function Register() {
   const { signUp } = useAuth()
@@ -28,7 +29,15 @@ export default function Register() {
   return (
     <div className="mx-auto max-w-md px-4 py-16 lg:px-8">
       <h1 className="text-2xl font-bold uppercase">Create Account</h1>
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+      <div className="mt-6">
+        <SocialSignInButtons onError={setError} />
+      </div>
+      <div className="my-6 flex items-center gap-3 text-xs uppercase text-black/40">
+        <span className="h-px flex-1 bg-black/10" />
+        or
+        <span className="h-px flex-1 bg-black/10" />
+      </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
           placeholder="Full name"

@@ -12,6 +12,10 @@ export function AuthProvider({ children }) {
       .getCurrentUser()
       .then(setUser)
       .finally(() => setLoading(false))
+
+    // Picks up the session Supabase creates once a Google/Apple OAuth
+    // redirect lands back on the site; a no-op under the mock provider.
+    return api.auth.onAuthStateChange(setUser)
   }, [])
 
   async function signIn(credentials) {
@@ -26,13 +30,22 @@ export function AuthProvider({ children }) {
     return newUser
   }
 
+  // Resolves to a User under the mock provider (instant fake sign-in); under
+  // Supabase it redirects the browser away, so there's nothing useful to
+  // return — onAuthStateChange above picks up the session on return.
+  async function signInWithOAuth(provider) {
+    const signedInUser = await api.auth.signInWithOAuth(provider)
+    if (signedInUser) setUser(signedInUser)
+    return signedInUser
+  }
+
   async function signOut() {
     await api.auth.signOut()
     setUser(null)
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, signInWithOAuth, signOut }}>
       {children}
     </AuthContext.Provider>
   )

@@ -243,6 +243,32 @@ async function signIn({ email, password }) {
   return session
 }
 
+// No real OAuth app exists in mock mode, so simulate an instant social
+// sign-in — reuses the same fake account across calls, like a real IdP would.
+async function signInWithOAuth(provider) {
+  await delay()
+  const email = `${provider}-user@example.com`
+  const users = getUsersDb()
+  let user = users.find((u) => u.email === email)
+  if (!user) {
+    user = {
+      id: makeId('user'),
+      email,
+      name: provider === 'google' ? 'Google User' : 'Apple User',
+      password: null,
+    }
+    writeStore('users', [...users, user])
+  }
+  const session = { id: user.id, email: user.email, name: user.name }
+  writeStore('session', session)
+  return session
+}
+
+// Mock auth has no external session events (no redirect round-trip) to listen for.
+function onAuthStateChange() {
+  return () => {}
+}
+
 async function signOut() {
   await delay()
   writeStore('session', null)
@@ -276,6 +302,6 @@ export const mockApi = {
     clear: clearCart,
   },
   wishlist: { get: getWishlist, toggle: toggleWishlist },
-  auth: { getCurrentUser, signUp, signIn, signOut },
+  auth: { getCurrentUser, signUp, signIn, signInWithOAuth, onAuthStateChange, signOut },
   orders: { list: listOrders, applyDiscountCode },
 }

@@ -176,6 +176,29 @@ async function signIn({ email, password }) {
   }
 }
 
+// Redirects the browser to Google/Apple; Supabase needs that provider
+// enabled (with its OAuth client id/secret) in the client's Supabase project
+// dashboard — pending Brief.md #14, same as the rest of Supabase Auth.
+async function signInWithOAuth(provider) {
+  assertConfigured()
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: { redirectTo: `${window.location.origin}/account` },
+  })
+  if (error) throw error
+}
+
+// Catches the session Supabase creates after the OAuth redirect lands back
+// on the site (supabase-js parses it out of the URL automatically).
+function onAuthStateChange(callback) {
+  if (!isSupabaseConfigured) return () => {}
+  const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+    const user = session?.user
+    callback(user ? { id: user.id, email: user.email, name: user.user_metadata?.name ?? '' } : null)
+  })
+  return () => data.subscription.unsubscribe()
+}
+
 async function signOut() {
   assertConfigured()
   const { error } = await supabase.auth.signOut()
@@ -194,6 +217,6 @@ export const supabaseApi = {
     clear: clearCart,
   },
   wishlist: { get: getWishlist, toggle: toggleWishlist },
-  auth: { getCurrentUser, signUp, signIn, signOut },
+  auth: { getCurrentUser, signUp, signIn, signInWithOAuth, onAuthStateChange, signOut },
   orders: { list: listOrders, applyDiscountCode },
 }

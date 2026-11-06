@@ -1,12 +1,21 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../../api'
 import { useAuth } from '../../context/AuthContext'
 import Modal from '../../components/ui/Modal'
 
+const RESOLVED_ORDER_STATUSES = new Set(['delivered', 'cancelled'])
+
 export default function AccountDetails() {
   const { user, updateUser, signOut } = useAuth()
   const navigate = useNavigate()
+  const [hasPendingOrders, setHasPendingOrders] = useState(false)
+
+  useEffect(() => {
+    api.orders.list(user.id).then((orders) => {
+      setHasPendingOrders(orders.some((o) => !RESOLVED_ORDER_STATUSES.has(o.status?.toLowerCase())))
+    })
+  }, [user])
   const [firstName, setFirstName] = useState(user.firstName ?? '')
   const [lastName, setLastName] = useState(user.lastName ?? '')
   const [dateOfBirth, setDateOfBirth] = useState(user.dateOfBirth ?? '')
@@ -209,17 +218,24 @@ export default function AccountDetails() {
         <p className="mt-2 text-sm text-black/60">
           Permanently delete your account and all associated data. This can't be undone.
         </p>
-        <button
-          type="button"
-          onClick={() => {
-            setDeleteError(null)
-            setDeletePassword('')
-            setDeleting(true)
-          }}
-          className="mt-3 border border-red-600 px-6 py-3 text-sm font-semibold uppercase text-red-600"
-        >
-          Delete Account
-        </button>
+        {hasPendingOrders ? (
+          <p className="mt-3 max-w-md text-sm text-black/60">
+            You have an order that hasn't been delivered yet. You can delete your account once every order is
+            delivered or cancelled — your order history is kept as a payment record either way.
+          </p>
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              setDeleteError(null)
+              setDeletePassword('')
+              setDeleting(true)
+            }}
+            className="mt-3 border border-red-600 px-6 py-3 text-sm font-semibold uppercase text-red-600"
+          >
+            Delete Account
+          </button>
+        )}
       </div>
 
       <Modal isOpen={deleting} onRequestClose={() => setDeleting(false)} label="Confirm account deletion">

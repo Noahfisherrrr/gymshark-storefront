@@ -197,6 +197,11 @@ async function deleteAccount(userId, { currentPassword }) {
   })
   if (reauthError) throw new Error('Current password is incorrect')
 
+  // TODO once the `orders` table exists (plan.md → Phase 3): block this the
+  // same way the mock provider does when the user has an order that isn't
+  // delivered/cancelled yet, and never delete order rows — they're
+  // payment/fulfillment records that must outlive the account.
+
   // The Supabase client SDK can't delete the current user itself (that's an
   // admin/service-role call) — this needs a server-side function (e.g. a
   // Supabase Edge Function calling auth.admin.deleteUser) once Brief.md #14's

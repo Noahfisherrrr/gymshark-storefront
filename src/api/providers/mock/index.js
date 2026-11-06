@@ -371,6 +371,8 @@ async function changePassword(userId, { currentPassword, newPassword }) {
   writeStore('users', users.map((u) => (u.id === userId ? { ...u, password: newPassword } : u)))
 }
 
+const UNRESOLVED_ORDER_STATUSES = new Set(['delivered', 'cancelled'])
+
 async function deleteAccount(userId, { currentPassword }) {
   await delay()
   const users = getUsersDb()
@@ -379,6 +381,16 @@ async function deleteAccount(userId, { currentPassword }) {
   if (current.password !== null && current.password !== currentPassword) {
     throw new Error('Current password is incorrect')
   }
+
+  const pendingOrders = readStore('orders', []).filter(
+    (o) => o.userId === userId && !UNRESOLVED_ORDER_STATUSES.has(o.status?.toLowerCase()),
+  )
+  if (pendingOrders.length > 0) {
+    throw new Error(
+      'You have an order that has not been delivered yet. Please wait until it is delivered, or cancel it, before deleting your account.',
+    )
+  }
+
   writeStore('users', users.filter((u) => u.id !== userId))
   writeStore('session', null)
   // The mock store isn't namespaced per user — these all belong to the
@@ -388,6 +400,8 @@ async function deleteAccount(userId, { currentPassword }) {
   writeStore('wishlist', [])
   writeStore('returns', [])
   writeStore('referralStats', { referralsCount: 0, creditsEarned: 0 })
+  // Orders are left in place — they're payment/fulfillment records, not
+  // account profile data, so they must survive the account being deleted.
 }
 
 function getAddressesDb() {

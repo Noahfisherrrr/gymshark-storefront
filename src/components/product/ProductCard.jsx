@@ -25,6 +25,12 @@ function quickAddSizes(variants) {
   })
 }
 
+// One Size products have nothing to pick between, so the size-hover tray
+// (which exists purely to let shoppers choose a size) doesn't apply to them.
+function isOneSize(variants) {
+  return variants.every((v) => v.size.toLowerCase() === 'one size')
+}
+
 export default function ProductCard({ product, onNavigate, infoClassName = 'p-2 min-[1440px]:p-4' }) {
   const { isWishlisted, toggle } = useWishlist()
   const { addItem, openMiniBag } = useCart()
@@ -32,7 +38,8 @@ export default function ProductCard({ product, onNavigate, infoClassName = 'p-2 
   const saved = isWishlisted(product.id)
   const href = `/product/${product.id}`
   const colour = product.variants[0]?.color
-  const sizes = quickAddSizes(product.variants.filter((v) => v.color === colour))
+  const colourVariants = product.variants.filter((v) => v.color === colour)
+  const sizes = isOneSize(colourVariants) ? [] : quickAddSizes(colourVariants)
   const onSale = product.compareAtPrice != null && product.compareAtPrice > product.price
 
   async function handlePickSize(variant) {

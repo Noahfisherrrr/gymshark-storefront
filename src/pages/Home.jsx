@@ -55,7 +55,7 @@ export default function Home() {
   const hero = useHero()
   return (
     <div>
-      <Banner {...hero} headingLevel="h1" />
+      <Banner {...hero} headingLevel="h1" priority />
       <Carousel config={HOME_CAROUSELS.newIn} />
       <Carousel config={HOME_CAROUSELS.women} />
       <Banner {...HOME_VIDEO_BANNER} />

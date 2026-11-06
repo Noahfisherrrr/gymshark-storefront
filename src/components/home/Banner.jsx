@@ -9,35 +9,83 @@ const prefersReducedMotion = () =>
 // gymshark.com's "Standard" banner: full-bleed media (2:3 on mobile, 8:3
 // from tablet up), a bottom gradient, copy + underline CTAs bottom-left,
 // and a pause control when the media is a video.
-export default function Banner({ title, copy, ctas = [], video, poster, image, headingLevel = 'h2' }) {
+//
+// `priority` marks the above-the-fold hero: its video is allowed to start
+// loading immediately. Every other instance waits until it's actually
+// near the viewport before fetching any video bytes, so off-screen banners
+// don't compete with the initial page load (a top Lighthouse TBT offender
+// here was both homepage videos downloading on mount regardless of
+// scroll position).
+export default function Banner({
+  title,
+  copy,
+  ctas = [],
+  video,
+  poster,
+  image,
+  headingLevel = 'h2',
+  priority = false,
+}) {
   const videoRef = useRef(null)
+  const sectionRef = useRef(null)
   const [paused, setPaused] = useState(prefersReducedMotion)
+  const [nearViewport, setNearViewport] = useState(priority)
   const Heading = headingLevel
 
   useEffect(() => {
+    if (nearViewport || !video) return
+    const el = sectionRef.current
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setNearViewport(true)
+      return
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setNearViewport(true)
+      },
+      { rootMargin: '200px 0px' },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [nearViewport, video])
+
+  useEffect(() => {
     const el = videoRef.current
-    if (!el) return
+    if (!el || !nearViewport) return
     if (paused) el.pause()
     else el.play().catch(() => setPaused(true))
-  }, [paused])
+  }, [paused, nearViewport])
 
   return (
-    <section className="relative flex aspect-[2/3] w-full items-end overflow-hidden bg-ink md:aspect-[8/3]">
+    <section
+      ref={sectionRef}
+      className="relative flex aspect-[2/3] w-full items-end overflow-hidden bg-ink md:aspect-[8/3]"
+    >
       <div className="absolute inset-0">
         {video ? (
           <video
             ref={videoRef}
-            src={video}
+            src={nearViewport ? video : undefined}
             poster={poster}
             muted
             loop
             playsInline
-            preload="metadata"
+            preload={priority ? 'metadata' : 'none'}
+            fetchPriority={priority ? 'high' : 'low'}
             aria-hidden="true"
             className="h-full w-full object-cover"
           />
         ) : (
-          image && <img src={image} alt="" aria-hidden="true" className="h-full w-full object-cover" />
+          image && (
+            <img
+              src={image}
+              alt=""
+              aria-hidden="true"
+              fetchPriority={priority ? 'high' : undefined}
+              loading={priority ? 'eager' : 'lazy'}
+              className="h-full w-full object-cover"
+            />
+          )
         )}
         <div className="absolute inset-x-0 bottom-0 h-60 bg-gradient-to-b from-transparent to-ink opacity-80" />
       </div>

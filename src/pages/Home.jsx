@@ -40,12 +40,12 @@ export default function Home() {
   return (
     <div>
       <Banner {...HOME_HERO} headingLevel="h1" />
-      <Carousel config={HOME_CAROUSELS.newIn} />
-      <BannerSlim {...HOME_PROMO_BANNER} />
       <Carousel config={HOME_CAROUSELS.women} />
       <Banner {...HOME_VIDEO_BANNER} />
       <Carousel config={HOME_CAROUSELS.men} />
       <Carousel config={HOME_CAROUSELS.accessories} />
+      <BannerSlim {...HOME_PROMO_BANNER} />
+      <Carousel config={HOME_CAROUSELS.newIn} />
       <Carousel config={HOME_CAROUSELS.sale} title={saleTitle} />
       <TabbedProductGrid {...HOME_POPULAR} />
       <BlogCards {...HOME_BLOG} />

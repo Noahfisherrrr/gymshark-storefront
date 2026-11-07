@@ -5,6 +5,7 @@ import Home from './pages/Home'
 
 const Shop = lazy(() => import('./pages/Shop'))
 const ShopWomen = lazy(() => import('./pages/ShopWomen'))
+const ShopMen = lazy(() => import('./pages/ShopMen'))
 const CollectionNewReleasesWomen = lazy(() => import('./pages/CollectionNewReleasesWomen'))
 const Product = lazy(() => import('./pages/Product'))
 const Cart = lazy(() => import('./pages/Cart'))
@@ -34,6 +35,7 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="shop" element={<Shop />} />
           <Route path="pages/shop-women" element={<ShopWomen />} />
+          <Route path="pages/shop-men" element={<ShopMen />} />
           <Route path="collections/new-releases/womens" element={<CollectionNewReleasesWomen />} />
           <Route path="product/:productId" element={<Product />} />
           <Route path="cart" element={<Cart />} />

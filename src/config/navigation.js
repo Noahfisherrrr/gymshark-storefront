@@ -50,7 +50,7 @@ export const NAV_CATEGORIES = [
       {
         label: 'Trending',
         links: [
-          { label: 'New Releases', href: '/collections/new-releases/womens' },
+          { label: 'New Arrivals', href: '/collections/new-releases/womens' },
           ...['Best Sellers', 'Soft Touch', 'Edge', 'Signature Collab', 'Loungewear'].map((l) => shop('women', l)),
         ],
       },
@@ -70,7 +70,7 @@ export const NAV_CATEGORIES = [
   {
     id: 'men',
     label: 'Men',
-    href: '/shop?category=men',
+    href: '/pages/shop-men',
     groups: [
       group('men', 'Trending', ['New Arrivals', 'Best Sellers', 'Power Series', 'Signature Collab', 'Muscle Fit Shirts', 'Hybrid Training', 'Back In Stock']),
       group('men', 'T-Shirts & Tops', ['T-Shirts & Tops', 'Tank Tops', 'Muscle Fit Shirts', 'Short Sleeve', 'Long Sleeve Tops', 'Oversized T-Shirts', 'Compression Fit T-Shirts', 'Black T-Shirts']),

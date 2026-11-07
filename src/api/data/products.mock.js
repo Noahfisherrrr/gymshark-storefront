@@ -20,6 +20,7 @@ export const MOCK_PRODUCTS = [
     price: 32,
     fit: 'slim',
     features: ['sweat-wicking'],
+    collection: 'geo-seamless',
     description: 'Lightweight seamless tee built for high-rep training days.',
     image: asset('/media/products/p1.webp'),
     variants: [
@@ -225,6 +226,7 @@ export const MOCK_PRODUCTS = [
     activities: ['athleisure', 'weight-lifting'],
     price: 30,
     fit: 'oversized',
+    collection: 'power',
     description: 'Dropped-shoulder oversized tee in heavyweight cotton.',
     image: asset('/media/products/p13.webp'),
     variants: [

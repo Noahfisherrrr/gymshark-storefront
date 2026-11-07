@@ -6,4 +6,6 @@ export const COLLECTIONS = [
   { slug: 'everyday-seamless', label: 'Everyday Seamless' },
   { slug: 'vital', label: 'Vital' },
   { slug: 'matching-sets', label: 'Matching Sets' },
+  { slug: 'power', label: 'Power' },
+  { slug: 'geo-seamless', label: 'Geo Seamless' },
 ]

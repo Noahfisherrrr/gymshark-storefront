@@ -161,6 +161,44 @@ export const TwitterIcon = (p) => (
   </Icon>
 )
 
+// Help center category icons.
+export const TruckIcon = (p) => (
+  <Icon {...p}>
+    <path d="M3.5 7.5h10v8h-10Z" />
+    <path d="M13.5 10.5h3.3l2.7 2.8v2.2h-6Z" />
+    <circle cx="7.5" cy="17.5" r="1.6" />
+    <circle cx="16" cy="17.5" r="1.6" />
+  </Icon>
+)
+
+export const ReturnIcon = (p) => (
+  <Icon {...p}>
+    <path d="M6 9H15.5a4.5 4.5 0 0 1 0 9H11" />
+    <path d="M9 5.5 5.5 9 9 12.5" />
+  </Icon>
+)
+
+export const CardIcon = (p) => (
+  <Icon {...p}>
+    <rect x="3.5" y="6" width="17" height="12" rx="1.5" />
+    <path d="M3.5 10.5h17" />
+    <path d="M6.5 14.5h3" />
+  </Icon>
+)
+
+export const GearIcon = (p) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="3" />
+    <path d="M12 3.5v2.3M12 18.2v2.3M20.5 12h-2.3M5.8 12H3.5M17.8 6.2l-1.6 1.6M7.8 16.2l-1.6 1.6M17.8 17.8l-1.6-1.6M7.8 7.8 6.2 6.2" />
+  </Icon>
+)
+
+export const ProductIcon = (p) => (
+  <Icon {...p}>
+    <path d="M12 4.5 20 19H4Z" />
+  </Icon>
+)
+
 export const TiktokIcon = (p) => (
   <Icon {...p} fill="currentColor" stroke="none">
     <path d="M15.5 4.5h-2.7v10.8a2.2 2.2 0 1 1-2.2-2.2c.2 0 .4 0 .5.1v-2.8a5 5 0 1 0 4.4 5V9.3a6 6 0 0 0 3.5 1.2V7.8a3.2 3.2 0 0 1-3.5-3.3Z" />

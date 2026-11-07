@@ -112,22 +112,11 @@ export default function CollectionNewReleasesWomen() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 lg:px-8 lg:py-10">
-      <nav aria-label="Breadcrumb" className="mb-4 flex gap-2 text-[12px] text-muted">
-        <Link to="/" className="hover:text-ink">
-          Home
-        </Link>
-        <span aria-hidden="true">/</span>
-        <Link to="/pages/shop-women" className="hover:text-ink">
-          Women
-        </Link>
-        <span aria-hidden="true">/</span>
-        <span className="text-ink">New Releases</span>
-      </nav>
 
-      <h1 className="font-display text-2xl font-bold uppercase">New Releases</h1>
+      <h1 className="font-display text-3xl font-bold uppercase">New Arrivals</h1>
       <p className="mt-1 text-[14px] text-muted">The latest women's drops, newest first.</p>
-
-      <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:gap-8">
+    
+      <div className="mt-16 flex flex-col gap-6 lg:flex-row lg:gap-8">
         <FilterSortControls
           sort={sort}
           sortOptions={SORT_OPTIONS}

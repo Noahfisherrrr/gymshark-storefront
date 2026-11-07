@@ -25,7 +25,7 @@ const CATEGORIES = [
     icon: TruckIcon,
     articles: [
       { id: 'expected-delivery-date', q: 'Expected Delivery Date', a: 'Standard orders typically arrive within 3-5 working days, and express orders within 1-2 working days. You’ll get an estimated date at checkout and in your confirmation email.' },
-      { id: 'delivery-information', q: 'Delivery Information', a: 'We offer standard and express delivery. Delivery costs and timeframes depend on your location and are shown at checkout before you pay.' },
+      { id: 'delivery-information', q: 'Delivery Information', href: '/help/delivery-information', a: 'We offer standard and express delivery. Delivery costs and timeframes depend on your location and are shown at checkout before you pay.' },
       { id: 'track-my-order', q: 'How Do I Track My Order?', a: 'Once your order ships, you’ll receive a tracking link by email. You can also track it anytime from Your Account > Order History.' },
       { id: 'order-hasnt-arrived', q: 'My Order Hasn’t Arrived', a: 'If your order is later than the estimated delivery date, check the tracking link first. If it still hasn’t moved after 2 working days, contact us and we’ll look into it.' },
       { id: 'change-delivery-address', q: 'Can I Change My Delivery Address?', a: 'We can update your address if the order hasn’t been dispatched yet. Contact us as soon as possible after ordering and we’ll try to amend it.' },
@@ -168,8 +168,8 @@ export default function Help() {
                 {searchResults.map((article, i) => (
                   <Link
                     key={article.id}
-                    to={`#${article.categoryId}`}
-                    onClick={() => openArticle(article)}
+                    to={article.href ?? `#${article.categoryId}`}
+                    onClick={() => !article.href && openArticle(article)}
                     className={`flex items-center justify-between gap-4 px-5 py-4 text-sm font-semibold hover:bg-surface-subtle ${i !== searchResults.length - 1 ? 'border-b border-line' : ''}`}
                   >
                     <span>
@@ -190,8 +190,8 @@ export default function Help() {
                 {popularArticles.map((article) => (
                   <Link
                     key={article.id}
-                    to={`#${article.categoryId}`}
-                    onClick={() => openArticle(article)}
+                    to={article.href ?? `#${article.categoryId}`}
+                    onClick={() => !article.href && openArticle(article)}
                     className="flex items-center justify-between gap-2 text-sm font-semibold hover:underline"
                   >
                     {article.q}
@@ -233,21 +233,33 @@ export default function Help() {
           <section key={cat.id} id={cat.id} className="mt-12 scroll-mt-28">
             <h2 className="text-lg font-bold uppercase">{cat.title}</h2>
             <div className="mt-4 divide-y divide-line border-y border-line">
-              {cat.articles.map((article) => (
-                <details
-                  key={article.id}
-                  id={`${cat.id}-${article.id}`}
-                  open={openArticleId === article.id}
-                  onToggle={(e) => setOpenArticleId(e.target.open ? article.id : null)}
-                  className="group scroll-mt-28"
-                >
-                  <summary className="flex items-center justify-between gap-4 py-4 text-sm font-semibold">
+              {cat.articles.map((article) =>
+                article.href ? (
+                  <Link
+                    key={article.id}
+                    id={`${cat.id}-${article.id}`}
+                    to={article.href}
+                    className="flex items-center justify-between gap-4 py-4 text-sm font-semibold hover:bg-surface-subtle"
+                  >
                     {article.q}
-                    <ChevronDownIcon size={18} className="shrink-0 transition-transform duration-200 group-open:rotate-180" />
-                  </summary>
-                  <p className="pb-4 pr-8 text-sm text-black/60">{article.a}</p>
-                </details>
-              ))}
+                    <ChevronRightIcon size={18} className="shrink-0 text-muted" />
+                  </Link>
+                ) : (
+                  <details
+                    key={article.id}
+                    id={`${cat.id}-${article.id}`}
+                    open={openArticleId === article.id}
+                    onToggle={(e) => setOpenArticleId(e.target.open ? article.id : null)}
+                    className="group scroll-mt-28"
+                  >
+                    <summary className="flex items-center justify-between gap-4 py-4 text-sm font-semibold">
+                      {article.q}
+                      <ChevronDownIcon size={18} className="shrink-0 transition-transform duration-200 group-open:rotate-180" />
+                    </summary>
+                    <p className="pb-4 pr-8 text-sm text-black/60">{article.a}</p>
+                  </details>
+                ),
+              )}
             </div>
           </section>
         ))}

@@ -6,7 +6,12 @@ import { SECTION_HEADING } from '../home/ProductCarousel'
 // uppercase label, each routing back into /shop with the matching filter.
 export default function CategoryGrid({ title, tiles, columns = 4, aspect = 'aspect-[3/4]' }) {
   if (!tiles || tiles.length === 0) return null
-  const colsClass = columns === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2 lg:grid-cols-4'
+  const colsClass =
+    columns === 2
+      ? 'grid-cols-1 md:grid-cols-2'
+      : columns === 3
+        ? 'grid-cols-1 md:grid-cols-3'
+        : 'grid-cols-2 lg:grid-cols-4'
 
   return (
     <section className="mx-auto w-full max-w-[3000px] py-8 lg:px-10 lg:py-16" aria-label={title}>

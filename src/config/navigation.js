@@ -60,7 +60,14 @@ export const NAV_CATEGORIES = [
       activityGroup('women'),
       group('women', 'Accessories', ['All Accessories', 'All Socks', 'Gym Bags', 'All Equipment', "Women's Underwear & Basics"]),
       group('women', 'Last Chance', ['Last Chance']),
-      group('women', 'Explore', ['Leggings Guide', 'Leggings Size Guide', 'Sports Bra Guide', 'Running Guide', 'New Here?', 'Your Edit', 'Loyalty']),
+      {
+        label: 'Explore',
+        links: [
+          ...['Leggings Guide', 'Leggings Size Guide', 'Sports Bra Guide', 'Running Guide'].map((l) => shop('women', l)),
+          { label: 'New Here?', href: '/pages/new-users/women' },
+          ...['Your Edit', 'Loyalty'].map((l) => shop('women', l)),
+        ],
+      },
     ],
     featured: [
       { title: 'Soft Touch', href: '/shop?category=women' },
@@ -85,7 +92,14 @@ export const NAV_CATEGORIES = [
       activityGroup('men'),
       group('men', 'Accessories', ['All Accessories', 'All Socks', 'Gym Bags', 'All Equipment', "Men's Underwear & Basics"]),
       group('men', 'Last Chance', ['Last Chance Styles']),
-      group('men', 'Explore', ['Shorts Guide', 'Shorts Length Guide', 'Running Guide', 'Your Edit', 'New Here?', 'Loyalty']),
+      {
+        label: 'Explore',
+        links: [
+          ...['Shorts Guide', 'Shorts Length Guide', 'Running Guide', 'Your Edit'].map((l) => shop('men', l)),
+          { label: 'New Here?', href: '/pages/new-users/men' },
+          ...['Loyalty'].map((l) => shop('men', l)),
+        ],
+      },
     ],
     featured: [
       { title: 'Power Series', href: '/shop?category=men' },
@@ -116,13 +130,20 @@ export const NAV_CATEGORIES = [
   {
     id: 'explore',
     label: 'Explore',
-    href: '/',
+    href: '/pages/new-users',
     groups: [
       group('explore', "Women's Guides", ['Leggings Guide', 'Sports Bra Guide', 'Running Guide']),
       group('explore', "Men's Guides", ['Shorts Guide', 'Running Guide']),
       group('explore', "Women's Clothing", ['Leggings', 'Sports Bras', 'Shorts']),
       group('explore', "Men's Clothing", ['T-Shirts', 'Shorts', 'Joggers']),
-      group('explore', 'Find Out More', ['About Us', 'Loyalty', 'Student Discount']),
+      {
+        label: 'Find Out More',
+        links: [
+          { label: 'New Here? (Women)', href: '/pages/new-users/women' },
+          { label: 'New Here? (Men)', href: '/pages/new-users/men' },
+          ...['About Us', 'Loyalty', 'Student Discount'].map((l) => shop('explore', l)),
+        ],
+      },
     ],
     featured: [],
   },

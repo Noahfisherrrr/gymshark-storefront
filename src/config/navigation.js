@@ -72,7 +72,13 @@ export const NAV_CATEGORIES = [
     label: 'Men',
     href: '/pages/shop-men',
     groups: [
-      group('men', 'Trending', ['New Arrivals', 'Best Sellers', 'Power Series', 'Signature Collab', 'Muscle Fit Shirts', 'Hybrid Training', 'Back In Stock']),
+      {
+        label: 'Trending',
+        links: [
+          { label: 'New Arrivals', href: '/collections/new-releases/mens' },
+          ...['Best Sellers', 'Power Series', 'Signature Collab', 'Muscle Fit Shirts', 'Hybrid Training', 'Back In Stock'].map((l) => shop('men', l)),
+        ],
+      },
       group('men', 'T-Shirts & Tops', ['T-Shirts & Tops', 'Tank Tops', 'Muscle Fit Shirts', 'Short Sleeve', 'Long Sleeve Tops', 'Oversized T-Shirts', 'Compression Fit T-Shirts', 'Black T-Shirts']),
       group('men', 'Products', ['All Products', 'T-Shirts & Tops', 'Shorts', 'Hoodies & Sweatshirts', 'Joggers & Sweatpants', 'Pants', 'Tracksuits', 'Long Sleeve Tops', 'Jackets', 'Outerwear', "Men's Underwear & Basics", 'Base Layers']),
       group('men', 'Shop By Collection', ['Power', 'Conditioning Club', 'Arrival', 'Crest', 'Vital Seamless', 'Geo Seamless']),
@@ -91,7 +97,13 @@ export const NAV_CATEGORIES = [
     label: 'Accessories',
     href: '/shop?category=accessories',
     groups: [
-      group('accessories', 'Trending', ['All Accessories', 'New Arrivals', 'Best Sellers', 'Seasonal Accessories', 'Running Accessories', 'Back In Stock']),
+      {
+        label: 'Trending',
+        links: [
+          { label: 'New Arrivals', href: '/collections/new-releases/accessories' },
+          ...['All Accessories', 'Best Sellers', 'Seasonal Accessories', 'Running Accessories', 'Back In Stock'].map((l) => shop('accessories', l)),
+        ],
+      },
       group('accessories', 'Bags', ['All Bags', 'Backpacks', 'Duffle Bags', 'Holdalls', 'Small Bags']),
       group('accessories', 'Equipment', ['All Equipment', 'Bottles', 'Lifting Equipment', 'Resistance Bands']),
       group('accessories', 'Socks', ['All Socks', 'Crew Socks', 'Ankle Socks', 'No Show Socks']),

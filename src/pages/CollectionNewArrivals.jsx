@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import ProductCard from '../components/product/ProductCard'
 import FilterSortControls from '../components/shop/FilterSortControls'
 import { useProductFilters } from '../hooks/useProductFilters'
@@ -11,6 +11,7 @@ import { ACTIVITIES } from '../config/activities'
 import { COLLECTIONS } from '../config/collections'
 import { COLOR_SWATCHES } from '../config/colorSwatches'
 import { PRICE_RANGES } from '../config/priceRanges'
+import { NEW_ARRIVALS_COLLECTIONS } from '../config/newArrivals'
 
 // Mirrors gymshark.com's Filter & Sort → Sort By options ("Relevancy" is
 // this app's "Featured"); a new-arrivals rail defaults to Newest rather
@@ -25,14 +26,19 @@ const SORT_OPTIONS = [
 const SIZE_OPTIONS = SIZE_ORDER.map((size) => ({ slug: size, label: size }))
 const COLOR_OPTIONS = Object.keys(COLOR_SWATCHES).map((color) => ({ slug: color, label: color }))
 
-// gymshark.com's /collections/new-releases/womens — the inner page the New
-// In rail's "View all" (src/config/shopWomen.js) and the Women's nav
-// (src/config/navigation.js) both route into. Unlike /pages/shop-women
-// (pure curation) this is a filterable PLP scoped to women's new arrivals,
-// using the same Filter & Sort panel as /shop.
-export default function CollectionNewReleasesWomen() {
+// gymshark.com's /collections/new-releases/{womens,mens,accessories} — one
+// shared PLP template for every gender/category's New Arrivals, so they're
+// always the same UI and placement. `:slug` selects the copy and the
+// `category` facet (src/config/newArrivals.js); everything else — Filter &
+// Sort panel, grid, sort default — is identical across all three.
+export default function CollectionNewArrivals() {
+  const { slug } = useParams()
+  const collection = NEW_ARRIVALS_COLLECTIONS[slug]
+
   const { products, loading, sort, setSort, selected, toggleFacet, selectedPrice, setPrice, clearAll, activeFilterCount } =
-    useProductFilters({ category: 'women', sort: 'newest' })
+    useProductFilters({ category: collection?.category, sort: 'newest' })
+
+  if (!collection) return <Navigate to="/shop" replace />
 
   const sections = [
     {
@@ -113,9 +119,9 @@ export default function CollectionNewReleasesWomen() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 lg:px-8 lg:py-10">
 
-      <h1 className="font-display text-3xl font-bold uppercase">New Arrivals</h1>
-      <p className="mt-1 text-[14px] text-muted">The latest women's drops, newest first.</p>
-    
+      <h1 className="font-display text-3xl font-bold uppercase">{collection.title}</h1>
+      <p className="mt-1 text-[14px] text-muted">{collection.subtitle}</p>
+
       <div className="mt-16 flex flex-col gap-6 lg:flex-row lg:gap-8">
         <FilterSortControls
           sort={sort}

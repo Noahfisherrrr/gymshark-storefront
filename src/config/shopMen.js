@@ -16,17 +16,19 @@ export const SHOP_MEN_HERO = {
   mobileVideo: asset('/media/gym-training-mobile.mp4'),
   poster: asset('/media/gym-training-poster.webp'),
   ctas: [
-    { label: 'Shop new in', href: '/shop?category=men&sort=newest' },
+    { label: 'Shop new in', href: '/collections/new-releases/mens' },
     { label: 'Shop best sellers', href: '/shop?category=men' },
   ],
 }
 
 // `category: 'men'` (the product's own catalog tag) rather than
 // `gender: 'm'` (which also matches unisex accessories) — a men's New In
-// rail should lead with apparel, not gym bags and shaker bottles.
+// rail should lead with apparel, not gym bags and shaker bottles. "View
+// all" routes into /collections/new-releases/mens, the same New Arrivals
+// PLP template women's and accessories' New In rails use.
 export const SHOP_MEN_NEW_IN = {
   title: 'New in',
-  href: '/shop?category=men&sort=newest',
+  href: '/collections/new-releases/mens',
   query: { category: 'men', sort: 'newest', limit: 10 },
 }
 

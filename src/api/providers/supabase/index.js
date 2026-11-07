@@ -38,6 +38,12 @@ async function listProducts({
   gender,
   activity,
   type,
+  size,
+  color,
+  fit,
+  rise,
+  feature,
+  collection,
   priceMin,
   priceMax,
   onSale,
@@ -52,6 +58,16 @@ async function listProducts({
   // `overlaps` matches rows where any of the given activities is present.
   if (activity) query = query.overlaps('activities', activity.split(',').filter(Boolean))
   if (type) query = query.in('type', type.split(',').filter(Boolean))
+  if (fit) query = query.in('fit', fit.split(',').filter(Boolean))
+  if (rise) query = query.in('rise', rise.split(',').filter(Boolean))
+  if (feature) query = query.overlaps('features', feature.split(',').filter(Boolean))
+  if (collection) query = query.in('collection', collection.split(',').filter(Boolean))
+  // size/color live on `product_variants`, a joined table — filtering the
+  // parent `products` row by a joined column isn't a plain column filter
+  // here, so these are left as a TODO until the real schema (and whether
+  // it's a view, RPC, or separate query) is settled.
+  void size
+  void color
   if (priceMin != null) query = query.gte('price', priceMin)
   if (priceMax != null) query = query.lte('price', priceMax)
   if (onSale) query = query.not('compare_at_price', 'is', null)

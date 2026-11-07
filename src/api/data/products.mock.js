@@ -18,6 +18,8 @@ export const MOCK_PRODUCTS = [
     type: 't-shirts',
     activities: ['weight-lifting', 'athleisure'],
     price: 32,
+    fit: 'slim',
+    features: ['sweat-wicking'],
     description: 'Lightweight seamless tee built for high-rep training days.',
     image: asset('/media/products/p1.webp'),
     variants: [
@@ -35,6 +37,9 @@ export const MOCK_PRODUCTS = [
     type: 'shorts',
     activities: ['weight-lifting', 'running'],
     price: 28,
+    fit: 'regular',
+    rise: 'mid-waisted',
+    features: ['four-way-stretch', 'pockets'],
     description: '4-way stretch shorts with a zip pocket for essentials.',
     image: asset('/media/products/p2.webp'),
     variants: [
@@ -51,6 +56,10 @@ export const MOCK_PRODUCTS = [
     type: 'leggings',
     activities: ['athleisure', 'yoga', 'pilates'],
     price: 48,
+    fit: 'compression',
+    rise: 'high-waisted',
+    features: ['squat-proof', 'four-way-stretch'],
+    collection: 'everyday-seamless',
     description: 'Second-skin ribbed leggings with a high waistband.',
     image: asset('/media/products/p3.webp'),
     variants: [
@@ -67,6 +76,9 @@ export const MOCK_PRODUCTS = [
     type: 'sports-bras',
     activities: ['yoga', 'pilates', 'athleisure'],
     price: 26,
+    fit: 'compression',
+    features: ['sweat-wicking'],
+    collection: 'vital',
     description: 'Medium-support sports bra with a racerback cut.',
     image: asset('/media/products/p4.webp'),
     variants: [
@@ -83,6 +95,7 @@ export const MOCK_PRODUCTS = [
     type: 'hoodies',
     activities: ['athleisure'],
     price: 54,
+    fit: 'oversized',
     description: 'Heavyweight cotton hoodie, relaxed oversized fit.',
     image: asset('/media/products/p5.webp'),
     variants: [
@@ -99,6 +112,8 @@ export const MOCK_PRODUCTS = [
     type: 'hoodies',
     activities: ['running', 'hiking', 'athleisure'],
     price: 46,
+    fit: 'regular',
+    features: ['sweat-wicking'],
     description: 'Brushed-back half-zip for warm-ups and rest days.',
     image: asset('/media/products/p6.webp'),
     variants: [
@@ -115,6 +130,7 @@ export const MOCK_PRODUCTS = [
     activities: ['running', 'athleisure'],
     price: 39,
     compareAtPrice: 65,
+    fit: 'relaxed',
     description: 'Retro track jacket, final-sale colorway.',
     image: asset('/media/products/p7.webp'),
     variants: [variant('p7-m-red', 'M', 'Red', 2), variant('p7-l-red', 'L', 'Red', 0)],
@@ -128,6 +144,8 @@ export const MOCK_PRODUCTS = [
     activities: ['weight-lifting', 'running'],
     price: 18,
     compareAtPrice: 30,
+    fit: 'compression',
+    features: ['sweat-wicking'],
     description: 'Moisture-wicking base layer, clearance pricing.',
     image: asset('/media/products/p8.webp'),
     variants: [variant('p8-s-black', 'S', 'Black', 6), variant('p8-m-black', 'M', 'Black', 6)],
@@ -140,6 +158,10 @@ export const MOCK_PRODUCTS = [
     type: 'leggings',
     activities: ['weight-lifting', 'athleisure'],
     price: 52,
+    fit: 'compression',
+    rise: 'high-waisted',
+    features: ['squat-proof'],
+    collection: 'vital',
     description: 'Scrunch-back leggings with a contour seam and squat-proof fabric.',
     image: asset('/media/products/p9.webp'),
     variants: [
@@ -157,6 +179,10 @@ export const MOCK_PRODUCTS = [
     activities: ['athleisure', 'yoga'],
     price: 35,
     compareAtPrice: 50,
+    fit: 'relaxed',
+    rise: 'mid-waisted',
+    features: ['four-way-stretch'],
+    collection: 'everyday-seamless',
     description: 'Soft-touch flared leggings for studio sessions and rest days.',
     image: asset('/media/products/p10.webp'),
     variants: [variant('p10-s-black', 'S', 'Black', 9), variant('p10-m-brown', 'M', 'Brown', 4)],
@@ -169,6 +195,7 @@ export const MOCK_PRODUCTS = [
     type: 't-shirts',
     activities: ['weight-lifting', 'pilates'],
     price: 24,
+    fit: 'relaxed',
     description: 'Cropped tank top with a relaxed fit and dropped armholes.',
     image: asset('/media/products/p11.webp'),
     variants: [variant('p11-s-white', 'S', 'White', 7), variant('p11-m-black', 'M', 'Black', 5)],
@@ -182,6 +209,9 @@ export const MOCK_PRODUCTS = [
     activities: ['running', 'hiking'],
     price: 21,
     compareAtPrice: 30,
+    fit: 'regular',
+    rise: 'low-waisted',
+    features: ['pockets', 'reflective'],
     description: 'Lightweight running shorts with a built-in liner and back pocket.',
     image: asset('/media/products/p12.webp'),
     variants: [variant('p12-xs-black', 'XS', 'Black', 6), variant('p12-s-pink', 'S', 'Pink', 3)],
@@ -194,6 +224,7 @@ export const MOCK_PRODUCTS = [
     type: 't-shirts',
     activities: ['athleisure', 'weight-lifting'],
     price: 30,
+    fit: 'oversized',
     description: 'Dropped-shoulder oversized tee in heavyweight cotton.',
     image: asset('/media/products/p13.webp'),
     variants: [
@@ -211,6 +242,9 @@ export const MOCK_PRODUCTS = [
     activities: ['athleisure', 'hiking'],
     price: 32,
     compareAtPrice: 45,
+    fit: 'relaxed',
+    rise: 'mid-waisted',
+    features: ['pockets'],
     description: 'Tapered fleece joggers with cuffed ankles and zip pockets.',
     image: asset('/media/products/p14.webp'),
     variants: [variant('p14-m-grey', 'M', 'Grey', 10), variant('p14-l-black', 'L', 'Black', 7)],
@@ -288,7 +322,15 @@ export const MOCK_PRODUCTS = [
     image: asset('/media/products/p20.webp'),
     variants: [variant('p20-os-black', 'One Size', 'Black', 8)],
   },
-].map((product) => ({ compareAtPrice: null, activities: [], ...product }))
+].map((product) => ({
+  compareAtPrice: null,
+  activities: [],
+  fit: null,
+  rise: null,
+  features: [],
+  collection: null,
+  ...product,
+}))
 
 // Stand-in for the search index's popular-queries data (Gymshark serves
 // these from an Algolia "suggestions" index). Used for both type-ahead

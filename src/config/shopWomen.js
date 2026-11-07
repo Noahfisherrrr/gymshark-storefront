@@ -17,17 +17,19 @@ export const SHOP_WOMEN_HERO = {
   mobileVideo: asset('/media/hero-training-mobile.mp4'),
   poster: asset('/media/hero-training-poster.webp'),
   ctas: [
-    { label: 'Shop new in', href: '/shop?category=women&sort=newest' },
+    { label: 'Shop new in', href: '/collections/new-releases/womens' },
     { label: 'Shop best sellers', href: '/shop?category=women' },
   ],
 }
 
 // `category: 'women'` (the product's own catalog tag) rather than
 // `gender: 'f'` (which also matches unisex accessories) — a women's New In
-// rail should lead with apparel, not gym bags and shaker bottles.
+// rail should lead with apparel, not gym bags and shaker bottles. "View
+// all" routes into /collections/new-releases/womens, gymshark.com's
+// dedicated new-arrivals PLP, rather than generic /shop?sort=newest.
 export const SHOP_WOMEN_NEW_IN = {
   title: 'New in',
-  href: '/shop?category=women&sort=newest',
+  href: '/collections/new-releases/womens',
   query: { category: 'women', sort: 'newest', limit: 10 },
 }
 

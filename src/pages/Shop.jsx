@@ -1,10 +1,16 @@
-import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { api } from '../api'
 import ProductCard from '../components/product/ProductCard'
+import FilterSortControls from '../components/shop/FilterSortControls'
+import { useProductFilters } from '../hooks/useProductFilters'
 import { ACTIVITIES } from '../config/activities'
 import { PRODUCT_TYPES } from '../config/productTypes'
 import { PRICE_RANGES } from '../config/priceRanges'
+import { SIZE_ORDER } from '../config/sizes'
+import { FEATURES } from '../config/features'
+import { FITS } from '../config/fits'
+import { RISES } from '../config/rises'
+import { COLLECTIONS } from '../config/collections'
+import { COLOR_SWATCHES } from '../config/colorSwatches'
 
 const CATEGORIES = ['all', 'men', 'women', 'accessories', 'new', 'sale']
 
@@ -17,6 +23,9 @@ const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest' },
 ]
 
+const SIZE_OPTIONS = SIZE_ORDER.map((size) => ({ slug: size, label: size }))
+const COLOR_OPTIONS = Object.keys(COLOR_SWATCHES).map((color) => ({ slug: color, label: color }))
+
 // Women/men are gendered (unisex included) and sale means "discounted", so
 // these pages match the homepage carousels that link to them.
 function listQuery(category) {
@@ -26,191 +35,138 @@ function listQuery(category) {
   return { category }
 }
 
-function parseList(param) {
-  return param ? param.split(',').filter(Boolean) : []
-}
-
-// Collapsible section matching gymshark.com's Filter & Sort accordion.
-function FilterSection({ title, defaultOpen = false, children }) {
-  const [open, setOpen] = useState(defaultOpen)
-  return (
-    <div className="mt-6 border-t border-black/10 pt-4 first:mt-0 first:border-0 first:pt-0">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between text-sm font-semibold uppercase"
-      >
-        {title}
-        <span>{open ? '−' : '+'}</span>
-      </button>
-      {open && <div className="mt-3 space-y-2 text-sm">{children}</div>}
-    </div>
-  )
-}
-
 export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams()
   const category = searchParams.get('category') ?? 'all'
-  const sort = searchParams.get('sort') ?? 'featured'
-  const search = searchParams.get('q') ?? ''
-  const selectedActivities = parseList(searchParams.get('activity'))
-  const selectedTypes = parseList(searchParams.get('type'))
-  const selectedPrice = searchParams.get('price') ?? ''
 
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
+  const { products, loading, sort, setSort, selected, toggleFacet, selectedPrice, setPrice, clearAll, activeFilterCount } =
+    useProductFilters(listQuery(category))
 
-  const priceRange = PRICE_RANGES.find((r) => r.slug === selectedPrice)
-
-  useEffect(() => {
-    setLoading(true)
-    api.products
-      .list({
-        ...listQuery(category),
-        activity: selectedActivities.join(',') || undefined,
-        type: selectedTypes.join(',') || undefined,
-        priceMin: priceRange?.min,
-        priceMax: priceRange && priceRange.max !== Infinity ? priceRange.max : undefined,
-        sort,
-        search,
-      })
-      .then(setProducts)
-      .finally(() => setLoading(false))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, sort, search, selectedActivities.join(','), selectedTypes.join(','), selectedPrice])
-
-  function updateParam(key, value) {
+  function setCategory(cat) {
     const next = new URLSearchParams(searchParams)
-    if (value && value !== 'all' && value !== 'featured') next.set(key, value)
-    else next.delete(key)
+    if (cat && cat !== 'all') next.set('category', cat)
+    else next.delete('category')
     setSearchParams(next)
   }
 
-  function toggleListParam(key, slug, current) {
-    const next = new URLSearchParams(searchParams)
-    const nextList = current.includes(slug) ? current.filter((s) => s !== slug) : [...current, slug]
-    if (nextList.length) next.set(key, nextList.join(','))
-    else next.delete(key)
-    setSearchParams(next)
-  }
-
-  function clearFilters() {
-    const next = new URLSearchParams(searchParams)
-    ;['activity', 'type', 'price', 'sort'].forEach((key) => next.delete(key))
-    setSearchParams(next)
-  }
-
-  const activeFilterCount = selectedActivities.length + selectedTypes.length + (selectedPrice ? 1 : 0)
+  const sections = [
+    {
+      key: 'type',
+      title: 'Product Type',
+      type: 'checkbox',
+      options: PRODUCT_TYPES,
+      selected: selected.type,
+      onChange: (slug) => toggleFacet('type', slug),
+    },
+    {
+      key: 'size',
+      title: 'Size',
+      type: 'checkbox',
+      options: SIZE_OPTIONS,
+      selected: selected.size,
+      onChange: (slug) => toggleFacet('size', slug),
+    },
+    {
+      key: 'feature',
+      title: 'Features',
+      type: 'checkbox',
+      options: FEATURES,
+      selected: selected.feature,
+      onChange: (slug) => toggleFacet('feature', slug),
+    },
+    {
+      key: 'fit',
+      title: 'Fit',
+      type: 'checkbox',
+      options: FITS,
+      selected: selected.fit,
+      onChange: (slug) => toggleFacet('fit', slug),
+    },
+    {
+      key: 'rise',
+      title: 'Rise',
+      type: 'checkbox',
+      options: RISES,
+      selected: selected.rise,
+      onChange: (slug) => toggleFacet('rise', slug),
+    },
+    {
+      key: 'activity',
+      title: 'Activity',
+      type: 'checkbox',
+      options: ACTIVITIES,
+      selected: selected.activity,
+      onChange: (slug) => toggleFacet('activity', slug),
+    },
+    {
+      key: 'collection',
+      title: 'Collection',
+      type: 'checkbox',
+      options: COLLECTIONS,
+      selected: selected.collection,
+      onChange: (slug) => toggleFacet('collection', slug),
+    },
+    {
+      key: 'color',
+      title: 'Color',
+      type: 'checkbox',
+      options: COLOR_OPTIONS,
+      selected: selected.color,
+      onChange: (slug) => toggleFacet('color', slug),
+      swatches: COLOR_SWATCHES,
+    },
+    {
+      key: 'price',
+      title: 'Price',
+      type: 'radio',
+      options: PRICE_RANGES,
+      selected: selectedPrice,
+      onChange: setPrice,
+    },
+  ]
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
-      <h1 className="text-2xl font-bold uppercase">Shop All</h1>
+      <h1 className="font-display text-2xl font-bold uppercase">Shop All</h1>
 
-      <div className="mt-6 flex gap-8">
-        <aside className="hidden w-56 shrink-0 lg:block">
-          <p className="text-sm font-semibold uppercase">Category</p>
-          <ul className="mt-3 space-y-2 text-sm">
-            {CATEGORIES.map((cat) => (
-              <li key={cat}>
-                <button
-                  type="button"
-                  onClick={() => updateParam('category', cat)}
-                  className={cat === category ? 'font-bold' : 'text-black/60'}
-                >
-                  {cat}
-                </button>
-              </li>
-            ))}
-          </ul>
+      <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[14px]">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            type="button"
+            onClick={() => setCategory(cat)}
+            className={cat === category ? 'font-bold capitalize' : 'capitalize text-muted'}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
 
-          <div className="mt-8 flex items-center justify-between border-t border-black/10 pt-6">
-            <p className="text-sm font-semibold uppercase">Filter &amp; Sort</p>
-            {activeFilterCount > 0 && (
-              <button type="button" onClick={clearFilters} className="text-xs underline">
-                Clear All
-              </button>
-            )}
-          </div>
-
-          <FilterSection title="Sort By" defaultOpen>
-            {SORT_OPTIONS.map(({ value, label }) => (
-              <label key={value} className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="sort"
-                  checked={sort === value}
-                  onChange={() => updateParam('sort', value)}
-                />
-                {label}
-              </label>
-            ))}
-          </FilterSection>
-
-          <FilterSection title="Product Type">
-            {PRODUCT_TYPES.map(({ slug, label }) => (
-              <label key={slug} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={selectedTypes.includes(slug)}
-                  onChange={() => toggleListParam('type', slug, selectedTypes)}
-                />
-                {label}
-              </label>
-            ))}
-          </FilterSection>
-
-          <FilterSection title="Activity">
-            {ACTIVITIES.map(({ slug, label }) => (
-              <label key={slug} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={selectedActivities.includes(slug)}
-                  onChange={() => toggleListParam('activity', slug, selectedActivities)}
-                />
-                {label}
-              </label>
-            ))}
-          </FilterSection>
-
-          <FilterSection title="Price">
-            {PRICE_RANGES.map(({ slug, label }) => (
-              <label key={slug} className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="price"
-                  checked={selectedPrice === slug}
-                  onChange={() => updateParam('price', selectedPrice === slug ? '' : slug)}
-                />
-                {label}
-              </label>
-            ))}
-          </FilterSection>
-        </aside>
+      <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:gap-8">
+        <FilterSortControls
+          sort={sort}
+          sortOptions={SORT_OPTIONS}
+          onSortChange={setSort}
+          sections={sections}
+          activeCount={activeFilterCount}
+          onClearAll={clearAll}
+          productCount={products.length}
+          loading={loading}
+        />
 
         <div className="flex-1">
-          <div className="flex items-center justify-between text-sm">
-            <span>{loading ? 'Loading…' : `${products.length} products`}</span>
-            <select
-              value={sort}
-              onChange={(e) => updateParam('sort', e.target.value)}
-              className="border border-black/20 px-2 py-1 text-sm lg:hidden"
-            >
-              {SORT_OPTIONS.map(({ value, label }) => (
-                <option key={value} value={value}>
-                  Sort: {label}
-                </option>
-              ))}
-            </select>
-          </div>
+          <p className="hidden text-[14px] text-muted lg:block">
+            {loading ? 'Loading…' : `${products.length} products`}
+          </p>
 
-          <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <div className="mt-4 grid grid-cols-2 gap-4 lg:mt-6 lg:grid-cols-4">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
 
           {!loading && products.length === 0 && (
-            <p className="mt-10 text-sm text-black/50">No products match these filters.</p>
+            <p className="mt-10 text-sm text-muted">No products match these filters.</p>
           )}
         </div>
       </div>

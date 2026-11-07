@@ -47,7 +47,13 @@ export const NAV_CATEGORIES = [
     label: 'Women',
     href: '/pages/shop-women',
     groups: [
-      group('women', 'Trending', ['New Arrivals', 'Best Sellers', 'Soft Touch', 'Edge', 'Signature Collab', 'Loungewear']),
+      {
+        label: 'Trending',
+        links: [
+          { label: 'New Releases', href: '/collections/new-releases/womens' },
+          ...['Best Sellers', 'Soft Touch', 'Edge', 'Signature Collab', 'Loungewear'].map((l) => shop('women', l)),
+        ],
+      },
       group('women', 'Leggings', ['All Leggings', 'Straight Leg Leggings', 'Scrunch Leggings', 'High-Waisted Leggings', 'Flare Leggings', 'Leggings With Pockets', 'Seamless Leggings', 'Short Leggings', 'Tall Leggings']),
       group('women', 'Products', ['All Products', 'Leggings', 'Sports Bras', 'T-Shirts & Tops', 'Shorts', 'Hoodies & Sweatshirts', 'Joggers & Sweatpants', 'Matching Sets', 'Tracksuits', 'Jackets', 'Outerwear', 'Modest Workout Clothes', 'One Piece Bodysuits']),
       group('women', 'Shop By Collection', ['Vital', 'Everyday Seamless', 'Lift Seamless', 'Training', 'Soft Touch']),

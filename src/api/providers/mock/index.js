@@ -22,6 +22,11 @@ function findVariant(productId, variantId) {
 
 // ---- products ---------------------------------------------------------
 
+// Comma-separated facet param (e.g. `type=leggings,shorts`) → slug array.
+function parseSlugs(param) {
+  return param ? param.split(',').filter(Boolean) : []
+}
+
 async function listProducts({
   category,
   search,
@@ -29,6 +34,12 @@ async function listProducts({
   gender,
   activity,
   type,
+  size,
+  color,
+  fit,
+  rise,
+  feature,
+  collection,
   priceMin,
   priceMax,
   onSale,
@@ -42,12 +53,36 @@ async function listProducts({
   }
   if (gender) items = items.filter((p) => matchesGender(gender, p.gender))
   if (activity) {
-    const slugs = activity.split(',').filter(Boolean)
+    const slugs = parseSlugs(activity)
     items = items.filter((p) => p.activities.some((a) => slugs.includes(a)))
   }
   if (type) {
-    const slugs = type.split(',').filter(Boolean)
+    const slugs = parseSlugs(type)
     items = items.filter((p) => slugs.includes(p.type))
+  }
+  if (size) {
+    const slugs = parseSlugs(size)
+    items = items.filter((p) => p.variants.some((v) => slugs.includes(v.size)))
+  }
+  if (color) {
+    const slugs = parseSlugs(color)
+    items = items.filter((p) => p.variants.some((v) => slugs.includes(v.color)))
+  }
+  if (fit) {
+    const slugs = parseSlugs(fit)
+    items = items.filter((p) => slugs.includes(p.fit))
+  }
+  if (rise) {
+    const slugs = parseSlugs(rise)
+    items = items.filter((p) => slugs.includes(p.rise))
+  }
+  if (feature) {
+    const slugs = parseSlugs(feature)
+    items = items.filter((p) => p.features.some((f) => slugs.includes(f)))
+  }
+  if (collection) {
+    const slugs = parseSlugs(collection)
+    items = items.filter((p) => slugs.includes(p.collection))
   }
   if (priceMin != null) items = items.filter((p) => p.price >= priceMin)
   if (priceMax != null) items = items.filter((p) => p.price <= priceMax)

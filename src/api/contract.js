@@ -19,6 +19,10 @@
  * @property {'f'|'m'|'u'} gender  f = women, m = men, u = unisex
  * @property {string} type  slug from src/config/productTypes.js (e.g. 'leggings', 'hoodies')
  * @property {string[]} activities  slugs from src/config/activities.js (e.g. 'running', 'yoga')
+ * @property {string|null} fit  slug from src/config/fits.js, null if not applicable (e.g. accessories)
+ * @property {string|null} rise  slug from src/config/rises.js, null outside bottoms (leggings/shorts/joggers)
+ * @property {string[]} features  slugs from src/config/features.js
+ * @property {string|null} collection  slug from src/config/collections.js, null if unassigned
  * @property {number} price
  * @property {number|null} compareAtPrice  original price when on sale, else null
  * @property {string} description
@@ -94,6 +98,12 @@
  *     gender?: 'f'|'m',   // includes unisex products
  *     activity?: string,  // comma-separated activity slugs; matches if any is in the product's `activities`
  *     type?: string,      // comma-separated product type slugs (src/config/productTypes.js)
+ *     size?: string,      // comma-separated sizes; matches if any variant has that size
+ *     color?: string,     // comma-separated colors; matches if any variant has that color
+ *     fit?: string,       // comma-separated fit slugs (src/config/fits.js)
+ *     rise?: string,      // comma-separated rise slugs (src/config/rises.js)
+ *     feature?: string,   // comma-separated feature slugs; matches if any is in the product's `features`
+ *     collection?: string, // comma-separated collection slugs (src/config/collections.js)
  *     priceMin?: number,
  *     priceMax?: number,
  *     onSale?: boolean,   // only products with a compareAtPrice

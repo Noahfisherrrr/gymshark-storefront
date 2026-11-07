@@ -1,0 +1,15 @@
+/* Mobile Filter & Sort takeover, same sheet language as the mini bag
+   (src/components/minibag/minibag.css). Keyframes live in ui/overlay.css.
+   Desktop never mounts this — the panel sits inline as a sidebar instead. */
+.gs-filtersort-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: #fff;
+  animation: gs-slide-up 0.4s forwards;
+}
+.gs-filtersort-panel--closing {
+  animation: gs-slide-down 0.4s forwards;
+}

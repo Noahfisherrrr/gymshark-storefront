@@ -99,6 +99,7 @@ const CATEGORIES = [
       { id: 'physical-stores', q: 'Do You Have Physical Stores?', a: 'Store availability varies by location — check our site for the latest on any physical or pop-up locations.' },
       { id: 'unsubscribe-emails', q: 'How Do I Unsubscribe From Emails?', a: 'Use the unsubscribe link at the bottom of any marketing email, or update your preferences from Your Account.' },
       { id: 'size-guide-location', q: 'Where Can I Find Your Size Guide?', a: 'Size guides are linked on every product page, under the size selector.' },
+      { id: 'submit-a-fake', q: 'Submit a Fake', href: '/help/submit-a-fake', a: 'Report a counterfeit site, ad or social account impersonating us, and find out how to spot the real thing.' },
     ],
   },
 ]

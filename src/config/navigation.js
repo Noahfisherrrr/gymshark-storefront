@@ -45,7 +45,7 @@ export const NAV_CATEGORIES = [
   {
     id: 'women',
     label: 'Women',
-    href: '/shop?category=women',
+    href: '/pages/shop-women',
     groups: [
       group('women', 'Trending', ['New Arrivals', 'Best Sellers', 'Soft Touch', 'Edge', 'Signature Collab', 'Loungewear']),
       group('women', 'Leggings', ['All Leggings', 'Straight Leg Leggings', 'Scrunch Leggings', 'High-Waisted Leggings', 'Flare Leggings', 'Leggings With Pockets', 'Seamless Leggings', 'Short Leggings', 'Tall Leggings']),

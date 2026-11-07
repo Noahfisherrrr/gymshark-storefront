@@ -14,7 +14,7 @@ export const HOME_HERO = {
   mobileVideo: asset('/media/hero-training-mobile.mp4'),
   poster: asset('/media/hero-training-poster.webp'),
   ctas: [
-    { label: 'Shop women', href: '/shop?category=women' },
+    { label: 'Shop women', href: '/pages/shop-women' },
     { label: 'Shop men', href: '/shop?category=men' },
   ],
 }

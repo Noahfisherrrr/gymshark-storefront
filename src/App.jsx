@@ -4,6 +4,7 @@ import MainLayout from './components/layout/MainLayout'
 import Home from './pages/Home'
 
 const Shop = lazy(() => import('./pages/Shop'))
+const ShopWomen = lazy(() => import('./pages/ShopWomen'))
 const Product = lazy(() => import('./pages/Product'))
 const Cart = lazy(() => import('./pages/Cart'))
 const Wishlist = lazy(() => import('./pages/Wishlist'))
@@ -31,6 +32,7 @@ export default function App() {
         <Route element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="shop" element={<Shop />} />
+          <Route path="pages/shop-women" element={<ShopWomen />} />
           <Route path="product/:productId" element={<Product />} />
           <Route path="cart" element={<Cart />} />
           <Route path="wishlist" element={<Wishlist />} />

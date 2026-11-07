@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { api } from '../api'
-import { getProductContent } from '../api/cms'
 import { useCart } from '../context/CartContext'
 import { formatPrice } from '../lib/format'
 import { addRecentlyViewed } from '../lib/recentlyViewed'
@@ -17,26 +16,14 @@ export default function Product() {
 
   useEffect(() => {
     setLoading(true)
-    api.products.getById(productId).then(async (p) => {
+    api.products.getById(productId).then((p) => {
       if (!p) {
         setProduct(null)
         setLoading(false)
         return
       }
       addRecentlyViewed(p.id)
-      // CMS editorial content (description, extra gallery images) overrides
-      // the commerce record's placeholder copy when a client editor has
-      // published it; price/stock/variants always stay commerce-authoritative.
-      const content = await getProductContent(p.id)
-      setProduct(
-        content
-          ? {
-              ...p,
-              description: content.description ?? p.description,
-              gallery: content.gallery.length ? content.gallery : [p.image].filter(Boolean),
-            }
-          : p,
-      )
+      setProduct(p)
       setSelectedVariantId(p.variants[0]?.id ?? null)
       setLoading(false)
     })

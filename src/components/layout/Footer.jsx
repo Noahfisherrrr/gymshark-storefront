@@ -25,7 +25,7 @@ const NAV_COLUMNS = [
     links: [
       { label: 'FAQ', href: '/help' },
       { label: 'Track Your Order', href: '/account' },
-      { label: 'Delivery Information', href: '/help#shipping' },
+      { label: 'Delivery Information', href: '/help/delivery-information' },
       { label: 'Returns Policy', href: '/help#returns' },
       { label: 'Make A Return', href: '/help#returns' },
       { label: 'Orders', href: '/account' },

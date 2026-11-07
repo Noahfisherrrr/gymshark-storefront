@@ -12,8 +12,6 @@ import { RISES } from '../config/rises'
 import { COLLECTIONS } from '../config/collections'
 import { COLOR_SWATCHES } from '../config/colorSwatches'
 
-const CATEGORIES = ['all', 'men', 'women', 'accessories', 'new', 'sale']
-
 // Mirrors gymshark.com's Filter & Sort → Sort By options (its "Relevancy" is
 // our "Featured", everything else matches 1:1).
 const SORT_OPTIONS = [
@@ -36,18 +34,11 @@ function listQuery(category) {
 }
 
 export default function Shop() {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const category = searchParams.get('category') ?? 'all'
 
   const { products, loading, sort, setSort, selected, toggleFacet, selectedPrice, setPrice, clearAll, activeFilterCount } =
     useProductFilters(listQuery(category))
-
-  function setCategory(cat) {
-    const next = new URLSearchParams(searchParams)
-    if (cat && cat !== 'all') next.set('category', cat)
-    else next.delete('category')
-    setSearchParams(next)
-  }
 
   const sections = [
     {
@@ -128,19 +119,6 @@ export default function Shop() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
       <h1 className="font-display text-2xl font-bold uppercase">Shop All</h1>
-
-      <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[14px]">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            type="button"
-            onClick={() => setCategory(cat)}
-            className={cat === category ? 'font-bold capitalize' : 'capitalize text-muted'}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
 
       <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:gap-8">
         <FilterSortControls

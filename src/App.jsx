@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import MainLayout from './components/layout/MainLayout'
+import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/Home'
 
 const Shop = lazy(() => import('./pages/Shop'))
@@ -33,6 +34,7 @@ const NotFound = lazy(() => import('./pages/NotFound'))
 export default function App() {
   return (
     <Suspense fallback={null}>
+      <ScrollToTop />
       <Routes>
         <Route element={<MainLayout />}>
           <Route index element={<Home />} />

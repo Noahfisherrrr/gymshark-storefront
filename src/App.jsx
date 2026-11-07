@@ -26,6 +26,7 @@ const ReferFriend = lazy(() => import('./pages/account/ReferFriend'))
 const Search = lazy(() => import('./pages/Search'))
 const Help = lazy(() => import('./pages/Help'))
 const DeliveryInformation = lazy(() => import('./pages/help/DeliveryInformation'))
+const ReturnsPolicy = lazy(() => import('./pages/help/ReturnsPolicy'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 // Home stays eagerly imported (it's the index route and the one most
@@ -62,6 +63,7 @@ export default function App() {
           <Route path="search" element={<Search />} />
           <Route path="help" element={<Help />} />
           <Route path="help/delivery-information" element={<DeliveryInformation />} />
+          <Route path="help/returns-policy" element={<ReturnsPolicy />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

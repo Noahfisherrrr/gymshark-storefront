@@ -41,7 +41,7 @@ const CATEGORIES = [
     articles: [
       { id: 'refund-or-exchange', q: 'Where Is My Refund or Exchange?', a: 'Refunds are processed within 5 working days of us receiving your return, and typically show on your statement a few days after that. Exchanges are sent out as soon as the original item is received.' },
       { id: 'how-to-return', q: 'How Do I Return an Item?', a: 'Start a return from Your Account > Order History, print the label we send you, and drop the parcel at the specified carrier.' },
-      { id: 'returns-policy', q: 'What Is Your Returns Policy?', a: 'Unworn items in their original condition can be returned within 30 days of delivery for a full refund or exchange.' },
+      { id: 'returns-policy', q: 'What Is Your Returns Policy?', href: '/help/returns-policy', a: 'Unworn items in their original condition can be returned within 30 days of delivery for a full refund or exchange.' },
       { id: 'refund-timing', q: 'How Long Do Refunds Take?', a: 'Once your return is received, refunds are issued within 5 working days to your original payment method.' },
     ],
   },

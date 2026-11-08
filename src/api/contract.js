@@ -1,5 +1,5 @@
 /**
- * API contract — every provider (mock, supabase, firebase, ...) must
+ * API contract — every provider (supabase, or any future backend) must
  * implement this exact shape. UI code only ever imports `api` from
  * `src/api/index.js` and never reaches into a provider directly, so
  * swapping providers later means writing a new file in `providers/`,
@@ -177,7 +177,6 @@
  *   signUp: (input: { email: string, password: string, firstName: string, lastName: string, dateOfBirth: string }) => Promise<User>,
  *   signIn: (input: { email: string, password: string }) => Promise<User>,
  *   signInWithOAuth: (provider: 'google'|'apple') => Promise<void>,  // doesn't grant access directly — a confirmation email must be clicked first, see onAuthStateChange
- *   confirmPendingOAuth: () => Promise<User>,  // dev-only: completes the mock provider's simulated confirmation email. Supabase sends a real email instead and confirms automatically when its link is clicked, so its implementation is unused in practice.
  *   onAuthStateChange: (callback: (update: { user: User|null, pendingConfirmationEmail: string|null }) => void) => (() => void),  // returns an unsubscribe function
  *   signOut: () => Promise<void>,
  * }} auth

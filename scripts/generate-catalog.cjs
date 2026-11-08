@@ -1,15 +1,16 @@
 // Generator script for 100 Gymshark products (40 Women, 40 Men, 20 Accessories)
 // Generates:
 // 1. supabase/data/products.json
-// 2. supabase/seed.sql
+// 2. supabase/seed.sql + supabase/01_seed_products.sql + supabase/02_seed_reviews.sql
 // 3. supabase/schema.sql
-// 4. src/api/data/catalog.generated.js
 
 const fs = require('fs')
 const path = require('path')
 
-// Helper for variants
-function generateVariants(productId, sizes, color, price) {
+// Helper for variants. Every variant's priceOverride is null (no per-variant
+// pricing in this catalog) — callers still pass the product's price in case
+// that changes, so it's accepted but intentionally unused here.
+function generateVariants(productId, sizes, color, _price) {
   return sizes.map((size, idx) => {
     const cleanSize = size.toLowerCase().replace(/[^a-z0-9]/g, '')
     const id = `${productId}-${cleanSize}`

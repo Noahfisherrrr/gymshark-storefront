@@ -111,9 +111,6 @@ If your browser tab has trouble pasting large scripts:
 3. Update it with your credentials from **Step 2**:
 
 ```env
-# Switch API provider from mock to supabase
-VITE_API_PROVIDER=supabase
-
 # Your Supabase Project URL (from Step 2)
 VITE_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
 
@@ -179,11 +176,4 @@ Test each live feature to ensure complete functionality:
 ### Issue 3: Empty product list or "Permission denied"
 - Check that you ran [supabase/schema.sql](file:///d:/Gymshark%20App/supabase/schema.sql) first.
 - In Supabase Dashboard → **Authentication** → **Policies**, verify that the policy `"Products are viewable by everyone"` is enabled on the `products` table.
-
-### Issue 4: How to switch back to mock mode if needed?
-- In `.env.local`, simply change:
-  ```env
-  VITE_API_PROVIDER=mock
-  ```
-  and restart the server. The app will immediately use the local mock catalog.
 

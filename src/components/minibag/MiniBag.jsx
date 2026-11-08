@@ -473,10 +473,10 @@ function PaymentBadges() {
 function VariantPickerModal({ product, onClose, onAdd }) {
   const [variantId, setVariantId] = useState(product?.variants[0]?.id ?? null)
   const [busy, setBusy] = useState(false)
-  const prevProduct = useRef(product)
+  const [trackedProduct, setTrackedProduct] = useState(product)
 
-  if (product && product !== prevProduct.current) {
-    prevProduct.current = product
+  if (product && product !== trackedProduct) {
+    setTrackedProduct(product)
     setVariantId(product.variants[0]?.id ?? null)
   }
 

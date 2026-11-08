@@ -7,7 +7,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   // Set while a Google/Apple sign-in is waiting on the confirmation email
-  // being clicked — see onAuthStateChange in the supabase/mock providers.
+  // being clicked — see onAuthStateChange in providers/supabase/index.js.
   const [pendingConfirmationEmail, setPendingConfirmationEmail] = useState(null)
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
       .finally(() => setLoading(false))
 
     // Picks up both the OAuth confirmation state and the real session once
-    // the confirmation email's link (or the mock's dev button) is used.
+    // the confirmation email's link is used.
     return api.auth.onAuthStateChange(({ user: nextUser, pendingConfirmationEmail: pending }) => {
       setUser(nextUser)
       setPendingConfirmationEmail(pending ?? null)
@@ -43,10 +43,6 @@ export function AuthProvider({ children }) {
     await api.auth.signInWithOAuth(provider)
   }
 
-  async function confirmPendingOAuth() {
-    return api.auth.confirmPendingOAuth()
-  }
-
   async function signOut() {
     await api.auth.signOut()
     setUser(null)
@@ -68,7 +64,6 @@ export function AuthProvider({ children }) {
         signIn,
         signUp,
         signInWithOAuth,
-        confirmPendingOAuth,
         signOut,
         updateUser,
       }}

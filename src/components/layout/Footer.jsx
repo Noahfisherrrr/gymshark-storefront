@@ -33,6 +33,8 @@ import {
 // describe) — see brief notes in plan.md. What's left all routes to real
 // pages (Brief.md #4, #5).
 
+const CURRENT_YEAR = new Date().getFullYear()
+
 const NAV_COLUMNS = [
   {
     title: 'Help',
@@ -300,7 +302,7 @@ export default function Footer() {
       </div>
 
       <div className="mx-auto max-w-7xl border-t border-white/10 px-4 py-4 text-xs text-white/50 lg:px-8">
-        © {new Date().getFullYear()} | Brand Name | All Rights Reserved.
+        © {CURRENT_YEAR} | Brand Name | All Rights Reserved.
       </div>
 
       <NewsletterModal open={newsletterOpen} onClose={() => setNewsletterOpen(false)} />

@@ -1,10 +1,8 @@
 import { supabase, isSupabaseConfigured } from '../../../lib/supabaseClient'
 
-// Same contract as the mock provider (src/api/contract.js). Switch to this
-// provider by setting VITE_API_PROVIDER=supabase in .env.local once the
-// client's Supabase project exists (Brief.md #14) — the schema itself
-// (supabase/schema.sql) is already written and seeded (supabase/seed.sql,
-// SUPABASE_SETUP_GUIDE.md), so flipping that env var is the only step left.
+// Implements the contract in src/api/contract.js. The schema itself
+// (supabase/schema.sql) and seed data (supabase/seed.sql, SUPABASE_SETUP_GUIDE.md)
+// live alongside this provider.
 //
 // Tables: profiles, products, product_variants, reviews, comments,
 // review_helpful_votes, cart_items, wishlist_items, addresses, orders,
@@ -24,7 +22,7 @@ function assertConfigured() {
 function notImplemented(feature) {
   throw new Error(
     `${feature} is not implemented against Supabase yet — pending schema/scope decisions ` +
-      'in Brief.md (see plan.md → Phase 3/4). Use VITE_API_PROVIDER=mock in the meantime.',
+      'in Brief.md (see plan.md → Phase 3/4).',
   )
 }
 
@@ -34,13 +32,12 @@ const PRODUCT_COLUMNS = '*, variants:product_variants(*)'
 
 // The `products`/`product_variants` tables use snake_case columns, but the
 // contract (src/api/contract.js) and every component under src/components/pdp
-// and src/pages/Product.jsx read camelCase fields that were built against the
-// mock catalog's shape (src/api/data/products.mock.js) — e.g. `fitNote`,
+// and src/pages/Product.jsx read camelCase fields — e.g. `fitNote`,
 // `collectionName`, `colorHex`, `ratingBreakdown`, `reviewCount`,
 // `completeTheLookIds`, `fitFeedback`, and (note the name) `care` for
 // `care_instructions`. Without this mapping, those fields silently come back
-// `undefined` against a live Supabase backend and the PDP falls back to
-// placeholder copy instead of the real product data.
+// `undefined` and the PDP falls back to placeholder copy instead of the real
+// product data.
 function mapProductRow(row) {
   if (!row) return row
   const {
@@ -178,7 +175,9 @@ async function searchProducts(term, { gender = null, limit = 20 } = {}) {
   return { products, total: count ?? products.length, suggestions }
 }
 
-async function trendingTerms({ gender = null } = {}) {
+// `gender` isn't used yet — trending terms are the same curated list for
+// everyone until there's a real ranking source (see comment above).
+async function trendingTerms({ gender: _gender = null } = {}) {
   return [
     'leggings',
     'black leggings',
@@ -379,10 +378,10 @@ async function deleteAccount(userId, { currentPassword }) {
   })
   if (reauthError) throw new Error('Current password is incorrect')
 
-  // TODO once the `orders` table exists (plan.md → Phase 3): block this the
-  // same way the mock provider does when the user has an order that isn't
-  // delivered/cancelled yet, and never delete order rows — they're
-  // payment/fulfillment records that must outlive the account.
+  // TODO once the `orders` table exists (plan.md → Phase 3): block this when
+  // the user has an order that isn't delivered/cancelled yet, and never
+  // delete order rows — they're payment/fulfillment records that must
+  // outlive the account.
 
   // The Supabase client SDK can't delete the current user itself (that's an
   // admin/service-role call) — this needs a server-side function (e.g. a
@@ -462,9 +461,9 @@ async function removeAddress(userId, addressId) {
   return listAddresses(userId)
 }
 
-async function listReturns(userId) {
+// No `returns` table yet (see requestReturn below) — nothing to list per user.
+async function listReturns(_userId) {
   assertConfigured()
-  // Returns table or simulated response
   return []
 }
 
@@ -768,12 +767,6 @@ function onAuthStateChange(callback) {
   return () => data.subscription.unsubscribe()
 }
 
-// Real confirmation happens by clicking the emailed link (handled above);
-// nothing for the UI to call directly against Supabase.
-async function confirmPendingOAuth() {
-  throw new Error('Click the confirmation link in your email to finish signing in.')
-}
-
 async function signOut() {
   assertConfigured()
   const { error } = await supabase.auth.signOut()
@@ -792,7 +785,7 @@ export const supabaseApi = {
     clear: clearCart,
   },
   wishlist: { get: getWishlist, toggle: toggleWishlist },
-  auth: { getCurrentUser, signUp, signIn, signInWithOAuth, confirmPendingOAuth, onAuthStateChange, signOut },
+  auth: { getCurrentUser, signUp, signIn, signInWithOAuth, onAuthStateChange, signOut },
   orders: { list: listOrders, applyDiscountCode },
   account: {
     updateProfile,

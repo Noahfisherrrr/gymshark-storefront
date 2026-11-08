@@ -1,6 +1,6 @@
 // Activity taxonomy for "Shop By Activity" (women/men nav + Shop filters).
-// Products tag themselves with one or more of these slugs via
-// `activities: []` (src/api/data/products.mock.js). Shared across both
+// Products tag themselves with one or more of these slugs via the
+// `activities` column (text[], see supabase/schema.sql). Shared across both
 // genders since the sport doesn't change, only which products carry it.
 export const ACTIVITIES = [
   { slug: 'running', label: 'Running' },

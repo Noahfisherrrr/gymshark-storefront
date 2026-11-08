@@ -33,8 +33,8 @@ function group(category, label, links) {
   return { label, links: links.map((l) => shop(category, l)) }
 }
 
-// Activity links filter by the product's `activities` tags (src/api/data/
-// products.mock.js), unlike `shop()`'s placeholder links above.
+// Activity links filter by the product's `activities` column, unlike
+// `shop()`'s placeholder links above.
 function activityGroup(category) {
   return {
     label: 'Shop By Activity',

@@ -23,13 +23,11 @@ backend SDK directly:
 
 - `src/api/contract.js` — the interface every provider must implement
   (products, cart, wishlist, auth, orders)
-- `src/api/providers/mock/` — a fully working mock backend (localStorage),
-  used right now so the UI functions end-to-end with no backend at all
-- `src/api/providers/supabase/` — a real Supabase implementation for
-  products/auth already written against the contract; cart/wishlist/orders
-  are explicit "not implemented yet" stubs pending schema decisions
-- `src/api/index.js` — picks the active provider via `VITE_API_PROVIDER`
-  (defaults to `mock`)
+- `src/api/providers/supabase/` — the live Supabase implementation; the
+  mock provider that bootstrapped the UI pre-Supabase has been removed
+  now that the real backend is wired up end-to-end
+- `src/api/index.js` — exports the active provider (currently just
+  Supabase)
 - A future `providers/firebase/` would just be another file satisfying the
   same contract — no component changes needed either way.
 

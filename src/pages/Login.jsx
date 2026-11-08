@@ -65,10 +65,6 @@ export default function Login() {
       <p className="mt-4 text-sm text-black/60">
         No account? <Link to="/register" className="underline">Create one</Link>.
       </p>
-      <p className="mt-6 text-xs text-black/40">
-        Mock auth today, stored only in this browser. Switches to real Supabase Auth
-        once VITE_API_PROVIDER=supabase is set.
-      </p>
     </div>
   )
 }

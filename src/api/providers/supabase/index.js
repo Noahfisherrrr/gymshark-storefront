@@ -277,17 +277,39 @@ async function mergeGuestCartOnLogin(userId) {
   if (local.length === 0) return
   await Promise.all(
     local.map(({ productId, variantId, quantity }) =>
-      supabase
-        .rpc('add_to_cart', {
-          p_user_id: userId,
-          p_product_id: productId,
-          p_variant_id: variantId,
-          p_quantity: quantity,
-        })
-        .catch(() => {}), // best-effort — don't block sign-in if one item fails
+      upsertCartItem(userId, productId, variantId, quantity).catch(() => {}),
     ),
   )
   clearGuestCart()
+}
+
+// Adds `quantity` units of a variant to the user's Supabase cart row,
+// accumulating on top of any existing quantity.  Uses a read-then-write
+// approach so it works without an `add_to_cart` database function.
+async function upsertCartItem(userId, productId, variantId, quantity) {
+  // Check for an existing row for this user + variant.
+  const { data: existing } = await supabase
+    .from('cart_items')
+    .select('id, quantity')
+    .match({ user_id: userId, variant_id: variantId })
+    .maybeSingle()
+
+  if (existing) {
+    // Accumulate quantity on top of whatever is already there.
+    const { error } = await supabase
+      .from('cart_items')
+      .update({ quantity: existing.quantity + quantity, updated_at: new Date().toISOString() })
+      .eq('id', existing.id)
+    if (error) throw error
+  } else {
+    const { error } = await supabase.from('cart_items').insert({
+      user_id: userId,
+      product_id: productId,
+      variant_id: variantId,
+      quantity,
+    })
+    if (error) throw error
+  }
 }
 
 // ---- cart / wishlist / orders -----------------------------------------
@@ -312,17 +334,7 @@ async function addToCart({ productId, variantId, quantity }) {
   const { data: authData } = await supabase.auth.getUser()
   if (!authData?.user) return guestAddToCart({ productId, variantId, quantity })
 
-  // add_to_cart (schema.sql) adds to the existing row's quantity on conflict
-  // instead of replacing it — a plain `.upsert()` would overwrite `quantity`
-  // with just this call's amount, so adding the same variant twice (e.g. two
-  // separate "Add to Bag" clicks) would leave the cart at 1 instead of 2.
-  const { error } = await supabase.rpc('add_to_cart', {
-    p_user_id: authData.user.id,
-    p_product_id: productId,
-    p_variant_id: variantId,
-    p_quantity: quantity,
-  })
-  if (error) throw error
+  await upsertCartItem(authData.user.id, productId, variantId, quantity)
   return getCart()
 }
 

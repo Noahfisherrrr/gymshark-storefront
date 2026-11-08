@@ -405,6 +405,29 @@ async function toggleWishlist(productId) {
   return getWishlist()
 }
 
+// Maps a `orders` row (+ joined `order_items`) from snake_case Supabase
+// columns to the camelCase shape the UI (OrderHistory, Confirmation) reads.
+function toOrder(row) {
+  return {
+    id: row.id,
+    total: Number(row.total),
+    subtotal: row.subtotal != null ? Number(row.subtotal) : undefined,
+    status: row.status,
+    shippingAddress: row.shipping_address,
+    createdAt: row.created_at,
+    items: (row.items || []).map((item) => ({
+      id: item.id,
+      productId: item.product_id,
+      variantId: item.variant_id,
+      name: item.name,
+      size: item.size,
+      color: item.color,
+      unitPrice: Number(item.unit_price),
+      quantity: item.quantity,
+    })),
+  }
+}
+
 async function listOrders(userId) {
   assertConfigured()
   const { data, error } = await supabase
@@ -413,7 +436,7 @@ async function listOrders(userId) {
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
   if (error) throw error
-  return data || []
+  return (data || []).map(toOrder)
 }
 
 // Ghost checkout — simulates a completed purchase without payment.
@@ -429,12 +452,16 @@ async function ghostCheckout({ shipping, lines, subtotal, discount }) {
   if (isSupabaseConfigured) {
     const { data: authData } = await supabase.auth.getUser()
     if (authData?.user) {
-      // Insert order header
+      // Insert order header. `orders.id` has no DB default, so we have to
+      // generate it ourselves; `subtotal` is NOT NULL too.
       const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
+          id: crypto.randomUUID(),
           user_id: authData.user.id,
           total,
+          subtotal,
+          discount_amount: discountAmount,
           status: 'processing',
           shipping_address: shipping,
         })
@@ -447,11 +474,14 @@ async function ghostCheckout({ shipping, lines, subtotal, discount }) {
           order_id: order.id,
           product_id: line.productId,
           variant_id: line.variantId,
+          name: line.product?.name ?? '',
+          size: line.variant?.size ?? '',
+          color: line.variant?.color ?? '',
+          unit_price: line.product?.price ?? 0,
           quantity: line.quantity,
-          price: line.product?.price ?? 0,
         }))
         await supabase.from('order_items').insert(orderItems)
-        return order
+        return toOrder({ ...order, items: orderItems })
       }
     }
   }

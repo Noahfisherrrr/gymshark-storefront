@@ -28,6 +28,7 @@
  * @property {string} description
  * @property {ProductVariant[]} variants
  * @property {string|null} image
+ * @property {string|null} [tag]  short merchandising label shown on the image (e.g. 'New'), null if none
  *
  * @typedef {Object} CartItem
  * @property {string} id

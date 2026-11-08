@@ -63,6 +63,7 @@ export const MOCK_PRODUCTS = [
     collection: 'everyday-seamless',
     description: 'Second-skin ribbed leggings with a high waistband.',
     image: asset('/media/products/p3.webp'),
+    tag: 'all day comfort',
     variants: [
       variant('p3-xs-blk', 'XS', 'Black', 7),
       variant('p3-s-blk', 'S', 'Black', 9),
@@ -165,6 +166,7 @@ export const MOCK_PRODUCTS = [
     collection: 'vital',
     description: 'Scrunch-back leggings with a contour seam and squat-proof fabric.',
     image: asset('/media/products/p9.webp'),
+    tag: 'New',
     variants: [
       variant('p9-xs-black', 'XS', 'Black', 5),
       variant('p9-s-black', 'S', 'Black', 8),
@@ -186,6 +188,7 @@ export const MOCK_PRODUCTS = [
     collection: 'everyday-seamless',
     description: 'Soft-touch flared leggings for studio sessions and rest days.',
     image: asset('/media/products/p10.webp'),
+    tag: 'super stretchy',
     variants: [variant('p10-s-black', 'S', 'Black', 9), variant('p10-m-brown', 'M', 'Brown', 4)],
   },
   {

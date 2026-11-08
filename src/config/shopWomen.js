@@ -6,6 +6,7 @@
 // supplies their own (Brief.md #5, #6).
 
 import { asset } from './assetVersion'
+import { blogTeasers } from './blog'
 
 // Reuses the homepage hero's footage (Mixkit #52110, "Woman doing lunges
 // with dumbbells at the gym" — see public/media/CREDITS.md) with
@@ -89,28 +90,6 @@ export const SHOP_WOMEN_COLLECTIONS = {
 
 export const SHOP_WOMEN_EDITORIAL = {
   title: 'Guides & edits',
-  href: '/help',
-  posts: [
-    {
-      id: 'women-guide-1',
-      title: 'The leggings guide: finding your fit',
-      excerpt: 'Scrunch, flare, high-waisted — how to pick the pair that works for you.',
-      image: asset('/media/products/p9.webp'),
-      href: '/help',
-    },
-    {
-      id: 'women-guide-2',
-      title: 'Sports bra support, explained',
-      excerpt: 'Light, medium or high support: what each one is actually built for.',
-      image: asset('/media/products/p4.webp'),
-      href: '/help',
-    },
-    {
-      id: 'women-guide-3',
-      title: 'Building a capsule training wardrobe',
-      excerpt: 'A handful of pieces that cover every session on your calendar.',
-      image: asset('/media/products/p11.webp'),
-      href: '/help',
-    },
-  ],
+  href: '/blog',
+  posts: blogTeasers(['leggings-guide', 'sports-bra-support-guide', 'capsule-training-wardrobe']),
 }

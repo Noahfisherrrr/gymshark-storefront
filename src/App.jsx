@@ -29,6 +29,15 @@ const DeliveryInformation = lazy(() => import('./pages/help/DeliveryInformation'
 const ReturnsPolicy = lazy(() => import('./pages/help/ReturnsPolicy'))
 const ReviewsPolicy = lazy(() => import('./pages/help/ReviewsPolicy'))
 const SubmitAFake = lazy(() => import('./pages/help/SubmitAFake'))
+const BlogIndex = lazy(() => import('./pages/blog/BlogIndex'))
+const BlogCategory = lazy(() => import('./pages/blog/BlogCategory'))
+const BlogTag = lazy(() => import('./pages/blog/BlogTag'))
+const BlogArticle = lazy(() => import('./pages/blog/BlogArticle'))
+const Stores = lazy(() => import('./pages/Stores'))
+const ReferAFriend = lazy(() => import('./pages/ReferAFriend'))
+const AboutUs = lazy(() => import('./pages/AboutUs'))
+const Careers = lazy(() => import('./pages/Careers'))
+const StudentDiscount = lazy(() => import('./pages/StudentDiscount'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 // Home stays eagerly imported (it's the index route and the one most
@@ -68,6 +77,15 @@ export default function App() {
           <Route path="help/returns-policy" element={<ReturnsPolicy />} />
           <Route path="help/reviews-policy" element={<ReviewsPolicy />} />
           <Route path="help/submit-a-fake" element={<SubmitAFake />} />
+          <Route path="blog" element={<BlogIndex />} />
+          <Route path="blog/category/:slug" element={<BlogCategory />} />
+          <Route path="blog/tag/:slug" element={<BlogTag />} />
+          <Route path="blog/article/:slug" element={<BlogArticle />} />
+          <Route path="pages/stores" element={<Stores />} />
+          <Route path="pages/refer-a-friend" element={<ReferAFriend />} />
+          <Route path="pages/about-us" element={<AboutUs />} />
+          <Route path="pages/careers" element={<Careers />} />
+          <Route path="pages/student-discount" element={<StudentDiscount />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

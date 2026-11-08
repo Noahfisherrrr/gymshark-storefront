@@ -203,8 +203,9 @@ export const NEW_USERS_SHOP_TILES = {
   ],
 }
 
-// "Wait there's more…" — guides route to /help (our only reads-more page),
-// matching the SHOP_WOMEN_EDITORIAL/SHOP_MEN_EDITORIAL convention.
+// "Wait there's more…" — guide cards route into the real blog articles
+// (config/blog.js); "Join the club" stays on /help since there's no
+// loyalty program to describe yet.
 export const NEW_USERS_MORE = {
   title: "Wait, there's more…",
   tabs: [
@@ -216,21 +217,21 @@ export const NEW_USERS_MORE = {
           title: 'Leggings guide',
           copy: "Stop looking; start finding the leggings you've been looking for.",
           image: asset('/media/products/p9.webp'),
-          href: '/help',
+          href: '/blog/article/leggings-guide',
         },
         {
           id: 'sports-bra-guide',
           title: 'Sports bra guide',
           copy: 'Find the support level that works for your training.',
           image: asset('/media/products/p4.webp'),
-          href: '/help',
+          href: '/blog/article/sports-bra-support-guide',
         },
         {
           id: 'shorts-guide',
           title: "Men's shorts guide",
           copy: 'Everything you need to know about finding the right length.',
           image: asset('/media/products/p2.webp'),
-          href: '/help',
+          href: '/blog/article/shorts-guide',
         },
         {
           id: 'loyalty',
@@ -278,14 +279,14 @@ export const NEW_USERS_WOMEN_FIND_FIT = {
           title: 'Leggings guide',
           copy: "Stop looking; start finding the leggings you've been looking for.",
           image: asset('/media/products/p10.webp'),
-          href: '/help',
+          href: '/blog/article/leggings-guide',
         },
         {
           id: 'sports-bra-guide',
           title: 'Sports bra guide',
           copy: 'Find the support level that works for your training.',
           image: asset('/media/products/p4.webp'),
-          href: '/help',
+          href: '/blog/article/sports-bra-support-guide',
         },
       ],
     },

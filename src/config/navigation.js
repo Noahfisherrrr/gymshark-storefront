@@ -141,7 +141,9 @@ export const NAV_CATEGORIES = [
         links: [
           { label: 'New Here? (Women)', href: '/pages/new-users/women' },
           { label: 'New Here? (Men)', href: '/pages/new-users/men' },
-          ...['About Us', 'Loyalty', 'Student Discount'].map((l) => shop('explore', l)),
+          { label: 'About Us', href: '/pages/about-us' },
+          shop('explore', 'Loyalty'),
+          { label: 'Student Discount', href: '/pages/student-discount' },
         ],
       },
     ],
@@ -153,5 +155,5 @@ export const SECONDARY_LINKS = [
   { label: 'Help', href: '/help' },
   { label: 'Order Tracking', href: '/account' },
   { label: 'Returns', href: '/help/returns-policy' },
-  { label: 'Student Discount', href: '/help#student-discount' },
+  { label: 'Student Discount', href: '/pages/student-discount' },
 ]

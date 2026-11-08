@@ -5,6 +5,7 @@
 // are placeholders until the client supplies their own (Brief.md #5, #6).
 
 import { asset } from './assetVersion'
+import { blogTeasers } from './blog'
 
 // Reuses the homepage video banner's footage (Mixkit, "Fitness man lifting
 // weights at the gym" — see public/media/CREDITS.md) with men's-specific
@@ -82,28 +83,6 @@ export const SHOP_MEN_COLLECTIONS = {
 
 export const SHOP_MEN_EDITORIAL = {
   title: 'Guides & edits',
-  href: '/help',
-  posts: [
-    {
-      id: 'men-guide-1',
-      title: 'The shorts guide: finding your length',
-      excerpt: 'From 5" to 9" inseams — how to pick the pair that works for your session.',
-      image: asset('/media/products/p2.webp'),
-      href: '/help',
-    },
-    {
-      id: 'men-guide-2',
-      title: 'Running gear, explained',
-      excerpt: 'What actually matters in a running kit, from fabric to fit.',
-      image: asset('/media/products/p14.webp'),
-      href: '/help',
-    },
-    {
-      id: 'men-guide-3',
-      title: 'Building a capsule training wardrobe',
-      excerpt: 'A handful of pieces that cover every session on your calendar.',
-      image: asset('/media/products/p13.webp'),
-      href: '/help',
-    },
-  ],
+  href: '/blog',
+  posts: blogTeasers(['shorts-guide', 'running-gear-guide', 'capsule-training-wardrobe']),
 }

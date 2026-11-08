@@ -94,9 +94,9 @@ const CATEGORIES = [
     icon: InfoIcon,
     articles: [
       { id: 'contact-customer-service', q: 'How Do I Contact Customer Service?', a: 'You can reach us through the Contact page — we aim to respond within 24-48 hours.' },
-      { id: 'student-discount', q: 'Do You Offer Student Discount?', a: 'Eligible students can verify their status at checkout for a discount on their order.' },
-      { id: 'where-based', q: 'Where Are You Based?', a: 'Details on our head office and operations are available on our About page.' },
-      { id: 'physical-stores', q: 'Do You Have Physical Stores?', a: 'Store availability varies by location — check our site for the latest on any physical or pop-up locations.' },
+      { id: 'student-discount', q: 'Do You Offer Student Discount?', href: '/pages/student-discount', a: 'Eligible students get 12% off after verifying their status — visit our Student Discount page to get started.' },
+      { id: 'where-based', q: 'Where Are You Based?', href: '/pages/about-us', a: 'Details on our head office and operations are available on our About page.' },
+      { id: 'physical-stores', q: 'Do You Have Physical Stores?', href: '/pages/stores', a: 'Yes — visit our Stores page for locations, addresses and opening hours.' },
       { id: 'unsubscribe-emails', q: 'How Do I Unsubscribe From Emails?', a: 'Use the unsubscribe link at the bottom of any marketing email, or update your preferences from Your Account.' },
       { id: 'size-guide-location', q: 'Where Can I Find Your Size Guide?', a: 'Size guides are linked on every product page, under the size selector.' },
       { id: 'submit-a-fake', q: 'Submit a Fake', href: '/help/submit-a-fake', a: 'Report a counterfeit site, ad or social account impersonating us, and find out how to spot the real thing.' },

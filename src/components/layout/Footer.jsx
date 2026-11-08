@@ -15,9 +15,12 @@ import {
 
 // Ported from gymshark.com's footer structure (nav columns → featured tiles
 // → socials → legal row → region/language → payment badges → copyright).
-// Labels that named Gymshark's own brand (e.g. "Gymshark Central", "Gymshark
-// Loyalty") are genericized; pages that don't exist yet point at /help as a
-// placeholder hub until the client supplies real content (Brief.md #4, #5).
+// The "Pages" column mirrors gymshark.com's, minus items we don't have
+// content/rights for: Loyalty Program (no program defined yet), Military &
+// Government Discount (no verification provider), and Accessibility
+// Statement / Factory List / Sustainability (no real commitments to
+// describe) — see brief notes in plan.md. What's left all routes to real
+// pages (Brief.md #4, #5).
 
 const NAV_COLUMNS = [
   {
@@ -43,24 +46,19 @@ const NAV_COLUMNS = [
   {
     title: 'Pages',
     links: [
-      { label: 'Stores', href: '/help' },
-      { label: 'Refer a Friend', href: '/help' },
-      { label: 'Our Blog', href: '/help' },
-      { label: 'Loyalty Program', href: '/help' },
-      { label: 'About Us', href: '/help' },
-      { label: 'Careers', href: '/help' },
-      { label: 'Student Discount', href: '/help#student-discount' },
-      { label: 'Military & Government Discount', href: '/help' },
-      { label: 'Accessibility Statement', href: '/help' },
-      { label: 'Factory List', href: '/help' },
-      { label: 'Sustainability', href: '/help' },
+      { label: 'Stores', href: '/pages/stores' },
+      { label: 'Refer a Friend', href: '/pages/refer-a-friend' },
+      { label: 'Our Blog', href: '/blog' },
+      { label: 'About Us', href: '/pages/about-us' },
+      { label: 'Careers', href: '/pages/careers' },
+      { label: 'Student Discount', href: '/pages/student-discount' },
     ],
   },
 ]
 
 const FEATURED_TILES = [
-  { label: 'Our Blog', href: '/help' },
-  { label: 'Students get an extra 12% off', href: '/help#student-discount' },
+  { label: 'Our Blog', href: '/blog' },
+  { label: 'Students get an extra 12% off', href: '/pages/student-discount' },
 ]
 
 const SOCIAL_LINKS = [

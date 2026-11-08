@@ -4,6 +4,7 @@
 // supplies them (Brief.md #5, #6); eventually this comes from the CMS.
 
 import { asset } from './assetVersion'
+import { blogTeasers } from './blog'
 
 // Placeholder footage: "Woman doing lunges with dumbbells at the gym"
 // (Mixkit #52110, free under the Mixkit License).
@@ -64,34 +65,12 @@ export const HOME_POPULAR = {
   ],
 }
 
-// Editorial/news cards (gymshark.com's "Conditioning" blog). Posts and
-// imagery are placeholders — the client's content manager will publish the
-// real ones (new drops, styling guides, etc.) through the CMS; link to
-// /help, the only reads-more page we have, until a blog page exists.
+// Editorial/news cards (gymshark.com's "Conditioning" blog). Pulls real
+// teasers from config/blog.js now that /blog is built — the client's
+// content manager will publish real posts through the CMS later, but the
+// shape (and the live blog behind it) is already real.
 export const HOME_BLOG = {
   title: 'From the blog',
-  href: '/help',
-  posts: [
-    {
-      id: 'blog-1',
-      title: 'New in: the 2026 drop, decoded',
-      excerpt: 'Everything landing this season, from everyday leggings to the next training essentials.',
-      image: asset('/media/products/p3.webp'),
-      href: '/help',
-    },
-    {
-      id: 'blog-2',
-      title: 'Dresses, re-imagined for the gym bag',
-      excerpt: 'Why athleisure dresses are the move for rest days — more coming soon.',
-      image: asset('/media/products/p16.webp'),
-      href: '/help',
-    },
-    {
-      id: 'blog-3',
-      title: 'How we train: tips from the team',
-      excerpt: 'Short, sharp advice for getting the most out of every session.',
-      image: asset('/media/products/p9.webp'),
-      href: '/help',
-    },
-  ],
+  href: '/blog',
+  posts: blogTeasers(['winter-training-edit', 'what-to-wear-for-every-workout', 'strength-training-for-beginners']),
 }

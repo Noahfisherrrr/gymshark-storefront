@@ -157,10 +157,20 @@ environment variables.
       Brief #12), social icon row (inert pending the client's real accounts,
       Brief #5), legal link row, region/language selects (single-market
       placeholder pending Brief #11), payment-network text badges (pending
-      Brief #9), copyright line. Pages not yet built route to `/help`.
-      All controls are real `<button>`/`<Link>`/`<select>` elements —
-      cursor-pointer and click handling come from the global rule in
-      `index.css` plus native element behavior, no dead-looking controls.
+      Brief #9), copyright line. All controls are real
+      `<button>`/`<Link>`/`<select>` elements — cursor-pointer and click
+      handling come from the global rule in `index.css` plus native element
+      behavior, no dead-looking controls.
+- [x] Footer "Pages" column built out: Stores (`/pages/stores`, placeholder
+      US locations), Refer a Friend (`/pages/refer-a-friend`, 10%-off/5-friend
+      reward program described in the brief), Our Blog (`/blog` —
+      `src/pages/blog/`, full index/category/tag/article templates backed by
+      `config/blog.js`'s 16 placeholder articles), About Us
+      (`/pages/about-us`), Careers (`/pages/careers`, placeholder vacancies
+      in `config/careers.js`), Student Discount (`/pages/student-discount`).
+      Removed per the client's direction (no content/rights to describe):
+      Loyalty Program, Military & Government Discount, Accessibility
+      Statement, Factory List, Sustainability.
 - [ ] Refine against real Gymshark reference pages once client confirms
       which sections/pages to mirror (Brief #4)
 - [ ] Swap placeholder tokens for real brand colors/fonts/logo once supplied

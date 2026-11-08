@@ -77,7 +77,7 @@ const LEGAL_LINKS = [
   { label: 'Terms of Use', href: '/pages/terms-of-use' },
   { label: 'Privacy Notice', href: '/pages/privacy-notice' },
   { label: 'Cookie Policy', href: '/pages/cookie-policy' },
-  { label: 'Modern Slavery Statement', href: '/help' },
+  { label: 'Modern Slavery Statement', href: '/pages/modern-slavery-statement' },
 ]
 
 function FooterLink({ href, children, mobile = false }) {

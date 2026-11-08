@@ -18,6 +18,7 @@ glossary.md
 cms-plan.md
 *.md
 !SUPABASE_SETUP_GUIDE.md
+!CONTENTFUL_STRIPE_SETUP.md
 
 # Editor directories and files
 .vscode/*

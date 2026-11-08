@@ -199,12 +199,105 @@ async function trendingProducts({ gender = null, limit = 8 } = {}) {
   return (data || []).map(mapProductRow)
 }
 
+// ---- guest cart (localStorage) ----------------------------------------
+// When the user is not signed in, cart operations run entirely in
+// localStorage so the site works for every visitor — not just logged-in
+// ones.  On sign-in, mergeGuestCartOnLogin() pushes the local items into
+// Supabase and clears the local copy so the two never diverge.
+
+const GUEST_CART_KEY = 'gymshark:guest_cart'
+
+function readGuestCart() {
+  try {
+    return JSON.parse(localStorage.getItem(GUEST_CART_KEY) || '[]')
+  } catch {
+    return []
+  }
+}
+
+function writeGuestCart(items) {
+  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(items))
+}
+
+function clearGuestCart() {
+  localStorage.removeItem(GUEST_CART_KEY)
+}
+
+function guestGetCart() {
+  return Promise.resolve(readGuestCart())
+}
+
+function guestAddToCart({ productId, variantId, quantity }) {
+  const items = readGuestCart()
+  const existing = items.find((i) => i.variantId === variantId)
+  let next
+  if (existing) {
+    next = items.map((i) =>
+      i.variantId === variantId ? { ...i, quantity: i.quantity + quantity } : i,
+    )
+  } else {
+    next = [
+      ...items,
+      {
+        // Use a stable local id so CartContext can reference items by id.
+        id: `local-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        productId,
+        variantId,
+        quantity,
+      },
+    ]
+  }
+  writeGuestCart(next)
+  return Promise.resolve(next)
+}
+
+function guestUpdateCartQuantity(itemId, quantity) {
+  if (quantity <= 0) return guestRemoveFromCart(itemId)
+  const next = readGuestCart().map((i) => (i.id === itemId ? { ...i, quantity } : i))
+  writeGuestCart(next)
+  return Promise.resolve(next)
+}
+
+function guestRemoveFromCart(itemId) {
+  const next = readGuestCart().filter((i) => i.id !== itemId)
+  writeGuestCart(next)
+  return Promise.resolve(next)
+}
+
+function guestClearCart() {
+  clearGuestCart()
+  return Promise.resolve()
+}
+
+// Called by onAuthStateChange when a user signs in.  Pushes every local item
+// into Supabase (accumulating quantity, same as a normal add) and then wipes
+// the local copy.
+async function mergeGuestCartOnLogin(userId) {
+  const local = readGuestCart()
+  if (local.length === 0) return
+  await Promise.all(
+    local.map(({ productId, variantId, quantity }) =>
+      supabase
+        .rpc('add_to_cart', {
+          p_user_id: userId,
+          p_product_id: productId,
+          p_variant_id: variantId,
+          p_quantity: quantity,
+        })
+        .catch(() => {}), // best-effort — don't block sign-in if one item fails
+    ),
+  )
+  clearGuestCart()
+}
+
 // ---- cart / wishlist / orders -----------------------------------------
 
 async function getCart() {
-  assertConfigured()
+  // Guest path — no Supabase needed
+  if (!isSupabaseConfigured) return readGuestCart()
   const { data: authData } = await supabase.auth.getUser()
-  if (!authData?.user) return []
+  if (!authData?.user) return readGuestCart()
+
   const { data, error } = await supabase
     .from('cart_items')
     .select('id, productId:product_id, variantId:variant_id, quantity')
@@ -214,9 +307,11 @@ async function getCart() {
 }
 
 async function addToCart({ productId, variantId, quantity }) {
-  assertConfigured()
+  // Guest path
+  if (!isSupabaseConfigured) return guestAddToCart({ productId, variantId, quantity })
   const { data: authData } = await supabase.auth.getUser()
-  if (!authData?.user) throw new Error('Must be logged in to modify cart')
+  if (!authData?.user) return guestAddToCart({ productId, variantId, quantity })
+
   // add_to_cart (schema.sql) adds to the existing row's quantity on conflict
   // instead of replacing it — a plain `.upsert()` would overwrite `quantity`
   // with just this call's amount, so adding the same variant twice (e.g. two
@@ -232,9 +327,10 @@ async function addToCart({ productId, variantId, quantity }) {
 }
 
 async function updateCartQuantity(itemId, quantity) {
-  assertConfigured()
+  if (!isSupabaseConfigured) return guestUpdateCartQuantity(itemId, quantity)
   const { data: authData } = await supabase.auth.getUser()
-  if (!authData?.user) throw new Error('Must be logged in to modify cart')
+  if (!authData?.user) return guestUpdateCartQuantity(itemId, quantity)
+
   if (quantity <= 0) return removeFromCart(itemId)
   const { error } = await supabase
     .from('cart_items')
@@ -245,9 +341,10 @@ async function updateCartQuantity(itemId, quantity) {
 }
 
 async function removeFromCart(itemId) {
-  assertConfigured()
+  if (!isSupabaseConfigured) return guestRemoveFromCart(itemId)
   const { data: authData } = await supabase.auth.getUser()
-  if (!authData?.user) throw new Error('Must be logged in to modify cart')
+  if (!authData?.user) return guestRemoveFromCart(itemId)
+
   const { error } = await supabase
     .from('cart_items')
     .delete()
@@ -257,9 +354,10 @@ async function removeFromCart(itemId) {
 }
 
 async function clearCart() {
-  assertConfigured()
+  if (!isSupabaseConfigured) return guestClearCart()
   const { data: authData } = await supabase.auth.getUser()
-  if (!authData?.user) return
+  if (!authData?.user) return guestClearCart()
+
   const { error } = await supabase.from('cart_items').delete().eq('user_id', authData.user.id)
   if (error) throw error
 }
@@ -749,6 +847,7 @@ function onAuthStateChange(callback) {
     if (awaitingThisEmail && !alreadyAuthorized) {
       window.localStorage.removeItem(PENDING_OAUTH_KEY)
       supabase.auth.updateUser({ data: { oauth_authorized: true } }).catch(() => {})
+      mergeGuestCartOnLogin(user.id).catch(() => {})
       callback({ user: toUser(user), pendingConfirmationEmail: null })
       return
     }
@@ -762,6 +861,8 @@ function onAuthStateChange(callback) {
       return
     }
 
+    // Normal sign-in: merge any guest cart items the user built up while browsing.
+    mergeGuestCartOnLogin(user.id).catch(() => {})
     callback({ user: toUser(user), pendingConfirmationEmail: null })
   })
   return () => data.subscription.unsubscribe()

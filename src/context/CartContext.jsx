@@ -11,11 +11,22 @@ export function CartProvider({ children }) {
   const openMiniBag = useCallback(() => setMiniBagOpen(true), [])
   const closeMiniBag = useCallback(() => setMiniBagOpen(false), [])
 
+  // Load cart on mount — works for guests (localStorage) and signed-in users (Supabase).
   useEffect(() => {
     api.cart
       .get()
       .then(setItems)
       .finally(() => setLoading(false))
+  }, [])
+
+  // When auth state changes (sign-in / sign-out), reload the cart so the UI
+  // immediately reflects the merged Supabase cart (after login) or resets to
+  // the localStorage guest cart (after logout).
+  useEffect(() => {
+    const unsubscribe = api.auth.onAuthStateChange(() => {
+      api.cart.get().then(setItems).catch(() => setItems([]))
+    })
+    return unsubscribe
   }, [])
 
   async function addItem(input) {

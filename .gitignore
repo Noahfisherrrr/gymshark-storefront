@@ -17,6 +17,7 @@ futurePlans.md
 glossary.md
 cms-plan.md
 *.md
+!SUPABASE_SETUP_GUIDE.md
 
 # Editor directories and files
 .vscode/*

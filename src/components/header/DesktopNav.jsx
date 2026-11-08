@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronDownIcon, ChevronRightIcon } from './icons'
 
@@ -17,12 +17,15 @@ function FeaturedTile({ tile, onNavigate }) {
   )
 }
 
-function MegaMenu({ category, onNavigate }) {
+function MegaMenu({ category, onNavigate, sidebarWidth }) {
   const [activeGroup, setActiveGroup] = useState(null)
 
   return (
     <div className="absolute left-0 top-[76px] z-[250] flex h-[calc(100vh-76px)] text-ink">
-      <div className="relative flex w-[300px] shrink-0 flex-col border-r border-t border-line bg-white">
+      <div
+        className="relative flex shrink-0 flex-col border-r border-t border-line bg-white"
+        style={{ width: sidebarWidth }}
+      >
         <ul className="flex flex-col py-6 pl-10 pr-6">
           {category.groups.map((group) => (
             <li
@@ -70,6 +73,23 @@ function MegaMenu({ category, onNavigate }) {
 }
 
 export default function DesktopNav({ categories, openId, setOpenId, onNavigate }) {
+  // The left sidebar pane widens to meet the right edge of the "Explore" nav
+  // item, so it's measured live rather than hard-coded (the nav's width
+  // depends on the viewport and the category labels rendered into it).
+  const exploreItemRef = useRef(null)
+  const [sidebarWidth, setSidebarWidth] = useState(300)
+
+  useEffect(() => {
+    function measure() {
+      if (exploreItemRef.current) {
+        setSidebarWidth(Math.round(exploreItemRef.current.getBoundingClientRect().right))
+      }
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [])
+
   return (
     <nav className="-ml-4 hidden h-full lg:flex" aria-label="Main">
       {categories.map((category) => {
@@ -77,6 +97,7 @@ export default function DesktopNav({ categories, openId, setOpenId, onNavigate }
         return (
           <div
             key={category.id}
+            ref={category.id === 'explore' ? exploreItemRef : undefined}
             className="flex h-full"
             onMouseEnter={() => setOpenId(category.id)}
             onMouseLeave={() => setOpenId(null)}
@@ -105,7 +126,12 @@ export default function DesktopNav({ categories, openId, setOpenId, onNavigate }
 
             {open && (
               <div id={`menu-${category.id}`}>
-                <MegaMenu key={category.id} category={category} onNavigate={onNavigate} />
+                <MegaMenu
+                  key={category.id}
+                  category={category}
+                  onNavigate={onNavigate}
+                  sidebarWidth={sidebarWidth}
+                />
               </div>
             )}
           </div>

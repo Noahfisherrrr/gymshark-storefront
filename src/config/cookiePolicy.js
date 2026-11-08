@@ -20,7 +20,7 @@ export const COOKIE_POLICY_SECTIONS = [
   {
     heading: '2. The Cookies We Use',
     paragraphs: [
-      '2.1. We group our cookies into the categories below. You can accept or reject each non-essential category at any time using the "Manage Cookie Preferences" button on this page, or the "Manage Cookies" link in the footer.',
+      '2.1. We group our cookies into the categories below. You can accept or reject each non-essential category at any time using the "Manage Cookie Preferences" button on this page, or the "Cookie Settings" link in the footer.',
     ],
   },
   {
@@ -38,7 +38,7 @@ export const COOKIE_POLICY_SECTIONS = [
   {
     heading: '5. Managing Cookies',
     paragraphs: [
-      '5.1. You can change your cookie choices for this Site at any time via the "Manage Cookie Preferences" button on this page or the "Manage Cookies" link in the footer.',
+      '5.1. You can change your cookie choices for this Site at any time via the "Manage Cookie Preferences" button on this page or the "Cookie Settings" link in the footer.',
       '5.2. Most browsers also let you control cookies through their settings, including blocking or deleting them. Because strictly necessary cookies are required for the Site to function, blocking them may mean parts of the Site — such as your shopping bag — don’t work properly.',
       '5.3. Where we rely on your consent for a cookie category, we won’t set those cookies until you’ve given it, and you can withdraw it at any time with the same effect going forward.',
     ],

@@ -243,7 +243,7 @@ export default function Footer() {
               onClick={openPreferences}
               className="text-xs text-white/60 transition-colors duration-200 hover:text-white hover:underline"
             >
-              Manage Cookies
+              Cookie Settings
             </button>
           </div>
 

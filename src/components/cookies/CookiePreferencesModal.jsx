@@ -77,8 +77,8 @@ export default function CookiePreferencesModal() {
 
       <div className="min-h-0 flex-1 overflow-y-auto px-6">
         <p className="pt-5 text-sm text-muted">
-          Choose which cookies you're happy for us to use. You can change this at any time from the "Manage
-          Cookies" link in the footer — see our{' '}
+          Choose which cookies you're happy for us to use. You can change this at any time from the "Cookie
+          Settings" link in the footer — see our{' '}
           <a href="/pages/cookie-policy" className="underline">
             Cookie Policy
           </a>{' '}

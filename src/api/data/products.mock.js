@@ -4,12 +4,186 @@
 // `product_variants` tables should match.
 
 import { asset } from '../../config/assetVersion'
+import catalog100 from '../../../supabase/data/products.json'
 
 function variant(id, size, color, stock) {
   return { id, size, color, sku: `SKU-${id.toUpperCase()}`, stock }
 }
 
-export const MOCK_PRODUCTS = [
+const RAW_PRODUCTS = [
+  {
+    id: 'gymshark-softsense-longline-sports-bra-sports-bras-red-aw26',
+    slug: 'gymshark-softsense-longline-sports-bra-sports-bras-red-aw26',
+    name: 'Gymshark SoftSense™ Longline Sports Bra',
+    subtitle: 'Medium Support',
+    category: 'women',
+    gender: 'f',
+    type: 'sports-bras',
+    activities: ['yoga', 'pilates', 'athleisure'],
+    price: 42,
+    compareAtPrice: null,
+    fit: 'compression',
+    fitNote: 'True to size. Longline silhouette sits comfortably under the bust. Model is 5\'8" (173cm) wearing size S.',
+    collection: 'softsense',
+    collectionName: 'SoftSense™',
+    rating: 4.8,
+    reviewCount: 142,
+    ratingBreakdown: { 5: 118, 4: 16, 3: 5, 2: 2, 1: 1 },
+    fitFeedback: {
+      runsSmall: 6,
+      trueToSize: 88,
+      runsLarge: 6,
+      softnessRating: 98,
+      supportRating: 'Medium Support',
+    },
+    color: 'Cherry Red',
+    colorHex: '#8B1E2E',
+    colorways: [
+      { name: 'Cherry Red', hex: '#8B1E2E', slug: 'gymshark-softsense-longline-sports-bra-sports-bras-red-aw26', image: asset('/media/products/p4.webp'), isCurrent: true },
+      { name: 'Black', hex: '#1C1C1E', slug: 'p4', image: asset('/media/products/p4.webp'), isCurrent: false },
+      { name: 'Soft White', hex: '#EDE8E1', slug: 'p4', image: asset('/media/products/p4.webp'), isCurrent: false },
+      { name: 'Shadow Blue', hex: '#3B4E5F', slug: 'p4', image: asset('/media/products/p4.webp'), isCurrent: false },
+    ],
+    gallery: [
+      {
+        type: 'image',
+        url: 'https://cdn.shopify.com/s/files/1/0156/6146/files/GymsharkSoftSenseLonglineSportsBraCherryRed-B6A9C-RB6E0170-0010.jpg?v=1725547432',
+        fallback: asset('/media/products/p4.webp'),
+        alt: 'SoftSense Longline Sports Bra Cherry Red front view',
+        badge: "Model is 5'8\" and wears size S",
+      },
+      {
+        type: 'image',
+        url: 'https://cdn.shopify.com/s/files/1/0156/6146/files/GymsharkSoftSenseLonglineSportsBraCherryRed-B6A9C-RB6E0174-0014.jpg?v=1725547432',
+        fallback: asset('/media/products/p4.webp'),
+        alt: 'SoftSense Longline Sports Bra Cherry Red side 3/4 view',
+      },
+      {
+        type: 'image',
+        url: 'https://cdn.shopify.com/s/files/1/0156/6146/files/GymsharkSoftSenseLonglineSportsBraCherryRed-B6A9C-RB6E0178-0018.jpg?v=1725547432',
+        fallback: asset('/media/products/p4.webp'),
+        alt: 'SoftSense Longline Sports Bra Cherry Red racerback rear view',
+      },
+      {
+        type: 'image',
+        url: 'https://cdn.shopify.com/s/files/1/0156/6146/files/GymsharkSoftSenseLonglineSportsBraCherryRed-B6A9C-RB6E0182-0022.jpg?v=1725547432',
+        fallback: asset('/media/products/p4.webp'),
+        alt: 'SoftSense Longline Sports Bra Cherry Red fabric detail texture',
+      },
+      {
+        type: 'image',
+        url: 'https://cdn.shopify.com/s/files/1/0156/6146/files/GymsharkSoftSenseLonglineSportsBraCherryRed-B6A9C-RB6E0186-0026.jpg?v=1725547432',
+        fallback: asset('/media/products/p4.webp'),
+        alt: 'SoftSense Longline Sports Bra Cherry Red studio movement view',
+      },
+      {
+        type: 'video',
+        src: asset('/media/gym-training-mobile.mp4'),
+        poster: asset('/media/gym-training-poster.webp'),
+        title: 'SoftSense Movement In Action',
+      },
+    ],
+    image: asset('/media/products/p4.webp'),
+    tag: 'Trending',
+    badges: ['NEW RELEASE', 'SOFTSENSE™'],
+    variants: [
+      variant('ss-bra-xxs', 'XXS', 'Cherry Red', 4),
+      variant('ss-bra-xs', 'XS', 'Cherry Red', 8),
+      variant('ss-bra-s', 'S', 'Cherry Red', 12),
+      variant('ss-bra-m', 'M', 'Cherry Red', 2), // Low stock
+      variant('ss-bra-l', 'L', 'Cherry Red', 5),
+      variant('ss-bra-xl', 'XL', 'Cherry Red', 0), // Out of stock
+      variant('ss-bra-xxl', 'XXL', 'Cherry Red', 3),
+    ],
+    description: 'Softness you can genuinely sense. The SoftSense™ Longline Sports Bra is engineered with revolutionary LYCRA® ADAPTIV fiber that personalizes its hold to your unique shape. Designed with an extended underbust band for confident coverage during studio sessions, pilates flows, and all-day athleisure comfort.',
+    highlights: [
+      'Medium support tailored for studio training, yoga & pilates',
+      'Longline silhouette provides flattering extra ribcage coverage',
+      'Buttery-soft, weightless LYCRA® ADAPTIV dynamic stretch fabric',
+      'Removable contoured padding cups for customizable shape and modesty',
+      'Wide comfort-stretch straps prevent shoulder dig-in',
+      'Subtle tonal heat-sealed Gymshark sharkhead logo at center back',
+      'Sweat-wicking and quick-drying finish to keep you cool and dry',
+    ],
+    materials: 'Main: 75% Nylon, 25% LYCRA® ADAPTIV Elastane. Mesh lining: 82% Nylon, 18% Elastane.',
+    care: [
+      'Machine wash cold (30°C / 86°F) inside out with similar colours',
+      'Do not bleach or dry clean',
+      'Tumble dry low or hang dry inside out',
+      'Do not iron prints or heat-sealed logo',
+      'Remove pads prior to washing for longest lifespan',
+    ],
+    deliveryInfo: {
+      freeThreshold: 75,
+      standardDays: '3-5 business days',
+      expressPrice: 15,
+      expressDays: '1-2 business days',
+      returnDays: 30,
+    },
+    completeTheLookIds: ['p3', 'p10', 'p14'],
+    reviews: [
+      {
+        id: 'rev-1',
+        author: 'Chloe M.',
+        verified: true,
+        rating: 5,
+        date: '2026-10-24',
+        title: 'Hands down the softest sports bra I own',
+        content: 'I was hesitant about the longline fit rolling up, but it stays perfectly in place during hot pilates and reformer workouts. The cherry red shade is gorgeous in person and pairs so well with high-rise leggings.',
+        height: "5'7\" (170cm)",
+        weight: '135 lbs (61kg)',
+        usualSize: 'S',
+        sizePurchased: 'S',
+        activity: 'Pilates & Yoga',
+        helpfulCount: 28,
+      },
+      {
+        id: 'rev-2',
+        author: 'Jessica T.',
+        verified: true,
+        rating: 5,
+        date: '2026-10-18',
+        title: 'Incredible adaptive stretch',
+        content: 'The LYCRA ADAPTIV material is real magic. It feels like a second skin without squeezing your ribs. Pads are easy to take out or adjust. Gymshark nailed this collection.',
+        height: "5'5\" (165cm)",
+        weight: '128 lbs (58kg)',
+        usualSize: 'S',
+        sizePurchased: 'S',
+        activity: 'Studio & Lifting',
+        helpfulCount: 19,
+      },
+      {
+        id: 'rev-3',
+        author: 'Samantha R.',
+        verified: true,
+        rating: 4,
+        date: '2026-10-09',
+        title: 'Super comfortable, size up if between sizes',
+        content: 'Fabric is an absolute 10/10. I usually sit right between S and M, and the Medium gave me a bit more breathing room around the lats. Great medium hold for weight sessions and everyday wear.',
+        height: "5'9\" (175cm)",
+        weight: '148 lbs (67kg)',
+        usualSize: 'S / M',
+        sizePurchased: 'M',
+        activity: 'Weight Lifting',
+        helpfulCount: 14,
+      },
+      {
+        id: 'rev-4',
+        author: 'Elena K.',
+        verified: true,
+        rating: 5,
+        date: '2026-09-30',
+        title: 'Already ordering a second color',
+        content: 'The color is so vibrant and rich. Holds up through sweaty sessions and washes like new. No pilling so far after 5+ cycles. Highly recommend matching with the leggings!',
+        height: "5'4\" (162cm)",
+        weight: '120 lbs (54kg)',
+        usualSize: 'XS',
+        sizePurchased: 'XS',
+        activity: 'Barre & Pilates',
+        helpfulCount: 9,
+      },
+    ],
+  },
   {
     id: 'p1',
     name: 'Seamless Training Tee',
@@ -327,15 +501,113 @@ export const MOCK_PRODUCTS = [
     image: asset('/media/products/p20.webp'),
     variants: [variant('p20-os-black', 'One Size', 'Black', 8)],
   },
-].map((product) => ({
-  compareAtPrice: null,
-  activities: [],
-  fit: null,
-  rise: null,
-  features: [],
-  collection: null,
-  ...product,
-}))
+].map((product) => {
+  const primaryImg = product.image
+  const colorName = product.variants?.[0]?.color || 'Black'
+  return {
+    compareAtPrice: null,
+    activities: [],
+    fit: null,
+    rise: null,
+    features: [],
+    collection: null,
+    rating: product.rating ?? 4.7,
+    reviewCount: product.reviewCount ?? 86,
+    highlights: product.highlights ?? [
+      'Engineered for maximum freedom of movement and training support',
+      'Sweat-wicking, breathable finish keeps you cool and focused',
+      'Reinforced stretch seams retain shape through high-intensity sessions',
+      'Signature Gymshark branding details',
+    ],
+    materials: product.materials ?? '80% Polyester, 20% Elastane',
+    care: product.care ?? [
+      'Machine wash cold (30°C / 86°F) inside out with like colours',
+      'Do not bleach or dry clean',
+      'Tumble dry low or air dry',
+      'Do not iron design prints or heat seals',
+    ],
+    gallery: product.gallery ?? (primaryImg ? [
+      { type: 'image', url: primaryImg, fallback: primaryImg, alt: `${product.name} view 1` },
+      { type: 'image', url: primaryImg, fallback: primaryImg, alt: `${product.name} view 2` },
+      { type: 'image', url: primaryImg, fallback: primaryImg, alt: `${product.name} view 3` },
+    ] : []),
+    colorways: product.colorways ?? [
+      { name: colorName, hex: '#1C1C1E', slug: product.slug || product.id, image: primaryImg, isCurrent: true },
+    ],
+    deliveryInfo: product.deliveryInfo ?? {
+      freeThreshold: 75,
+      standardDays: '3-5 business days',
+      expressPrice: 15,
+      expressDays: '1-2 business days',
+      returnDays: 30,
+    },
+    reviews: product.reviews ?? [
+      {
+        id: `rev-${product.id}-1`,
+        author: 'Alex P.',
+        verified: true,
+        rating: 5,
+        date: '2026-10-15',
+        title: 'Great fit and quality',
+        content: 'Fits true to size and feels premium during tough workouts. Exactly what you expect from Gymshark.',
+        activity: 'Gym / Training',
+        helpfulCount: 12,
+      },
+      {
+        id: `rev-${product.id}-2`,
+        author: 'Jordan K.',
+        verified: true,
+        rating: 4,
+        date: '2026-09-28',
+        title: 'Comfortable & stylish',
+        content: 'Super comfortable material, moves well with high reps and breathes easily.',
+        activity: 'Weight Lifting',
+        helpfulCount: 7,
+      },
+    ],
+    ...product,
+  }
+})
+
+// Merge baseline products with all 100 generated catalog products (40 women, 40 men, 20 accessories)
+const productMap = new Map()
+
+RAW_PRODUCTS.forEach((p) => productMap.set(p.id, p))
+
+catalog100.forEach((p) => {
+  productMap.set(p.id, {
+    compareAtPrice: null,
+    activities: [],
+    fit: null,
+    rise: null,
+    features: [],
+    collection: null,
+    rating: 4.8,
+    reviewCount: 95,
+    highlights: [
+      'Engineered for maximum freedom of movement and training support',
+      'Sweat-wicking, breathable finish keeps you cool and focused',
+      'Tested by elite athletes and powerlifters',
+    ],
+    materials: '82% Nylon, 18% Elastane',
+    care: [
+      'Machine wash cold (30°C / 86°F) inside out with like colours',
+      'Do not bleach or dry clean',
+      'Tumble dry low or air dry',
+      'Do not iron design prints or heat seals',
+    ],
+    deliveryInfo: {
+      freeThreshold: 75,
+      standardDays: '3-5 business days',
+      expressPrice: 15,
+      expressDays: '1-2 business days',
+      returnDays: 30,
+    },
+    ...p,
+  })
+})
+
+export const MOCK_PRODUCTS = Array.from(productMap.values())
 
 // Stand-in for the search index's popular-queries data (Gymshark serves
 // these from an Algolia "suggestions" index). Used for both type-ahead

@@ -66,6 +66,7 @@ export default function App() {
           <Route path="pages/new-users/women" element={<NewUsersWomen />} />
           <Route path="pages/new-users/men" element={<NewUsersMen />} />
           <Route path="product/:productId" element={<Product />} />
+          <Route path="products/:productId" element={<Product />} />
           <Route path="cart" element={<Cart />} />
           <Route path="wishlist" element={<Wishlist />} />
           <Route path="login" element={<Login />} />

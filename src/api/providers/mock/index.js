@@ -12,7 +12,20 @@ import { readStore, writeStore, makeId } from './storage'
 const delay = (ms = 150) => new Promise((resolve) => setTimeout(resolve, ms))
 
 function findProduct(productId) {
-  return MOCK_PRODUCTS.find((p) => p.id === productId) ?? null
+  if (!productId) return null
+  const idStr = String(productId).toLowerCase().trim()
+  return (
+    MOCK_PRODUCTS.find((p) => {
+      const pId = p.id.toLowerCase()
+      const pSlug = (p.slug || '').toLowerCase()
+      return (
+        pId === idStr ||
+        pSlug === idStr ||
+        pId.replace(/[^a-z0-9]/g, '') === idStr.replace(/[^a-z0-9]/g, '') ||
+        (pSlug && pSlug.replace(/[^a-z0-9]/g, '') === idStr.replace(/[^a-z0-9]/g, ''))
+      )
+    }) ?? null
+  )
 }
 
 function findVariant(productId, variantId) {
@@ -503,6 +516,90 @@ async function getActiveOffer() {
   return MOCK_ACTIVE_OFFER
 }
 
+// ---- reviews & comments (backend content) ----------------------------
+
+async function listReviews(productId, { sort = 'recent', rating = null, verified = false } = {}) {
+  await delay()
+  const product = findProduct(productId)
+  const storedReviews = readStore(`reviews:${productId}`, null)
+  let items = storedReviews ?? product?.reviews ?? []
+
+  if (rating !== null) items = items.filter((r) => r.rating === rating)
+  if (verified) items = items.filter((r) => r.verified)
+
+  if (sort === 'highest') items = [...items].sort((a, b) => b.rating - a.rating)
+  else if (sort === 'lowest') items = [...items].sort((a, b) => a.rating - b.rating)
+  else if (sort === 'helpful') items = [...items].sort((a, b) => (b.helpfulCount || 0) - (a.helpfulCount || 0))
+  else items = [...items].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
+
+  return items
+}
+
+async function addReview(productId, input) {
+  await delay()
+  const product = findProduct(productId)
+  const current = readStore(`reviews:${productId}`, product?.reviews ? [...product.reviews] : [])
+  const newReview = {
+    id: makeId('rev'),
+    productId,
+    author: input.author || 'Anonymous',
+    verified: Boolean(input.email),
+    rating: Number(input.rating) || 5,
+    date: new Date().toISOString().split('T')[0],
+    title: input.title || '',
+    content: input.content || '',
+    activity: input.activity || 'Training',
+    sizePurchased: input.sizePurchased || 'M',
+    usualSize: input.usualSize || 'M',
+    height: input.height || '',
+    weight: input.weight || '',
+    helpfulCount: 0,
+  }
+  const next = [newReview, ...current]
+  writeStore(`reviews:${productId}`, next)
+  return newReview
+}
+
+async function voteHelpfulReview(reviewId) {
+  await delay()
+  const votes = readStore('reviewHelpfulVotes', {})
+  const currentCount = votes[reviewId] ?? 0
+  const nextCount = currentCount + 1
+  writeStore('reviewHelpfulVotes', { ...votes, [reviewId]: nextCount })
+  return { helpfulCount: nextCount }
+}
+
+async function listComments(parentType, parentId) {
+  await delay()
+  const allComments = readStore('comments', [])
+  return allComments.filter((c) => c.parentType === parentType && c.parentId === parentId)
+}
+
+async function addComment(parentType, parentId, { content, authorName = 'Customer' }) {
+  await delay()
+  const allComments = readStore('comments', [])
+  const newComment = {
+    id: makeId('comm'),
+    parentType,
+    parentId,
+    authorName,
+    authorRole: 'customer',
+    content,
+    createdAt: new Date().toISOString(),
+  }
+  writeStore('comments', [newComment, ...allComments])
+  return newComment
+}
+
+async function getContentBlock(key) {
+  await delay()
+  const blocks = readStore('contentBlocks', {
+    hero_announcement: { title: 'FREE STANDARD SHIPPING OVER $75', link: '/shop' },
+    footer_notice: { text: 'Gymshark Official Store - Built for Conditioning' },
+  })
+  return blocks[key] ?? null
+}
+
 /** @type {import('../../contract').ApiProvider} */
 export const mockApi = {
   products: { list: listProducts, getById: getProductById, listCategories },
@@ -529,5 +626,17 @@ export const mockApi = {
     requestReturn,
     getReferralInfo,
     getActiveOffer,
+  },
+  reviews: {
+    list: listReviews,
+    add: addReview,
+    voteHelpful: voteHelpfulReview,
+  },
+  comments: {
+    list: listComments,
+    add: addComment,
+  },
+  content: {
+    getBlock: getContentBlock,
   },
 }

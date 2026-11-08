@@ -14,21 +14,39 @@
  *
  * @typedef {Object} Product
  * @property {string} id
+ * @property {string} [slug]  usually equal to `id`; ColorSelector links to `/products/:slug`
  * @property {string} name
+ * @property {string} [subtitle]
  * @property {string} category
  * @property {'f'|'m'|'u'} gender  f = women, m = men, u = unisex
  * @property {string} type  slug from src/config/productTypes.js (e.g. 'leggings', 'hoodies')
  * @property {string[]} activities  slugs from src/config/activities.js (e.g. 'running', 'yoga')
  * @property {string|null} fit  slug from src/config/fits.js, null if not applicable (e.g. accessories)
+ * @property {string|null} [fitNote]  PDP copy, e.g. "Model is 5'8\" wearing size S"
  * @property {string|null} rise  slug from src/config/rises.js, null outside bottoms (leggings/shorts/joggers)
  * @property {string[]} features  slugs from src/config/features.js
  * @property {string|null} collection  slug from src/config/collections.js, null if unassigned
+ * @property {string|null} [collectionName]  display name for `collection`
  * @property {number} price
  * @property {number|null} compareAtPrice  original price when on sale, else null
  * @property {string} description
+ * @property {string[]} [highlights]  bullet points shown in the PDP accordion
+ * @property {string} [materials]
+ * @property {string[]} [care]  care instructions (maps to the `care_instructions` column — note the shortened name)
  * @property {ProductVariant[]} variants
  * @property {string|null} image
  * @property {string|null} [tag]  short merchandising label shown on the image (e.g. 'New'), null if none
+ * @property {string[]} [badges]
+ * @property {string} [color]  the swatch name this product row represents (one product per colorway)
+ * @property {string} [colorHex]
+ * @property {Array<{name: string, hex: string, slug: string, image: string, isCurrent: boolean}>} [colorways]
+ * @property {Array<{type: 'image'|'video', url?: string, src?: string, fallback?: string, alt?: string, badge?: string}>} [gallery]
+ * @property {number} [rating]
+ * @property {number} [reviewCount]
+ * @property {Record<'1'|'2'|'3'|'4'|'5', number>} [ratingBreakdown]
+ * @property {{runsSmall: number, trueToSize: number, runsLarge: number, softnessRating: number, supportRating: string}} [fitFeedback]
+ * @property {string[]} [completeTheLookIds]  product ids shown in the "Complete the Look" rail
+ * @property {{freeThreshold: number, standardDays: string, expressPrice: number, expressDays: string, returnDays: number}} [deliveryInfo]  local-only static copy, not stored in Supabase — components fall back to defaults when absent
  *
  * @typedef {Object} CartItem
  * @property {string} id
@@ -84,6 +102,31 @@
  * @property {string} description
  * @property {number} amountOff  fraction, e.g. 0.1 = 10% off
  * @property {string|null} expiresAt  ISO date string, or null if it never expires
+ *
+ * @typedef {Object} Review
+ * @property {string} id
+ * @property {string} productId
+ * @property {string} author
+ * @property {boolean} verified
+ * @property {number} rating
+ * @property {string} date
+ * @property {string} [title]
+ * @property {string} content
+ * @property {string} [activity]
+ * @property {string} [sizePurchased]
+ * @property {string} [usualSize]
+ * @property {string} [height]
+ * @property {string} [weight]
+ * @property {number} helpfulCount
+ *
+ * @typedef {Object} Comment
+ * @property {string} id
+ * @property {'review'|'product'|'blog'} parentType
+ * @property {string} parentId
+ * @property {string} authorName
+ * @property {'customer'|'staff'|'admin'} authorRole
+ * @property {string} content
+ * @property {string} createdAt
  *
  * @typedef {Object} SearchResult
  * @property {Product[]} products   first `limit` matches
@@ -155,6 +198,18 @@
  *   getReferralInfo: (userId: string) => Promise<ReferralInfo>,
  *   getActiveOffer: (userId: string) => Promise<AccountOffer|null>,
  * }} account
+ * @property {{
+ *   list: (productId: string, opts?: { sort?: 'recent'|'highest'|'lowest'|'helpful', rating?: number, verified?: boolean }) => Promise<Review[]>,
+ *   add: (productId: string, input: { rating: number, title?: string, content: string, author: string, email?: string, sizePurchased?: string, usualSize?: string, activity?: string, height?: string, weight?: string }) => Promise<Review>,
+ *   voteHelpful: (reviewId: string) => Promise<{ helpfulCount: number }>,
+ * }} reviews
+ * @property {{
+ *   list: (parentType: 'review'|'product'|'blog', parentId: string) => Promise<Comment[]>,
+ *   add: (parentType: 'review'|'product'|'blog', parentId: string, input: { content: string, authorName?: string }) => Promise<Comment>,
+ * }} comments
+ * @property {{
+ *   getBlock: (key: string) => Promise<any>,
+ * }} content
  */
 
 export {}

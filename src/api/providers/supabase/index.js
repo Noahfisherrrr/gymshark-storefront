@@ -1,14 +1,16 @@
 import { supabase, isSupabaseConfigured } from '../../../lib/supabaseClient'
 
 // Same contract as the mock provider (src/api/contract.js). Switch to this
-// provider by setting VITE_API_PROVIDER=supabase once the client's Supabase
-// project exists (Brief.md #14) and the schema below is created (see
-// plan.md → Phase 3).
+// provider by setting VITE_API_PROVIDER=supabase in .env.local once the
+// client's Supabase project exists (Brief.md #14) — the schema itself
+// (supabase/schema.sql) is already written and seeded (supabase/seed.sql,
+// SUPABASE_SETUP_GUIDE.md), so flipping that env var is the only step left.
 //
-// Expected tables: products, product_variants, cart_items, wishlist_items,
-// orders, order_items. Column names below are a best guess based on the
-// contract shapes — adjust the `.select()` mappings if the real schema
-// differs once it's created.
+// Tables: profiles, products, product_variants, reviews, comments,
+// review_helpful_votes, cart_items, wishlist_items, addresses, orders,
+// order_items, discount_codes, content_blocks (see schema.sql for exact
+// columns/RLS). snake_case column names are mapped to the contract's
+// camelCase shapes below — see mapProductRow for the product-specific ones.
 
 function assertConfigured() {
   if (!isSupabaseConfigured) {
@@ -105,12 +107,23 @@ async function listProducts({
   if (rise) query = query.in('rise', rise.split(',').filter(Boolean))
   if (feature) query = query.overlaps('features', feature.split(',').filter(Boolean))
   if (collection) query = query.in('collection', collection.split(',').filter(Boolean))
-  // size/color live on `product_variants`, a joined table — filtering the
-  // parent `products` row by a joined column isn't a plain column filter
-  // here, so these are left as a TODO until the real schema (and whether
-  // it's a view, RPC, or separate query) is settled.
-  void size
-  void color
+  // size/color live on `product_variants`, a joined table, so they can't be
+  // a plain column filter on `products` here. A `!inner` embed filter would
+  // also prune the returned `variants` array down to only the matching rows,
+  // which breaks the PDP's size/colorway selectors — so instead this looks
+  // up the matching product_ids first and filters `products.id` by that,
+  // which still returns every variant per the contract ("matches if any
+  // variant has that size/color").
+  if (size || color) {
+    let variantQuery = supabase.from('product_variants').select('product_id')
+    if (size) variantQuery = variantQuery.in('size', size.split(',').filter(Boolean))
+    if (color) variantQuery = variantQuery.in('color', color.split(',').filter(Boolean))
+    const { data: variantRows, error: variantError } = await variantQuery
+    if (variantError) throw variantError
+    const matchingIds = [...new Set((variantRows || []).map((row) => row.product_id))]
+    if (matchingIds.length === 0) return []
+    query = query.in('id', matchingIds)
+  }
   if (priceMin != null) query = query.gte('price', priceMin)
   if (priceMax != null) query = query.lte('price', priceMax)
   if (onSale) query = query.not('compare_at_price', 'is', null)

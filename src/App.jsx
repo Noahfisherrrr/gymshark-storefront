@@ -14,6 +14,7 @@ const NewUsersWomen = lazy(() => import('./pages/NewUsersWomen'))
 const NewUsersMen = lazy(() => import('./pages/NewUsersMen'))
 const Product = lazy(() => import('./pages/Product'))
 const Cart = lazy(() => import('./pages/Cart'))
+const Checkout = lazy(() => import('./pages/Checkout'))
 const Wishlist = lazy(() => import('./pages/Wishlist'))
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
@@ -68,6 +69,7 @@ export default function App() {
           <Route path="product/:productId" element={<Product />} />
           <Route path="products/:productId" element={<Product />} />
           <Route path="cart" element={<Cart />} />
+          <Route path="checkout" element={<Checkout />} />
           <Route path="wishlist" element={<Wishlist />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />

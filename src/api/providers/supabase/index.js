@@ -416,6 +416,55 @@ async function listOrders(userId) {
   return data || []
 }
 
+// Ghost checkout — simulates a completed purchase without payment.
+// Saves a real `orders` + `order_items` row in Supabase (or creates a
+// local-only object when the user is a guest) so the confirmation page
+// and order history both work.
+async function ghostCheckout({ shipping, lines, subtotal, discount }) {
+  const shippingCost = shipping?.shippingMethod === 'express' ? 9.99 : 0
+  const discountAmount = discount?.valid ? subtotal * discount.amountOff : 0
+  const total = subtotal + shippingCost - discountAmount
+
+  // Try to persist to Supabase if configured and user is signed in.
+  if (isSupabaseConfigured) {
+    const { data: authData } = await supabase.auth.getUser()
+    if (authData?.user) {
+      // Insert order header
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          user_id: authData.user.id,
+          total,
+          status: 'processing',
+          shipping_address: shipping,
+        })
+        .select()
+        .single()
+
+      if (!orderError && order) {
+        // Insert order line items (best-effort — don't block confirmation)
+        const orderItems = lines.map((line) => ({
+          order_id: order.id,
+          product_id: line.productId,
+          variant_id: line.variantId,
+          quantity: line.quantity,
+          price: line.product?.price ?? 0,
+        }))
+        await supabase.from('order_items').insert(orderItems)
+        return order
+      }
+    }
+  }
+
+  // Guest fallback — return a local object so the confirmation page renders.
+  return {
+    id: `ghost-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    total,
+    status: 'processing',
+    createdAt: new Date().toISOString(),
+  }
+}
+
 async function applyDiscountCode(code) {
   assertConfigured()
   const cleanCode = (code || '').trim().toUpperCase()
@@ -899,7 +948,7 @@ export const supabaseApi = {
   },
   wishlist: { get: getWishlist, toggle: toggleWishlist },
   auth: { getCurrentUser, signUp, signIn, signInWithOAuth, onAuthStateChange, signOut },
-  orders: { list: listOrders, applyDiscountCode },
+  orders: { list: listOrders, applyDiscountCode, ghostCheckout },
   account: {
     updateProfile,
     changePassword,

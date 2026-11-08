@@ -13,6 +13,7 @@ import {
   HOME_PROMO_BANNER,
   HOME_VIDEO_BANNER,
 } from '../config/home'
+import { getBannerBySlug } from '../lib/contentful'
 
 function useProductList(query) {
   const [products, setProducts] = useState([])
@@ -20,6 +21,19 @@ function useProductList(query) {
     api.products.list(query).then(setProducts)
   }, [query])
   return products
+}
+
+// Renders the local config/home.js placeholder immediately, then swaps in
+// the Contentful entry for `slug` if one exists — stays on the placeholder
+// when Contentful isn't configured yet, or has no matching entry.
+function useBanner(slug, fallback) {
+  const [banner, setBanner] = useState(fallback)
+  useEffect(() => {
+    getBannerBySlug(slug).then((entry) => {
+      if (entry) setBanner(entry)
+    })
+  }, [slug])
+  return banner
 }
 
 // "Up to 40% off", from the deepest discount in the sale list.
@@ -37,15 +51,19 @@ function Carousel({ config, title }) {
 }
 
 export default function Home() {
+  const hero = useBanner('home-hero', HOME_HERO)
+  const videoBanner = useBanner('home-video-banner', HOME_VIDEO_BANNER)
+  const promoBanner = useBanner('home-promo-banner', HOME_PROMO_BANNER)
+
   return (
     <div>
-      <Banner {...HOME_HERO} headingLevel="h1" priority />
+      <Banner {...hero} headingLevel="h1" priority />
       <Carousel config={HOME_CAROUSELS.newIn} />
       <Carousel config={HOME_CAROUSELS.women} />
-      <Banner {...HOME_VIDEO_BANNER} />
+      <Banner {...videoBanner} />
       <Carousel config={HOME_CAROUSELS.men} />
       <Carousel config={HOME_CAROUSELS.accessories} />
-      <BannerSlim {...HOME_PROMO_BANNER} />
+      <BannerSlim {...promoBanner} />
       <Carousel config={HOME_CAROUSELS.sale} title={saleTitle} />
       <TabbedProductGrid {...HOME_POPULAR} />
       <BlogCards {...HOME_BLOG} />

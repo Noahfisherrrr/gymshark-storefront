@@ -2,6 +2,16 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PAYMENT_METHODS } from '../../config/store'
 import { useCookieConsent } from '../../context/CookieConsentContext'
+import {
+  AfterpayIcon,
+  AmexIcon,
+  ApplePayIcon,
+  KlarnaIcon,
+  MastercardIcon,
+  PaypalIcon,
+  SezzleIcon,
+  VisaIcon,
+} from '../footer/PaymentIcons'
 import Modal from '../ui/Modal'
 import {
   ChevronDownIcon,
@@ -71,6 +81,17 @@ const SOCIAL_LINKS = [
   { label: 'Twitter', Icon: TwitterIcon },
   { label: 'TikTok', Icon: TiktokIcon },
 ]
+
+const PAYMENT_ICON_MAP = {
+  visa: VisaIcon,
+  mastercard: MastercardIcon,
+  paypal: PaypalIcon,
+  applePay: ApplePayIcon,
+  amex: AmexIcon,
+  klarna: KlarnaIcon,
+  afterpay: AfterpayIcon,
+  sezzle: SezzleIcon,
+}
 
 const LEGAL_LINKS = [
   { label: 'Terms & Conditions', href: '/pages/terms-conditions' },
@@ -265,15 +286,16 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-wrap gap-3 border-t border-white/10 pt-8">
-          {PAYMENT_METHODS.map((method) => (
-            <span
-              key={method}
-              className="rounded border border-white/15 px-2.5 py-1 text-[11px] uppercase tracking-wide text-white/60"
-            >
-              {method}
-            </span>
-          ))}
+        <div className="mt-8 flex flex-wrap gap-2 border-t border-white/10 pt-8">
+          {PAYMENT_METHODS.map(({ label, icon }) => {
+            const Icon = PAYMENT_ICON_MAP[icon]
+            return (
+              <span key={label} className="inline-flex">
+                <span className="sr-only">{label}</span>
+                <Icon />
+              </span>
+            )
+          })}
         </div>
       </div>
 

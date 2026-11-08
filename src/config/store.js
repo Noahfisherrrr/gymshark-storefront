@@ -16,14 +16,15 @@ export const LOW_STOCK_THRESHOLD = 5
 
 // Generic payment-network badges, not Gymshark's assets. Which of these the
 // client actually accepts is pending their verified Stripe account
-// (Brief.md #9) — shown as plain text so nothing implies a live integration.
+// (Brief.md #9) — the icons are hand-drawn approximations, not traced brand
+// assets, so nothing implies a live integration.
 export const PAYMENT_METHODS = [
-  'Visa',
-  'Mastercard',
-  'PayPal',
-  'Apple Pay',
-  'Klarna',
-  'American Express',
-  'Afterpay',
-  'Sezzle',
+  { label: 'Visa', icon: 'visa' },
+  { label: 'Mastercard', icon: 'mastercard' },
+  { label: 'PayPal', icon: 'paypal' },
+  { label: 'Apple Pay', icon: 'applePay' },
+  { label: 'Klarna', icon: 'klarna' },
+  { label: 'American Express', icon: 'amex' },
+  { label: 'Afterpay', icon: 'afterpay' },
+  { label: 'Sezzle', icon: 'sezzle' },
 ]

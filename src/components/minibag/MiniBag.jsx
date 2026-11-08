@@ -13,6 +13,16 @@ import {
   PAYMENT_METHODS,
   STANDARD_SHIPPING_COST,
 } from '../../config/store'
+import {
+  AfterpayIcon,
+  AmexIcon,
+  ApplePayIcon,
+  KlarnaIcon,
+  MastercardIcon,
+  PaypalIcon,
+  SezzleIcon,
+  VisaIcon,
+} from '../footer/PaymentIcons'
 import Modal from '../ui/Modal'
 import {
   BagFilledIcon,
@@ -433,17 +443,29 @@ function OrderSummary({ subtotal, shipping, discountAmount, total }) {
   )
 }
 
+const PAYMENT_ICON_MAP = {
+  visa: VisaIcon,
+  mastercard: MastercardIcon,
+  paypal: PaypalIcon,
+  applePay: ApplePayIcon,
+  amex: AmexIcon,
+  klarna: KlarnaIcon,
+  afterpay: AfterpayIcon,
+  sezzle: SezzleIcon,
+}
+
 function PaymentBadges() {
   return (
     <div className="flex flex-wrap justify-center gap-1.5 bg-ink px-4 pb-4">
-      {PAYMENT_METHODS.map((method) => (
-        <span
-          key={method}
-          className="rounded border border-white/15 px-2 py-1 text-[10px] uppercase tracking-wide text-white/60"
-        >
-          {method}
-        </span>
-      ))}
+      {PAYMENT_METHODS.map(({ label, icon }) => {
+        const Icon = PAYMENT_ICON_MAP[icon]
+        return (
+          <span key={label} className="inline-flex">
+            <span className="sr-only">{label}</span>
+            <Icon />
+          </span>
+        )
+      })}
     </div>
   )
 }

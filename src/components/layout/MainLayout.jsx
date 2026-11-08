@@ -1,6 +1,8 @@
 import { Outlet } from 'react-router-dom'
 import Header from '../header/Header'
 import Footer from './Footer'
+import CookieConsentBanner from '../cookies/CookieConsentBanner'
+import CookiePreferencesModal from '../cookies/CookiePreferencesModal'
 
 export default function MainLayout() {
   return (
@@ -10,6 +12,8 @@ export default function MainLayout() {
         <Outlet />
       </main>
       <Footer />
+      <CookieConsentBanner />
+      <CookiePreferencesModal />
     </div>
   )
 }

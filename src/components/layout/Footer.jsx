@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PAYMENT_METHODS } from '../../config/store'
+import { useCookieConsent } from '../../context/CookieConsentContext'
 import Modal from '../ui/Modal'
 import {
   ChevronDownIcon,
@@ -75,7 +76,7 @@ const LEGAL_LINKS = [
   { label: 'Terms & Conditions', href: '/pages/terms-conditions' },
   { label: 'Terms of Use', href: '/pages/terms-of-use' },
   { label: 'Privacy Notice', href: '/pages/privacy-notice' },
-  { label: 'Cookie Policy', href: '/help' },
+  { label: 'Cookie Policy', href: '/pages/cookie-policy' },
   { label: 'Modern Slavery Statement', href: '/help' },
 ]
 
@@ -179,6 +180,7 @@ function NewsletterModal({ open, onClose }) {
 
 export default function Footer() {
   const [newsletterOpen, setNewsletterOpen] = useState(false)
+  const { openPreferences } = useCookieConsent()
 
   return (
     <footer className="border-t border-black/10 bg-brand-black text-brand-white">
@@ -236,6 +238,13 @@ export default function Footer() {
                 {link.label}
               </Link>
             ))}
+            <button
+              type="button"
+              onClick={openPreferences}
+              className="text-xs text-white/60 transition-colors duration-200 hover:text-white hover:underline"
+            >
+              Manage Cookies
+            </button>
           </div>
 
           <div className="flex gap-3">

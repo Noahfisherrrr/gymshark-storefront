@@ -1,0 +1,32 @@
+/* Cookie consent banner + preferences modal. Keyframes shared with the
+   header overlays live in ui/overlay.css. */
+
+.gs-cookie-banner {
+  animation: gs-slide-up 0.4s forwards;
+}
+
+/* Mobile: bottom sheet, same slide as the mini bag. Desktop: centered
+   dialog (via flex on the overlay — see overlayClassName), fade + scale
+   instead since it isn't anchored to an edge. */
+.gs-cookie-prefs {
+  animation: gs-slide-up 0.3s forwards;
+}
+.gs-cookie-prefs--closing {
+  animation: gs-slide-down 0.3s forwards;
+}
+@media (min-width: 1024px) {
+  .gs-cookie-prefs {
+    animation: gs-cookie-prefs-in 0.25s forwards;
+  }
+  .gs-cookie-prefs--closing {
+    animation: gs-cookie-prefs-out 0.2s forwards;
+  }
+}
+@keyframes gs-cookie-prefs-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes gs-cookie-prefs-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.96); }
+}

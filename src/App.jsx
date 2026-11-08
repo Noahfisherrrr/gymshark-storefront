@@ -32,6 +32,7 @@ const SubmitAFake = lazy(() => import('./pages/help/SubmitAFake'))
 const TermsConditions = lazy(() => import('./pages/legal/TermsConditions'))
 const TermsOfUse = lazy(() => import('./pages/legal/TermsOfUse'))
 const PrivacyNotice = lazy(() => import('./pages/legal/PrivacyNotice'))
+const CookiePolicy = lazy(() => import('./pages/legal/CookiePolicy'))
 const BlogIndex = lazy(() => import('./pages/blog/BlogIndex'))
 const BlogCategory = lazy(() => import('./pages/blog/BlogCategory'))
 const BlogTag = lazy(() => import('./pages/blog/BlogTag'))
@@ -83,6 +84,7 @@ export default function App() {
           <Route path="pages/terms-conditions" element={<TermsConditions />} />
           <Route path="pages/terms-of-use" element={<TermsOfUse />} />
           <Route path="pages/privacy-notice" element={<PrivacyNotice />} />
+          <Route path="pages/cookie-policy" element={<CookiePolicy />} />
           <Route path="blog" element={<BlogIndex />} />
           <Route path="blog/category/:slug" element={<BlogCategory />} />
           <Route path="blog/tag/:slug" element={<BlogTag />} />

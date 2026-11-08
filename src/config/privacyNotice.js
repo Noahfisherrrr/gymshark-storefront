@@ -96,6 +96,7 @@ export const PRIVACY_NOTICE_SECTIONS = [
 export const PRIVACY_NOTICE_LAST_UPDATED = '8 November 2026'
 
 export const PRIVACY_NOTICE_RELATED_ARTICLES = [
+  { q: 'Cookie Policy', href: '/pages/cookie-policy' },
   { q: 'Terms & Conditions', href: '/pages/terms-conditions' },
   { q: 'Terms of Use', href: '/pages/terms-of-use' },
   { q: 'What Is Your Returns Policy?', href: '/help/returns-policy' },

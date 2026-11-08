@@ -20,9 +20,13 @@ export const ADS_MESSAGES = [
   'Students get an extra 12% off',
 ]
 
+// Placeholder sub-nav links (Brief.md #4, #6) land on the gendered Shop page
+// without a facet filter — there's no real per-item taxonomy to filter by
+// yet, and tagging the URL with an arbitrary slug would collide with the
+// real `collection` facet (src/hooks/useProductFilters.js) and filter the
+// page down to zero products.
 function shop(category, label) {
-  const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
-  return { label, href: `/shop?category=${category}&collection=${slug}` }
+  return { label, href: `/shop?category=${category}` }
 }
 
 function group(category, label, links) {
@@ -30,7 +34,7 @@ function group(category, label, links) {
 }
 
 // Activity links filter by the product's `activities` tags (src/api/data/
-// products.mock.js), unlike `shop()`'s `collection` param which is cosmetic.
+// products.mock.js), unlike `shop()`'s placeholder links above.
 function activityGroup(category) {
   return {
     label: 'Shop By Activity',

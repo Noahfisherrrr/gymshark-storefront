@@ -1,17 +1,23 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { api } from '../api'
+import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { useCartLines } from '../hooks/useCartLines'
 import { formatPrice } from '../lib/format'
 import { productThumb } from '../lib/images'
+import { supabase } from '../lib/supabaseClient'
 
 export default function Cart() {
+  const { user } = useAuth()
+  const navigate = useNavigate()
   const { updateQuantity, removeItem } = useCart()
   const { lines, subtotal } = useCartLines()
   const [discountCode, setDiscountCode] = useState('')
   const [discount, setDiscount] = useState(null)
   const [discountError, setDiscountError] = useState(null)
+  const [checkingOut, setCheckingOut] = useState(false)
+  const [checkoutError, setCheckoutError] = useState(null)
 
   const discountAmount = discount?.valid ? subtotal * discount.amountOff : 0
   const total = subtotal - discountAmount
@@ -25,6 +31,28 @@ export default function Cart() {
       setDiscountError(result.message)
     } else {
       setDiscount(result)
+    }
+  }
+
+  // The checkout session is rebuilt server-side from the cart/discount
+  // code in Supabase (see supabase/functions/stripe-checkout) — the amounts
+  // shown here are a preview, never trusted as the amount actually charged.
+  async function handleCheckout() {
+    if (!user) {
+      navigate('/login')
+      return
+    }
+    setCheckoutError(null)
+    setCheckingOut(true)
+    try {
+      const { data, error } = await supabase.functions.invoke('stripe-checkout', {
+        body: { discountCode: discount?.valid ? discountCode : undefined },
+      })
+      if (error) throw error
+      window.location.href = data.url
+    } catch (err) {
+      setCheckoutError(err.message)
+      setCheckingOut(false)
     }
   }
 
@@ -111,12 +139,14 @@ export default function Cart() {
         </div>
       </div>
 
+      {checkoutError && <p className="mt-2 text-xs text-red-600">{checkoutError}</p>}
       <button
         type="button"
-        disabled
+        onClick={handleCheckout}
+        disabled={checkingOut}
         className="mt-6 w-full bg-brand-black py-3 text-sm font-semibold uppercase text-brand-white disabled:opacity-40"
       >
-        Checkout (pending client Stripe account — Brief.md #9)
+        {checkingOut ? 'Redirecting to checkout…' : 'Checkout'}
       </button>
     </div>
   )

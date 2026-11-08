@@ -30,7 +30,7 @@ const NAV_COLUMNS = [
       { label: 'Make A Return', href: '/account/returns' },
       { label: 'Orders', href: '/account' },
       { label: 'Submit a Fake', href: '/help/submit-a-fake' },
-      { label: 'Reviews Policy', href: '/help' },
+      { label: 'Reviews Policy', href: '/help/reviews-policy' },
     ],
   },
   {

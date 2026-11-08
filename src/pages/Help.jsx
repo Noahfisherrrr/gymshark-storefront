@@ -100,6 +100,7 @@ const CATEGORIES = [
       { id: 'unsubscribe-emails', q: 'How Do I Unsubscribe From Emails?', a: 'Use the unsubscribe link at the bottom of any marketing email, or update your preferences from Your Account.' },
       { id: 'size-guide-location', q: 'Where Can I Find Your Size Guide?', a: 'Size guides are linked on every product page, under the size selector.' },
       { id: 'submit-a-fake', q: 'Submit a Fake', href: '/help/submit-a-fake', a: 'Report a counterfeit site, ad or social account impersonating us, and find out how to spot the real thing.' },
+      { id: 'reviews-policy', q: 'Reviews Policy', href: '/help/reviews-policy', a: 'How we handle customer reviews, ratings and related information, including our approach to fake and incentivised reviews.' },
     ],
   },
 ]

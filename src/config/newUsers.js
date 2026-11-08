@@ -217,7 +217,7 @@ export const NEW_USERS_MORE = {
           title: 'Leggings guide',
           copy: "Stop looking; start finding the leggings you've been looking for.",
           image: asset('/media/products/p9.webp'),
-          href: '/blog/article/leggings-guide',
+          href: '/pages/leggings-guide',
         },
         {
           id: 'sports-bra-guide',
@@ -279,7 +279,7 @@ export const NEW_USERS_WOMEN_FIND_FIT = {
           title: 'Leggings guide',
           copy: "Stop looking; start finding the leggings you've been looking for.",
           image: asset('/media/products/p10.webp'),
-          href: '/blog/article/leggings-guide',
+          href: '/pages/leggings-guide',
         },
         {
           id: 'sports-bra-guide',

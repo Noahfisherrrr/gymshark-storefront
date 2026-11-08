@@ -67,7 +67,8 @@ export const NAV_CATEGORIES = [
       {
         label: 'Explore',
         links: [
-          ...['Leggings Guide', 'Leggings Size Guide', 'Sports Bra Guide', 'Running Guide'].map((l) => shop('women', l)),
+          { label: 'Leggings Guide', href: '/pages/leggings-guide' },
+          ...['Leggings Size Guide', 'Sports Bra Guide', 'Running Guide'].map((l) => shop('women', l)),
           { label: 'New Here?', href: '/pages/new-users/women' },
           ...['Your Edit', 'Loyalty'].map((l) => shop('women', l)),
         ],
@@ -136,7 +137,13 @@ export const NAV_CATEGORIES = [
     label: 'Explore',
     href: '/pages/new-users',
     groups: [
-      group('explore', "Women's Guides", ['Leggings Guide', 'Sports Bra Guide', 'Running Guide']),
+      {
+        label: "Women's Guides",
+        links: [
+          { label: 'Leggings Guide', href: '/pages/leggings-guide' },
+          ...['Sports Bra Guide', 'Running Guide'].map((l) => shop('explore', l)),
+        ],
+      },
       group('explore', "Men's Guides", ['Shorts Guide', 'Running Guide']),
       group('explore', "Women's Clothing", ['Leggings', 'Sports Bras', 'Shorts']),
       group('explore', "Men's Clothing", ['T-Shirts', 'Shorts', 'Joggers']),

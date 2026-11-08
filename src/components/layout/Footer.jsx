@@ -73,7 +73,7 @@ const SOCIAL_LINKS = [
 
 const LEGAL_LINKS = [
   { label: 'Terms & Conditions', href: '/pages/terms-conditions' },
-  { label: 'Terms of Use', href: '/help' },
+  { label: 'Terms of Use', href: '/pages/terms-of-use' },
   { label: 'Privacy Notice', href: '/help' },
   { label: 'Cookie Policy', href: '/help' },
   { label: 'Modern Slavery Statement', href: '/help' },

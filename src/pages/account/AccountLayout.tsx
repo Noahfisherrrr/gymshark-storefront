@@ -27,7 +27,7 @@ export default function AccountLayout() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 lg:px-8">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-2xl font-bold uppercase">{user.firstName}, Account</h1>
+        <h1 className="text-2xl font-bold uppercase">{user.firstName}'s Account</h1>
         <button type="button" onClick={handleSignOut} className="text-sm uppercase underline">
           Sign Out
         </button>

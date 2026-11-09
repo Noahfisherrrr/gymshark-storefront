@@ -1,0 +1,81 @@
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { SECTION_HEADING } from './ProductCarousel'
+import './home.css'
+
+export interface ActivityTile {
+  label: string
+  href: string
+  image?: string
+}
+
+export interface ActivityTab {
+  label: string
+  tiles: ActivityTile[]
+}
+
+interface ActivityCarouselProps {
+  title: string
+  tabs?: ActivityTab[]
+}
+
+// gymshark.com's "How do you train?" block: title + optional Women/Men
+// tabs, each switching a horizontal row of activity tiles (image + bottom
+// label) that route back into /shop with an activity filter. When there's
+// only one tab (the gendered /pages/new-users sub-pages) the tab switcher
+// is skipped and the single set of tiles renders directly.
+export default function ActivityCarousel({ title, tabs }: ActivityCarouselProps) {
+  const [active, setActive] = useState(tabs?.[0])
+  if (!tabs || tabs.length === 0 || !active) return null
+
+  return (
+    <section className="mx-auto w-full max-w-[3000px] py-8 lg:px-10 lg:py-16" aria-label={title}>
+      <div className="mb-6 flex flex-col gap-4 px-4 md:px-[30px] lg:flex-row lg:items-end lg:justify-between lg:px-0">
+        <h2 className={SECTION_HEADING}>{title}</h2>
+        {tabs.length > 1 && (
+          <div role="tablist" aria-label={`${title} categories`} className="flex gap-4">
+            {tabs.map((tab) => (
+              <button
+                key={tab.label}
+                type="button"
+                role="tab"
+                aria-selected={tab === active}
+                onClick={() => setActive(tab)}
+                className="gs-tab shrink-0 text-[14px] leading-[1.4]"
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <ul
+        key={active.label}
+        className="gs-carousel gs-fade-swap flex items-start gap-1 overflow-x-auto overflow-y-hidden pl-4 md:pl-[30px] lg:pl-0"
+      >
+        {active.tiles.map((tile) => (
+          <li key={tile.label} className="shrink-0 basis-[45vw] md:basis-[220px] lg:basis-[calc(25%-3px)]">
+            <Link
+              to={tile.href}
+              className="group relative block aspect-[3/4] w-full overflow-hidden bg-surface-subtle"
+            >
+              {tile.image && (
+                <img
+                  src={tile.image}
+                  alt=""
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              )}
+              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4 text-[16px] font-bold uppercase leading-[1.2] text-white">
+                {tile.label}
+              </span>
+            </Link>
+          </li>
+        ))}
+        <li aria-hidden="true" className="min-h-px min-w-4 shrink-0 md:min-w-10 lg:hidden" />
+      </ul>
+    </section>
+  )
+}

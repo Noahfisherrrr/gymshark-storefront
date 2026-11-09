@@ -6,7 +6,6 @@
 
 const fs = require('fs')
 const path = require('path')
-const sharp = require('sharp')
 
 // Helper for variants. Every variant's priceOverride is null (no per-variant
 // pricing in this catalog) — callers still pass the product's price in case
@@ -29,13 +28,32 @@ function generateVariants(productId, sizes, color, _price) {
   })
 }
 
-// Each product gets its own generated placeholder image (see the image
-// generation pass at the bottom of this file) rather than cycling through a
-// shared pool — p1.webp..p20.webp remain untouched since marketing config
-// files (shopWomen.ts, shopMen.ts, leggingsGuide.ts, etc.) reference them
-// directly by filename.
-function productImagePath(id) {
-  return `/media/products/catalog/${id}.webp`
+// Helper for fallback image cycle
+const mediaImages = [
+  '/media/products/p1.webp',
+  '/media/products/p2.webp',
+  '/media/products/p3.webp',
+  '/media/products/p4.webp',
+  '/media/products/p5.webp',
+  '/media/products/p6.webp',
+  '/media/products/p7.webp',
+  '/media/products/p8.webp',
+  '/media/products/p9.webp',
+  '/media/products/p10.webp',
+  '/media/products/p11.webp',
+  '/media/products/p12.webp',
+  '/media/products/p13.webp',
+  '/media/products/p14.webp',
+  '/media/products/p15.webp',
+  '/media/products/p16.webp',
+  '/media/products/p17.webp',
+  '/media/products/p18.webp',
+  '/media/products/p19.webp',
+  '/media/products/p20.webp',
+]
+
+function getProductImage(index) {
+  return mediaImages[index % mediaImages.length]
 }
 
 const standardSizes = ['XS', 'S', 'M', 'L', 'XL']
@@ -1868,7 +1886,7 @@ const allProducts = []
 // Process Women (40)
 rawWomenProducts.forEach((item, idx) => {
   const id = slugify(item.name, item.color)
-  const image = productImagePath(id)
+  const image = getProductImage(idx)
   const sizes = item.type === 'accessories' ? accessorySizes : standardSizes
   const rating = Number((4.5 + ((idx * 7) % 5) * 0.1).toFixed(1))
   const reviewCount = 45 + ((idx * 19) % 200)
@@ -1955,7 +1973,7 @@ rawWomenProducts.forEach((item, idx) => {
 // Process Men (40)
 rawMenProducts.forEach((item, idx) => {
   const id = slugify(item.name, item.color)
-  const image = productImagePath(id)
+  const image = getProductImage((idx + 40) % mediaImages.length)
   const sizes = item.type === 'accessories' ? accessorySizes : standardSizes
   const rating = Number((4.6 + ((idx * 3) % 4) * 0.1).toFixed(1))
   const reviewCount = 38 + ((idx * 23) % 180)
@@ -2042,7 +2060,7 @@ rawMenProducts.forEach((item, idx) => {
 // Process Accessories (20)
 rawAccessories.forEach((item, idx) => {
   const id = slugify(item.name, item.color)
-  const image = productImagePath(id)
+  const image = getProductImage((idx + 80) % mediaImages.length)
   const sizes = item.name.includes('Belt') || item.name.includes('Knee Sleeves') ? beltSizes : accessorySizes
   const rating = Number((4.7 + ((idx * 2) % 3) * 0.1).toFixed(1))
   const reviewCount = 65 + ((idx * 31) % 250)
@@ -2684,62 +2702,4 @@ CREATE POLICY "Active discount codes viewable by all" ON public.discount_codes F
 const schemaPath = path.resolve(__dirname, '../supabase/schema.sql')
 fs.writeFileSync(schemaPath, schemaSql, 'utf-8')
 console.log(`Written ${schemaPath}`)
-
-// ---------------------------------------------------------------------------
-// Placeholder product images
-//
-// Real Gymshark product photography isn't ours to ship — this project uses
-// placeholders for all of Gymshark's imagery. Each of the 100 products gets
-// its own generated placeholder (instead of 20 photos recycled 5x each):
-// a flat card in the product's actual colorHex with its type/color printed
-// on it, at 800x1000 (4:5, matching ProductCard/ProductGallery) plus a
-// 480x600 `-sm` companion for thumbnails (see src/lib/images.ts).
-function readableTextColor(hex) {
-  const n = hex.replace('#', '')
-  const r = parseInt(n.substring(0, 2), 16)
-  const g = parseInt(n.substring(2, 4), 16)
-  const b = parseInt(n.substring(4, 6), 16)
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-  return luminance > 0.6 ? '#1C1C1E' : '#FFFFFF'
-}
-
-function typeLabel(type) {
-  return type.replace(/-/g, ' ').toUpperCase()
-}
-
-function escapeXml(str) {
-  return String(str).replace(/[&<>'"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&apos;', '"': '&quot;' }[c]))
-}
-
-function placeholderSvg({ colorHex, type, color }) {
-  const textColor = readableTextColor(colorHex)
-  const overlay = textColor === '#FFFFFF' ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.14)'
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000">
-    <rect width="800" height="1000" fill="${colorHex}"/>
-    <rect x="0" y="0" width="800" height="500" fill="${overlay}"/>
-    <circle cx="400" cy="430" r="120" fill="none" stroke="${textColor}" stroke-opacity="0.35" stroke-width="2"/>
-    <text x="400" y="440" font-family="Georgia, 'Times New Roman', serif" font-size="30" letter-spacing="2" fill="${textColor}" text-anchor="middle">${escapeXml(typeLabel(type))}</text>
-    <text x="400" y="480" font-family="Georgia, 'Times New Roman', serif" font-size="18" fill="${textColor}" fill-opacity="0.8" text-anchor="middle">${escapeXml(color)}</text>
-  </svg>`
-}
-
-async function generatePlaceholderImages(products) {
-  const outDir = path.resolve(__dirname, '../public/media/products/catalog')
-  fs.mkdirSync(outDir, { recursive: true })
-
-  for (const product of products) {
-    const svg = Buffer.from(placeholderSvg(product))
-    const fullPath = path.join(outDir, `${product.id}.webp`)
-    const smPath = path.join(outDir, `${product.id}-sm.webp`)
-    await sharp(svg).resize(800, 1000).webp({ quality: 80 }).toFile(fullPath)
-    await sharp(svg).resize(480, 600).webp({ quality: 75 }).toFile(smPath)
-  }
-
-  console.log(`Generated ${products.length} placeholder product images (+ -sm variants) in ${outDir}`)
-}
-
-generatePlaceholderImages(allProducts).catch((err) => {
-  console.error('Failed to generate placeholder images:', err)
-  process.exitCode = 1
-})
 

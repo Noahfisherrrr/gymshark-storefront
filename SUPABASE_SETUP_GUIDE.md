@@ -177,3 +177,9 @@ Test each live feature to ensure complete functionality:
 - Check that you ran [supabase/schema.sql](file:///d:/Gymshark%20App/supabase/schema.sql) first.
 - In Supabase Dashboard → **Authentication** → **Policies**, verify that the policy `"Products are viewable by everyone"` is enabled on the `products` table.
 
+---
+
+## TODO (later): Custom SMTP for signup confirmation emails
+
+**Why:** Signup has "Confirm email" enabled, so every registration sends a confirmation email through Supabase's built-in email service. That default service has a very low rate limit (~2–4 emails/hour, shared across signup/reset/magic-link emails) and throws **"email rate limit exceeded"** once exhausted — this will also bite real users, not just testing. Custom SMTP removes Supabase's default limit.
+

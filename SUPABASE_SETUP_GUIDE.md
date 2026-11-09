@@ -183,3 +183,17 @@ Test each live feature to ensure complete functionality:
 
 **Why:** Signup has "Confirm email" enabled, so every registration sends a confirmation email through Supabase's built-in email service. That default service has a very low rate limit (~2–4 emails/hour, shared across signup/reset/magic-link emails) and throws **"email rate limit exceeded"** once exhausted — this will also bite real users, not just testing. Custom SMTP removes Supabase's default limit.
 
+**Plan: use [Resend](https://resend.com)**
+
+1. Create a Resend account at resend.com (separate from Supabase).
+2. Verify a sending domain: Resend dashboard → **Domains** (if not visible in the sidebar, go directly to `resend.com/domains`, or check under a team/workspace switcher — it may be hidden under the wrong team). Add the DNS records (DKIM/SPF) it gives you to your domain's DNS provider and wait for it to show **Verified**.
+   - Without a verified domain, Resend's sandbox sender `onboarding@resend.dev` only delivers to the email address used to sign up for Resend — fine for a quick personal test, not for real users.
+3. Get an API key: Resend dashboard → **API Keys** → create one (starts with `re_...`).
+4. In Supabase Dashboard → **Authentication** → **Settings** → **SMTP Settings**, enable custom SMTP and enter:
+   - **Host:** `smtp.resend.com`
+   - **Port:** `465` (SSL) or `587` (TLS)
+   - **Username:** `resend`
+   - **Password:** the Resend API key from step 3
+   - **Sender email:** an address on the verified domain (e.g. `noreply@yourdomain.com`)
+5. Save, then test: register a new account with a real email and confirm the message arrives (check Resend dashboard → **Logs** and Supabase → **Logs** → **Auth** if it doesn't).
+

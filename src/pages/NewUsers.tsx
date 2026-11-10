@@ -37,7 +37,7 @@ export default function NewUsers() {
     <div>
       <Banner {...NEW_USERS_HERO} headingLevel="h1" priority />
       <ActivityCarousel {...NEW_USERS_ACTIVITIES} />
-      <TextBlock title="Get to know our families" copy="Loved by the Gymshark community, and soon to be loved by you too." />
+      <TextBlock title="Get to know our families" copy="Loved by the 10X Sports community, and soon to be loved by you too." />
       <CardsCarousel {...NEW_USERS_FAMILIES} />
       <ProductCarousel title={NEW_USERS_TOP_WOMEN.title} href={NEW_USERS_TOP_WOMEN.href} products={topWomen} />
       <ProductCarousel title={NEW_USERS_TOP_MEN.title} href={NEW_USERS_TOP_MEN.href} products={topMen} />

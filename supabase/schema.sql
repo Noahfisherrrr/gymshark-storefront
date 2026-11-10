@@ -1,5 +1,5 @@
 -- ============================================================
--- GYMSHARK APP - PRODUCTION POSTGRESQL SCHEMA FOR SUPABASE
+-- 10X SPORTS - PRODUCTION POSTGRESQL SCHEMA FOR SUPABASE
 -- Fully relational with Row Level Security (RLS) & Triggers
 -- ============================================================
 

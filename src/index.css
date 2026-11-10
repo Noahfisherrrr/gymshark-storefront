@@ -12,7 +12,7 @@
 @theme {
   --color-brand-black: #0a0a0a;
   --color-brand-white: #ffffff;
-  --color-brand-accent: #65ff00; /* Gymshark-style high-vis green placeholder */
+  --color-brand-accent: #65ff00; /* High-vis green placeholder accent */
   /* Ported from gymshark.com's --fds-* tokens */
   --color-ink: #0d1012;
   --color-ink-hover: #1b1d22;

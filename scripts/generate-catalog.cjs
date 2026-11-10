@@ -1,4 +1,4 @@
-// Generator script for 100 Gymshark products (40 Women, 40 Men, 20 Accessories)
+// Generator script for 100 10X Sports products (40 Women, 40 Men, 20 Accessories)
 // Generates:
 // 1. supabase/data/products.json
 // 2. supabase/seed.sql + supabase/01_seed_products.sql + supabase/02_seed_reviews.sql
@@ -63,7 +63,7 @@ const beltSizes = ['S', 'M', 'L', 'XL']
 // 40 WOMEN PRODUCTS
 const rawWomenProducts = [
   {
-    name: 'Gymshark SoftSense™ Longline Sports Bra',
+    name: '10X Sports SoftSense™ Longline Sports Bra',
     subtitle: 'Medium Support',
     type: 'sports-bras',
     activities: ['yoga', 'pilates', 'athleisure'],
@@ -96,7 +96,7 @@ const rawWomenProducts = [
     colorHex: '#222225',
     tag: 'Bestseller',
     badges: ['ICONIC', 'SQUAT-PROOF'],
-    description: 'The legend that built Gymshark. Vital Seamless 2.0 Leggings are crafted with sweat-wicking tech and compressive marl knit to support your heavy compound lifts and high-mileage runs with complete zero-distraction squat-proof security.',
+    description: 'The legend that built 10X Sports. Vital Seamless 2.0 Leggings are crafted with sweat-wicking tech and compressive marl knit to support your heavy compound lifts and high-mileage runs with complete zero-distraction squat-proof security.',
   },
   {
     name: 'Everyday Seamless Short Sleeve Crop Top',
@@ -186,7 +186,7 @@ const rawWomenProducts = [
     colorHex: '#F8F9FA',
     tag: null,
     badges: ['100% ORGANIC COTTON', 'DROP SHOULDER'],
-    description: 'The heavyweight gym staple reimagined. Crafted from 240gsm premium combed organic cotton with relaxed drop shoulders, a thick ribbed collar, and archival Gymshark weightlifting graphic print on the back.',
+    description: 'The heavyweight gym staple reimagined. Crafted from 240gsm premium combed organic cotton with relaxed drop shoulders, a thick ribbed collar, and archival 10X Sports weightlifting graphic print on the back.',
   },
   {
     name: 'Minimal Strappy Cross-Back Sports Bra',
@@ -348,7 +348,7 @@ const rawWomenProducts = [
     colorHex: '#1E3F20',
     tag: null,
     badges: ['LIFTING CLUB', 'STRETCH RIB'],
-    description: 'Classic collegiate lifting style. Deep scoop neck, narrow racerback cut that showcases upper back muscularity, and archival Gymshark Lifting Club crest embroidered at center chest.',
+    description: 'Classic collegiate lifting style. Deep scoop neck, narrow racerback cut that showcases upper back muscularity, and archival 10X Sports Lifting Club crest embroidered at center chest.',
   },
   {
     name: 'Everyday Seamless 7" Bike Shorts',
@@ -492,7 +492,7 @@ const rawWomenProducts = [
     colorHex: '#C2B280',
     tag: null,
     badges: ['HEAVYWEIGHT', 'ORGANIC COTTON'],
-    description: 'Thick, plush, and effortlessly boxy. Made from 360gsm organic fleece with ribbed side panels and a subtle tone-on-tone embroidered Gymshark script.',
+    description: 'Thick, plush, and effortlessly boxy. Made from 360gsm organic fleece with ribbed side panels and a subtle tone-on-tone embroidered 10X Sports script.',
   },
   {
     name: 'Apex Seamless 2-in-1 Running Shorts',
@@ -640,7 +640,7 @@ const rawWomenProducts = [
   },
   {
     name: 'Legacy Graphic Oversized Heavyweight Tee',
-    subtitle: 'Vintage Gymshark Gold Era Graphic',
+    subtitle: 'Vintage 10X Sports Gold Era Graphic',
     type: 't-shirts',
     activities: ['weight-lifting', 'athleisure'],
     price: 38,
@@ -654,7 +654,7 @@ const rawWomenProducts = [
     colorHex: '#2B3A42',
     tag: 'New',
     badges: ['ARCHIVAL GRAPHIC', 'VINTAGE WASH'],
-    description: 'An ode to where we began. Distressed screenprint graphic of the original 2012 Gymshark gym badge on 100% heavy mineral-washed cotton.',
+    description: 'An ode to where we began. Distressed screenprint graphic of the original 2012 10X Sports gym badge on 100% heavy mineral-washed cotton.',
   },
   {
     name: 'Elevate Packable Windbreaker Anorak',
@@ -838,7 +838,7 @@ const rawMenProducts = [
     colorHex: '#1D2A44',
     tag: 'Bestseller',
     badges: ['EMBROIDERED LOGO', 'KANGAROO POCKET'],
-    description: 'A genuine Gymshark essential since day one. Soft brushed fleece lining, tonal embroidered chest crest, double-layered drawstring hood, and durable ribbed hems.',
+    description: 'A genuine 10X Sports essential since day one. Soft brushed fleece lining, tonal embroidered chest crest, double-layered drawstring hood, and durable ribbed hems.',
   },
   {
     name: 'Critical 2.0 Drop Arm Stringer Vest',
@@ -892,7 +892,7 @@ const rawMenProducts = [
     colorHex: '#3B4D3C',
     tag: 'New',
     badges: ['VINTAGE WASH', 'HEAVYWEIGHT'],
-    description: 'Inspired by the garage gym roots. Mineral-washed heavyweight cotton tee featuring the original Gymshark lifting logo printed with distressed, crackled inks.',
+    description: 'Inspired by the garage gym roots. Mineral-washed heavyweight cotton tee featuring the original 10X Sports lifting logo printed with distressed, crackled inks.',
   },
   {
     name: 'Geo Seamless Muscle Fit T-Shirt',
@@ -964,7 +964,7 @@ const rawMenProducts = [
     colorHex: '#FFFFFF',
     tag: null,
     badges: ['QUICK DRY', 'LIGHTWEIGHT'],
-    description: 'Light as air. High-performance polyester with anti-static finish and subtle reflective heat-seal Gymshark sharkhead logo.',
+    description: 'Light as air. High-performance polyester with anti-static finish and subtle reflective heat-seal 10X Sports sharkhead logo.',
   },
   {
     name: 'Apex Breathable Seamless Long Sleeve Top',
@@ -1489,7 +1489,7 @@ const rawMenProducts = [
     description: 'Tight compression hold promotes venous return and reduces post-workout muscle soreness.',
   },
   {
-    name: 'Heritage Gymshark Barbell Club Tee',
+    name: 'Heritage 10X Sports Barbell Club Tee',
     subtitle: 'Archival Heavy Weightlifting Graphic',
     type: 't-shirts',
     activities: ['weight-lifting'],
@@ -1504,7 +1504,7 @@ const rawMenProducts = [
     colorHex: '#661D2B',
     tag: 'New',
     badges: ['BARBELL CLUB', 'ORGANIC COTTON'],
-    description: 'Commemorating our history of iron. Heavy mineral-washed 240gsm cotton with collegiate Gymshark Barbell Club graphics.',
+    description: 'Commemorating our history of iron. Heavy mineral-washed 240gsm cotton with collegiate 10X Sports Barbell Club graphics.',
   },
 ]
 
@@ -1652,10 +1652,10 @@ const rawAccessories = [
     colorHex: '#8E8E93',
     tag: null,
     badges: ['RIBBED KNIT', 'TONAL LOGO'],
-    description: 'Cozy warmth for chilly outdoor workouts and rest days. Subtle silicone Gymshark logo badge folded on the brim.',
+    description: 'Cozy warmth for chilly outdoor workouts and rest days. Subtle silicone 10X Sports logo badge folded on the brim.',
   },
   {
-    name: 'Gymshark Liquid Chalk 250ml',
+    name: '10X Sports Liquid Chalk 250ml',
     subtitle: 'Fast-Drying Dust-Free Grip Formula',
     type: 'accessories',
     activities: ['weight-lifting', 'hiking'],
@@ -1938,7 +1938,7 @@ rawWomenProducts.forEach((item, idx) => {
     highlights: [
       'Engineered for premium comfort and high durability',
       'Sweat-wicking technical fabric maintains cool core temperature',
-      'Tested by elite Gymshark athletes and powerlifters',
+      'Tested by elite 10X Sports athletes and powerlifters',
     ],
     materials: '82% Nylon, 18% Elastane / Lycra Adaptiv',
     careInstructions: ['Machine wash cold inside out (30°C)', 'Do not iron prints or trims', 'Air dry naturally or tumble dry low'],
@@ -2176,7 +2176,7 @@ function chunkArray(arr, size) {
 }
 
 let seedSql = `-- ============================================================
--- GYMSHARK APP - SUPABASE SEED DATA (PRODUCTION READY)
+-- 10X SPORTS - SUPABASE SEED DATA (PRODUCTION READY)
 -- 100 Products (40 Women, 40 Men, 20 Accessories)
 -- Includes Variants, Reviews, and Sample Discount Codes
 -- ============================================================
@@ -2189,7 +2189,7 @@ DELETE FROM public.product_variants;
 -- 2. DISCOUNT CODES
 INSERT INTO public.discount_codes (code, description, amount_off, is_active, expires_at) VALUES
 ('WELCOME10', 'Welcome 10% discount for first order', 0.10, true, NULL),
-('GYMSHARK15', 'Athlete exclusive 15% discount', 0.15, true, NULL),
+('10XSPORTS15', 'Athlete exclusive 15% discount', 0.15, true, NULL),
 ('SUMMER20', 'Seasonal 20% off summer collection', 0.20, true, NULL)
 ON CONFLICT (code) DO NOTHING;
 
@@ -2270,7 +2270,7 @@ console.log(`Written ${seedPath}`)
 
 // Also write modular seed files for users who prefer smaller queries
 const seedProductsSql = `-- ============================================================
--- GYMSHARK APP - SEED PART 1: PRODUCTS & VARIANTS
+-- 10X SPORTS - SEED PART 1: PRODUCTS & VARIANTS
 -- ============================================================
 
 -- Safe cleanup of variants from prior runs
@@ -2279,7 +2279,7 @@ DELETE FROM public.product_variants;
 -- 1. DISCOUNT CODES
 INSERT INTO public.discount_codes (code, description, amount_off, is_active, expires_at) VALUES
 ('WELCOME10', 'Welcome 10% discount for first order', 0.10, true, NULL),
-('GYMSHARK15', 'Athlete exclusive 15% discount', 0.15, true, NULL),
+('10XSPORTS15', 'Athlete exclusive 15% discount', 0.15, true, NULL),
 ('SUMMER20', 'Seasonal 20% off summer collection', 0.20, true, NULL)
 ON CONFLICT (code) DO NOTHING;
 
@@ -2310,7 +2310,7 @@ ON CONFLICT (code) DO NOTHING;
 )`).join(',\n') + `\nON CONFLICT (id) DO UPDATE SET stock = EXCLUDED.stock;\n`).join('\n')
 
 const seedReviewsSql = `-- ============================================================
--- GYMSHARK APP - SEED PART 2: REVIEWS & STATS
+-- 10X SPORTS - SEED PART 2: REVIEWS & STATS
 -- ============================================================
 
 -- REVIEWS\n` + reviewBatches.map(batch => `INSERT INTO public.reviews (
@@ -2337,7 +2337,7 @@ console.log('Written modular seed files 01_seed_products.sql and 02_seed_reviews
 
 // 3. Generate supabase/schema.sql
 const schemaSql = `-- ============================================================
--- GYMSHARK APP - PRODUCTION POSTGRESQL SCHEMA FOR SUPABASE
+-- 10X SPORTS - PRODUCTION POSTGRESQL SCHEMA FOR SUPABASE
 -- Fully relational with Row Level Security (RLS) & Triggers
 -- ============================================================
 

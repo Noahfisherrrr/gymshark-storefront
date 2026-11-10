@@ -1,5 +1,5 @@
 -- ============================================================
--- GYMSHARK APP - SEED PART 2: REVIEWS & STATS
+-- 10X SPORTS - SEED PART 2: REVIEWS & STATS
 -- ============================================================
 
 -- REVIEWS
@@ -8,7 +8,7 @@ INSERT INTO public.reviews (
 ) VALUES
 (
   'gymshark-softsense-longline-sports-bra-cherry-red', 'Chloe M.', TRUE, 5,
-  'Absolutely incredible quality and fit', 'I''ve bought dozens of gym items over the years, and this Gymshark SoftSense™ Longline Sports Bra is by far one of my favorite purchases. Holds its shape wash after wash!', 'yoga', 16, 'approved', NOW() - INTERVAL '21 days'
+  'Absolutely incredible quality and fit', 'I''ve bought dozens of gym items over the years, and this 10X Sports SoftSense™ Longline Sports Bra is by far one of my favorite purchases. Holds its shape wash after wash!', 'yoga', 16, 'approved', NOW() - INTERVAL '21 days'
 ),
 (
   'gymshark-softsense-longline-sports-bra-cherry-red', 'Jessica L.', TRUE, 5,
@@ -652,7 +652,7 @@ INSERT INTO public.reviews (
 ),
 (
   'heritage-gymshark-barbell-club-tee-washed-maroon', 'Marcus B.', TRUE, 5,
-  'Best lifting gear on the market', 'The taper on this Heritage Gymshark Barbell Club Tee is spot on. Doesn''t hug the stomach but shows off chest and shoulders perfectly.', 'Weight Lifting', 22, 'approved', NOW() - INTERVAL '28 days'
+  'Best lifting gear on the market', 'The taper on this Heritage 10X Sports Barbell Club Tee is spot on. Doesn''t hug the stomach but shows off chest and shoulders perfectly.', 'Weight Lifting', 22, 'approved', NOW() - INTERVAL '28 days'
 ),
 (
   'heritage-gymshark-barbell-club-tee-washed-maroon', 'Dave R.', TRUE, 4,
@@ -692,7 +692,7 @@ INSERT INTO public.reviews (
 ),
 (
   'gymshark-liquid-chalk-250ml-chalk-white', 'Liam T.', TRUE, 5,
-  'Essential gym bag item', 'Honestly wouldn''t train without this Gymshark Liquid Chalk 250ml anymore. The durability is far superior to cheap amazon clones.', 'Weight Lifting', 31, 'approved', NOW() - INTERVAL '3 days'
+  'Essential gym bag item', 'Honestly wouldn''t train without this 10X Sports Liquid Chalk 250ml anymore. The durability is far superior to cheap amazon clones.', 'Weight Lifting', 31, 'approved', NOW() - INTERVAL '3 days'
 ),
 (
   '7mm-neoprene-knee-sleeves-pair-stealth-black-white', 'Liam T.', TRUE, 5,

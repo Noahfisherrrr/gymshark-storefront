@@ -23,7 +23,7 @@ export default function DeliveryInformation() {
 
       <h1 className="mt-4 text-2xl font-bold uppercase lg:text-3xl">Delivery Information</h1>
       <p className="mt-3 text-sm text-black/60">
-        Find Gymshark shipping times, costs, delivery options and how to track your order.
+        Find 10X Sports shipping times, costs, delivery options and how to track your order.
       </p>
 
       <p className="mt-6 rounded-sm border border-line bg-surface-subtle p-4 text-sm font-semibold">

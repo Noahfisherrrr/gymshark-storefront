@@ -266,7 +266,7 @@ interface CartItemLike {
   quantity: number
 }
 
-const GUEST_CART_KEY = 'gymshark:guest_cart'
+const GUEST_CART_KEY = '10xsports:guest_cart'
 
 function readGuestCart(): CartItemLike[] {
   try {
@@ -784,8 +784,8 @@ async function requestReturn(_userId: string, input: { orderId: string; reason: 
 
 async function getReferralInfo(userId: string): Promise<ReferralInfo> {
   assertConfigured()
-  const code = `GS-${userId.slice(-6).toUpperCase()}`
-  return { code, link: `https://www.gymshark.com/refer/${code}`, rewardAmount: 10, referralsCount: 0, creditsEarned: 0 }
+  const code = `10X-${userId.slice(-6).toUpperCase()}`
+  return { code, link: `https://www.10xsports.com/refer/${code}`, rewardAmount: 10, referralsCount: 0, creditsEarned: 0 }
 }
 
 async function getActiveOffer() {
@@ -1028,7 +1028,7 @@ function toUser(user: SupabaseAuthUser): User {
 
 // localStorage (not state) because the confirmation email reopens the site in
 // a fresh page load — a plain variable wouldn't survive that round trip.
-const PENDING_OAUTH_KEY = 'gymshark:pendingOAuthEmail'
+const PENDING_OAUTH_KEY = '10xsports:pendingOAuthEmail'
 
 // Google/Apple already verify the email, but the client wants an extra
 // authorization step: the OAuth sign-in above establishes a real Supabase

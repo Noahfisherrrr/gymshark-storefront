@@ -1,4 +1,4 @@
-# Project Plan — Gymshark-style E-Commerce Storefront
+# Project Plan — 10X Sports E-Commerce Storefront
 
 Working title. Brand name, legal entity, domain, and assets are all pending
 client input (see "Blocked on Client" below) — `Brand Name` placeholders in

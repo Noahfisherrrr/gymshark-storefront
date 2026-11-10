@@ -1,4 +1,4 @@
-# Storefront (working title)
+# 10X Sports
 
 React + Tailwind e-commerce storefront cloning Gymshark.com's UI/UX, backed
 by Supabase and Stripe. See [`plan.md`](./plan.md) for the full roadmap and

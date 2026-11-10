@@ -76,7 +76,7 @@ export default function Product() {
     const url = window.location.href
     if (navigator.share) {
       navigator.share({
-        title: product?.name || 'Gymshark',
+        title: product?.name || '10X Sports',
         url,
       }).catch(() => {})
     } else {
